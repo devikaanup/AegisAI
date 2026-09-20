@@ -32,54 +32,64 @@ function rectPolygon(xMin: number, yMin: number, xMax: number, yMax: number): an
 }
 
 function main() {
-  console.log("Generating 3D GIS city features for Riverside Heights...");
+  console.log("Generating 3D GIS city features for South Chennai (Velachery–Pallikaranai)...");
 
   const buildingsFeatures: any[] = [];
   const landuseFeatures: any[] = [];
 
   // ==========================================
-  // 1. Natural Land Use: River & Parks
+  // 1. Natural Land Use: Wetland, Canals & Parks
   // ==========================================
 
-  // A. Palar River (Running east-west south of Row 0, from x: -100 to 1100, y: -130 to -35)
-  const riverPolygon = rectPolygon(-100, -130, 1100, -35);
-  riverPolygon.properties = {
+  // A. Pallikaranai Marshland (Expansive low-lying wetland basin south of Row 0: x: -100 to 1100, y: -130 to -35)
+  const marshPolygon = rectPolygon(-100, -130, 1100, -35);
+  marshPolygon.properties = {
     type: "water",
-    name: "Palar Riverbed",
-    color: "#0f233d",
+    name: "Pallikaranai Marsh Basin",
+    color: "#0a1c2e",
     strokeColor: "#1d4ed8",
   };
-  landuseFeatures.push(riverPolygon);
+  landuseFeatures.push(marshPolygon);
 
-  // B. Riverside Greenbelt Park (between River and Riverside Rd: y: -35 to -8, x: 50 to 950)
-  const riversidePark = rectPolygon(50, -32, 950, -10);
-  riversidePark.properties = {
-    type: "park",
-    name: "Riverside Greenbelt",
-    color: "#12231b",
-    strokeColor: "#1b382b",
+  // B. Veerangal Odai Drainage Canal (Key monsoon stormwater channel connecting Velachery to Pallikaranai)
+  const canalPolygon = rectPolygon(20, -36, 1050, -20);
+  canalPolygon.properties = {
+    type: "canal",
+    name: "Veerangal Odai Drainage Canal",
+    color: "#09243d",
+    strokeColor: "#2563eb",
   };
-  landuseFeatures.push(riversidePark);
+  landuseFeatures.push(canalPolygon);
 
-  // C. Temple Hill Nature Sanctuary (around r2c3: x: 550 to 700, y: 260 to 340)
-  const templeHillPark = rectPolygon(540, 260, 680, 340);
-  templeHillPark.properties = {
+  // C. Pallikaranai Wetland Buffer & Greenbelt (y: -20 to -6, x: 50 to 950)
+  const marshBufferPark = rectPolygon(50, -20, 950, -6);
+  marshBufferPark.properties = {
     type: "park",
-    name: "Temple Hill Nature Reserve",
+    name: "Pallikaranai Wetland Reserve Buffer",
+    color: "#0f231a",
+    strokeColor: "#1b4332",
+  };
+  landuseFeatures.push(marshBufferPark);
+
+  // D. Perungudi High Ground Nature Reserve (around r2c3: x: 540 to 680, y: 260 to 340)
+  const perungudiHillPark = rectPolygon(540, 260, 680, 340);
+  perungudiHillPark.properties = {
+    type: "park",
+    name: "Perungudi High Ground Reserve",
     color: "#13261d",
     strokeColor: "#1b382b",
   };
-  landuseFeatures.push(templeHillPark);
+  landuseFeatures.push(perungudiHillPark);
 
-  // D. Civic Plaza & Green (near Community Hall: x: 150 to 260, y: 170 to 220)
-  const civicPlaza = rectPolygon(150, 170, 260, 220);
-  civicPlaza.properties = {
+  // E. Velachery Junction Civic Plaza & Transit Concourse (x: 150 to 260, y: 170 to 220)
+  const velacheryPlaza = rectPolygon(150, 170, 260, 220);
+  velacheryPlaza.properties = {
     type: "plaza",
-    name: "Civic Plaza & Gardens",
+    name: "Velachery Concourse Plaza",
     color: "#111e19",
     strokeColor: "#1b382b",
   };
-  landuseFeatures.push(civicPlaza);
+  landuseFeatures.push(velacheryPlaza);
 
   // ==========================================
   // 2. Urban Blocks (Parcels) & 3D Buildings
@@ -109,16 +119,16 @@ function main() {
       const isGovtSchool = r === 1 && c === 3; // near r1c3 Govt High School
       const isCommunityHall = r === 1 && c === 0; // near r2c1 Community Hall
       const isSportsComplex = r === 2 && c === 4; // near r3c4 District Sports Complex
-      const isClinic = r === 2 && c === 3; // near r3c3 Heights Clinic
-      const isTemple = r === 1 && c === 2; // near r1c2 Ancient Temple
-      const isPharmacy = r === 0 && c === 0; // near r0c1 Riverside Pharmacy
-      const isBank = r === 2 && c === 2; // near r2c4 Apex Bank
+      const isClinic = r === 2 && c === 3; // near r3c3 Kamakshi Multi-Specialty Clinic
+      const isTemple = r === 1 && c === 2; // near r1c2 Dhandeeswaram Temple
+      const isPharmacy = r === 0 && c === 0; // near r0c1 Velachery Health Centre & Residential
+      const isBank = r === 2 && c === 2; // near r2c4 Perungudi Tech Park
 
       if (isGovtSchool) {
         // Govt High School Campus: Main wing (20m), East wing (14m), schoolyard
         const mainBuilding = rectPolygon(blockXMin + 12, blockYMin + 12, blockXMin + 85, blockYMin + 65);
         mainBuilding.properties = {
-          name: "Govt High School (Shelter S1)",
+          name: "Govt School (Shelter S1)",
           type: "shelter",
           height: 18,
           base_height: 0,
@@ -129,7 +139,7 @@ function main() {
 
         const eastWing = rectPolygon(blockXMin + 70, blockYMin + 65, blockXMin + 140, blockYMin + 105);
         eastWing.properties = {
-          name: "Govt School Assembly Hall",
+          name: "Velachery School Assembly Hall",
           type: "shelter_wing",
           height: 14,
           base_height: 0,
@@ -164,10 +174,10 @@ function main() {
         buildingsFeatures.push(stadium);
 
       } else if (isClinic) {
-        // Heights Clinic: Medical Cross footprint
+        // Kamakshi Multi-Specialty Clinic: Medical Cross footprint
         const clinicMain = rectPolygon(blockXMin + 30, blockYMin + 25, blockXMin + 120, blockYMin + 85);
         clinicMain.properties = {
-          name: "Heights Emergency Clinic",
+          name: "Kamakshi Multi-Specialty Clinic",
           type: "medical",
           height: 22,
           base_height: 0,
@@ -177,12 +187,12 @@ function main() {
         buildingsFeatures.push(clinicMain);
 
       } else if (isTemple) {
-        // Ancient Temple on Temple Hill: Stepped temple tower
+        // Ancient Dhandeeswaram Temple: Stepped Dravidian gopuram tower
         const templeBase = rectPolygon(blockXMin + 35, blockYMin + 25, blockXMin + 115, blockYMin + 90);
         templeBase.properties = {
-          name: "Ancient Temple Complex",
+          name: "Dhandeeswaram Temple Complex",
           type: "temple",
-          height: 24,
+          height: 25,
           base_height: 0,
           color: "#35383a",
           highlightColor: "#f59e0b",
@@ -192,7 +202,7 @@ function main() {
       } else if (isPharmacy) {
         const pharmacy = rectPolygon(blockXMin + 15, blockYMin + 15, blockXMin + 70, blockYMin + 60);
         pharmacy.properties = {
-          name: "Riverside Pharmacy",
+          name: "Velachery Health Centre",
           type: "commercial",
           height: 12,
           base_height: 0,
@@ -202,7 +212,7 @@ function main() {
 
         const residentialA = rectPolygon(blockXMin + 85, blockYMin + 20, blockXMin + 145, blockYMin + 95);
         residentialA.properties = {
-          name: "Riverside Apartments",
+          name: "Ram Nagar Enclave Apartments",
           type: "residential",
           height: 22,
           base_height: 0,
@@ -213,9 +223,9 @@ function main() {
       } else if (isBank) {
         const bank = rectPolygon(blockXMin + 30, blockYMin + 20, blockXMin + 110, blockYMin + 85);
         bank.properties = {
-          name: "Apex Commercial Bank",
+          name: "Perungudi Tech Park Tower",
           type: "commercial",
-          height: 26,
+          height: 28,
           base_height: 0,
           color: "#223145",
           highlightColor: "#38bdf8",

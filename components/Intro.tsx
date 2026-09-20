@@ -146,7 +146,7 @@ export function Intro({ onStart }: IntroProps) {
         {/* Credits and Data statement */}
         <div className="pt-2 text-xs text-slate-500 space-y-1 font-mono">
           <div>Graph algorithms decide. AI explains.</div>
-          <div className="text-slate-600">Demo dataset: seeded, fictionalized streets · Katpadi, Vellore</div>
+          <div className="text-slate-600">Simulation environment: seeded, fictionalized streets · Velachery–Pallikaranai, South Chennai</div>
         </div>
       </div>
     </div>

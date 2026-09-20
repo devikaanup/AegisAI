@@ -1,4 +1,4 @@
-export const ANCHOR_LNGLAT: [number, number] = [79.152, 12.968]; // [lng, lat] SW corner, Katpadi, Vellore
+export const ANCHOR_LNGLAT: [number, number] = [80.212, 12.962]; // [lng, lat] SW corner, Velachery–Pallikaranai, South Chennai (Simulation)
 
 export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 

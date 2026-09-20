@@ -78,18 +78,18 @@ export interface GraphEdge {
 }
 
 const POI_JUNCTIONS: Record<string, { poiScore: number; poiName: string }> = {
-  r0c1: { poiScore: 1, poiName: "Riverside Pharmacy" },
-  r1c2: { poiScore: 2, poiName: "Ancient Temple" },
-  r2c2: { poiScore: 1, poiName: "Primary School" },
-  r2c4: { poiScore: 1, poiName: "Apex Bank" },
-  r3c3: { poiScore: 2, poiName: "Heights Clinic" },
+  r0c1: { poiScore: 1, poiName: "Velachery Health Centre" },
+  r1c2: { poiScore: 2, poiName: "Dhandeeswaram Temple" },
+  r2c2: { poiScore: 1, poiName: "Guru Nanak Matriculation" },
+  r2c4: { poiScore: 1, poiName: "Perungudi Tech Park" },
+  r3c3: { poiScore: 2, poiName: "Kamakshi Multi-Specialty Clinic" },
 };
 
-const ROW_NAMES = ["Riverside Rd", "Market St", "Temple Rd", "Ridge Rd"];
-const COL_NAMES = ["Lane 1", "Lane 2", "Lane 3", "Lane 4", "Lane 5", "Lane 6"];
+const ROW_NAMES = ["Pallikaranai Marsh Rd", "Velachery Main Rd", "Taramani Link Rd", "OMR Expressway"];
+const COL_NAMES = ["Inner Ring Rd", "Ram Nagar Main Rd", "Dhandeeswaram Ave", "AGS Colony Rd", "Perungudi Bypass", "Thoraipakkam Radial"];
 
 function main() {
-  console.log("Generating deterministic neighborhood graph for Riverside Heights...");
+  console.log("Generating deterministic South Chennai (Velachery–Pallikaranai) simulation graph...");
 
   // 1. Build Coarse Junctions (4 rows, 6 cols)
   const junctions: Record<string, CoarseJunction> = {};

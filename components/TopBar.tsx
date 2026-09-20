@@ -36,13 +36,14 @@ export function TopBar({
           </span>
         </div>
         <span className="text-slate-700 font-mono">/</span>
-        <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest hidden sm:inline">
-          DISPATCH CONTROL // SECTOR 04
-        </span>
-        <span className="text-slate-700 font-mono hidden sm:inline">/</span>
-        <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 text-[11px] font-mono">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-          <span className="tracking-wider">LIVE 3D SIMULATION</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-[11px] font-mono text-cyan-300 font-semibold tracking-wider hidden md:inline">
+            VELACHERY–PALLIKARANAI, CHENNAI
+          </span>
+          <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span className="tracking-wider">SIMULATION</span>
+          </div>
         </div>
       </div>
 

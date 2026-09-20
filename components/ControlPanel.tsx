@@ -150,8 +150,8 @@ export function ControlPanel({
             <span className="text-cyan-400 font-bold">4 cm / min</span>
           </div>
           <div className="p-2 rounded-md bg-[#070a0f]/80 border border-[#1e293b] flex items-center justify-between text-xs font-mono">
-            <span className="text-slate-200">🌊 Flash Flood Front</span>
-            <span className="text-slate-400 text-[10px]">Palar Riverbed</span>
+            <span className="text-slate-200">🌊 Monsoon Surge Front</span>
+            <span className="text-cyan-400 text-[10px]">Pallikaranai Basin</span>
           </div>
         </div>
 

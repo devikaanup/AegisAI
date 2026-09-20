@@ -378,31 +378,31 @@ export function MapView({
           name: "STEPS — NOT ACCESSIBLE",
           icon: "⛔",
           color: "border-rose-500/80 text-rose-300 bg-rose-950/90",
-          lngLat: [graph.nodes["r1c1"]?.lng ?? 79.1538, (graph.nodes["r1c1"]?.lat ?? 12.9693) + 0.0006],
+          lngLat: [graph.nodes["r1c1"]?.lng ?? 80.2138, (graph.nodes["r1c1"]?.lat ?? 12.9633) + 0.0006],
         },
         {
           name: "KERB 15cm",
           icon: "⚠️",
           color: "border-amber-500/80 text-amber-300 bg-amber-950/90",
-          lngLat: [(graph.nodes["r0c1"]?.lng ?? 79.1538) + 0.0009, graph.nodes["r0c1"]?.lat ?? 12.968],
+          lngLat: [(graph.nodes["r0c1"]?.lng ?? 80.2138) + 0.0009, graph.nodes["r0c1"]?.lat ?? 12.962],
         },
         {
           name: "SLOPE 9%",
           icon: "⚠️",
           color: "border-amber-500/80 text-amber-300 bg-amber-950/90",
-          lngLat: [(graph.nodes["r2c3"]?.lng ?? 79.1575) - 0.0005, graph.nodes["r2c3"]?.lat ?? 12.9707],
+          lngLat: [(graph.nodes["r2c3"]?.lng ?? 80.2175) - 0.0005, graph.nodes["r2c3"]?.lat ?? 12.9647],
         },
         {
           name: "4-LANE CROSSING",
           icon: "⚠️",
           color: "border-amber-500/80 text-amber-300 bg-amber-950/90",
-          lngLat: [(graph.nodes["r1c2"]?.lng ?? 79.1557) + 0.0009, graph.nodes["r1c2"]?.lat ?? 12.9693],
+          lngLat: [(graph.nodes["r1c2"]?.lng ?? 80.2157) + 0.0009, graph.nodes["r1c2"]?.lat ?? 12.9633],
         },
         {
           name: "ROUGH GRAVEL",
           icon: "⚠️",
           color: "border-slate-600 text-slate-300 bg-slate-950/90",
-          lngLat: [(graph.nodes["r2c0"]?.lng ?? 79.152) + 0.0009, graph.nodes["r2c0"]?.lat ?? 12.9707],
+          lngLat: [(graph.nodes["r2c0"]?.lng ?? 80.212) + 0.0009, graph.nodes["r2c0"]?.lat ?? 12.9647],
         },
       ];
 
