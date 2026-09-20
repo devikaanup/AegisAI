@@ -15,7 +15,7 @@ function mulberry32(a: number) {
 
 const prng = mulberry32(42);
 
-// Convert local meters (x east, y north) to [lng, lat]
+// Convert local meters (x east, y north) from anchor to [lng, lat]
 function metersToLngLat(xMeters: number, yMeters: number): [number, number] {
   const origin = turf.point(ANCHOR_LNGLAT);
   const eastPt = xMeters !== 0 ? turf.destination(origin, xMeters / 1000, 90, { units: "kilometers" }) : origin;
@@ -31,28 +31,105 @@ function rectPolygon(xMin: number, yMin: number, xMax: number, yMax: number): an
   return turf.polygon([[p1, p2, p3, p4, p1]]);
 }
 
+function circlePolygon(cx: number, cy: number, radiusMeters: number, numPoints = 8): any {
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= numPoints; i++) {
+    const angle = (i * 2 * Math.PI) / numPoints;
+    const px = cx + radiusMeters * Math.cos(angle);
+    const py = cy + radiusMeters * Math.sin(angle);
+    coords.push(metersToLngLat(px, py));
+  }
+  return turf.polygon([coords]);
+}
+
 function main() {
-  console.log("Generating 3D GIS city features for South Chennai (Velachery–Pallikaranai)...");
+  console.log("Generating expansive 3D GIS city features (buildings, trees, parks, canals) for South Chennai...");
 
   const buildingsFeatures: any[] = [];
   const landuseFeatures: any[] = [];
 
-  // ==========================================
-  // 1. Natural Land Use: Wetland, Canals & Parks
-  // ==========================================
+  // Helper: add 3D tree (elevated canopy + trunk)
+  function addTree(cx: number, cy: number, radius = 3.5, height = 7, color = "#15803d") {
+    // 3D Tree Canopy (elevated fill-extrusion)
+    const canopy = circlePolygon(cx, cy, radius, 8);
+    canopy.properties = {
+      name: "Tree Canopy",
+      type: "tree",
+      height: height,
+      base_height: 1.8,
+      color: color,
+    };
+    buildingsFeatures.push(canopy);
 
-  // A. Pallikaranai Marshland (Expansive low-lying wetland basin south of Row 0: x: -100 to 1100, y: -130 to -35)
-  const marshPolygon = rectPolygon(-100, -130, 1100, -35);
+    // Tree Trunk
+    const trunk = circlePolygon(cx, cy, 0.7, 6);
+    trunk.properties = {
+      name: "Tree Trunk",
+      type: "tree_trunk",
+      height: 2.0,
+      base_height: 0,
+      color: "#382314",
+    };
+    buildingsFeatures.push(trunk);
+  }
+
+  // Helper: add building with Chennai-style rooftop water tank / lift shaft
+  function addBuilding(
+    xMin: number,
+    yMin: number,
+    xMax: number,
+    yMax: number,
+    height: number,
+    name: string,
+    type: string,
+    color: string,
+    highlightColor?: string
+  ) {
+    const b = rectPolygon(xMin, yMin, xMax, yMax);
+    b.properties = {
+      name,
+      type,
+      height,
+      base_height: 0,
+      color,
+      highlightColor,
+    };
+    buildingsFeatures.push(b);
+
+    // Rooftop water tank / lift machine room typical of Chennai architecture
+    if (height >= 12 && (xMax - xMin) > 16 && (yMax - yMin) > 14) {
+      const tankWidth = Math.min(10, (xMax - xMin) * 0.35);
+      const tankDepth = Math.min(8, (yMax - yMin) * 0.35);
+      const tankX = xMin + 4;
+      const tankY = yMin + 4;
+      const tank = rectPolygon(tankX, tankY, tankX + tankWidth, tankY + tankDepth);
+      tank.properties = {
+        name: `${name} Rooftop Structure`,
+        type: "rooftop_tank",
+        height: height + 2.8,
+        base_height: height,
+        color: "#1e293b",
+      };
+      buildingsFeatures.push(tank);
+    }
+  }
+
+  // =========================================================================
+  // 1. Natural Land Use: Pallikaranai Marsh, Canals, Parks & Temple Tank
+  // =========================================================================
+
+  // A. Pallikaranai Marshland Basin (South of Row 0: x: -300 to 1300, y: -220 to -45)
+  const marshPolygon = rectPolygon(-300, -220, 1300, -45);
   marshPolygon.properties = {
     type: "water",
-    name: "Pallikaranai Marsh Basin",
+    name: "Pallikaranai Marshland Basin",
     color: "#0a1c2e",
     strokeColor: "#1d4ed8",
   };
   landuseFeatures.push(marshPolygon);
 
-  // B. Veerangal Odai Drainage Canal (Key monsoon stormwater channel connecting Velachery to Pallikaranai)
-  const canalPolygon = rectPolygon(20, -36, 1050, -20);
+  // B. Veerangal Odai Drainage Canal (Monsoon stormwater canal: x: -250 to 1250, y: -45 to -22)
+  const canalPolygon = rectPolygon(-250, -45, 1250, -22);
   canalPolygon.properties = {
     type: "canal",
     name: "Veerangal Odai Drainage Canal",
@@ -61,8 +138,8 @@ function main() {
   };
   landuseFeatures.push(canalPolygon);
 
-  // C. Pallikaranai Wetland Buffer & Greenbelt (y: -20 to -6, x: 50 to 950)
-  const marshBufferPark = rectPolygon(50, -20, 950, -6);
+  // C. Pallikaranai Wetland Buffer Greenbelt (y: -22 to -6, x: -200 to 1200)
+  const marshBufferPark = rectPolygon(-200, -22, 1200, -6);
   marshBufferPark.properties = {
     type: "park",
     name: "Pallikaranai Wetland Reserve Buffer",
@@ -71,18 +148,48 @@ function main() {
   };
   landuseFeatures.push(marshBufferPark);
 
-  // D. Perungudi High Ground Nature Reserve (around r2c3: x: 540 to 680, y: 260 to 340)
-  const perungudiHillPark = rectPolygon(540, 260, 680, 340);
+  // D. Dhandeeswaram Sacred Temple Kulam (Stepped Water Tank: x: 420 to 485, y: 175 to 220)
+  const templeTank = rectPolygon(420, 175, 485, 220);
+  templeTank.properties = {
+    type: "temple_tank",
+    name: "Dhandeeswaram Temple Tank (Kulam)",
+    color: "#081d33",
+    strokeColor: "#d97706",
+  };
+  landuseFeatures.push(templeTank);
+
+  // E. Ram Nagar Central Neighborhood Park & Playground (x: 230 to 330, y: 22 to 85)
+  const ramNagarPark = rectPolygon(230, 22, 330, 85);
+  ramNagarPark.properties = {
+    type: "park",
+    name: "Ram Nagar Children's Park & Sports Ground",
+    color: "#11261c",
+    strokeColor: "#165335",
+  };
+  landuseFeatures.push(ramNagarPark);
+
+  // F. AGS Colony Community Garden (x: 630 to 720, y: 22 to 75)
+  const agsPark = rectPolygon(630, 22, 720, 75);
+  agsPark.properties = {
+    type: "park",
+    name: "AGS Colony Community Park",
+    color: "#102319",
+    strokeColor: "#165335",
+  };
+  landuseFeatures.push(agsPark);
+
+  // G. Perungudi High Ground Nature Reserve (around r2c3: x: 520 to 710, y: 250 to 355)
+  const perungudiHillPark = rectPolygon(520, 250, 710, 355);
   perungudiHillPark.properties = {
     type: "park",
-    name: "Perungudi High Ground Reserve",
+    name: "Perungudi High Ground Nature Reserve",
     color: "#13261d",
     strokeColor: "#1b382b",
   };
   landuseFeatures.push(perungudiHillPark);
 
-  // E. Velachery Junction Civic Plaza & Transit Concourse (x: 150 to 260, y: 170 to 220)
-  const velacheryPlaza = rectPolygon(150, 170, 260, 220);
+  // H. Velachery Concourse Plaza & Bus Terminus Grounds (x: 140 to 260, y: 165 to 235)
+  const velacheryPlaza = rectPolygon(140, 165, 260, 235);
   velacheryPlaza.properties = {
     type: "plaza",
     name: "Velachery Concourse Plaza",
@@ -91,189 +198,324 @@ function main() {
   };
   landuseFeatures.push(velacheryPlaza);
 
-  // ==========================================
-  // 2. Urban Blocks (Parcels) & 3D Buildings
-  // ==========================================
-  // Coarse grid has 5 column blocks (col 0 to 4, width 200m) and 3 row blocks (row 0 to 2, height 150m)
-  // Inside each grid block, inset roads by 16m for asphalt roadbed + sidewalks.
+  // I. Taramani Sports Stadium Field & Athletic Grounds (x: 1020 to 1180, y: 310 to 425)
+  const taramaniStadiumGrounds = rectPolygon(1020, 310, 1180, 425);
+  taramaniStadiumGrounds.properties = {
+    type: "sports_ground",
+    name: "Taramani Sports Complex Athletic Track",
+    color: "#122a1e",
+    strokeColor: "#10b981",
+  };
+  landuseFeatures.push(taramaniStadiumGrounds);
+
+  // J. OMR Boulevard Center Landscaped Medians (y: 446 to 454)
+  for (let c = 0; c < 5; c++) {
+    const medXMin = c * 200 + 20;
+    const medXMax = (c + 1) * 200 - 20;
+    const median = rectPolygon(medXMin, 447, medXMax, 453);
+    median.properties = {
+      type: "park",
+      name: "OMR Boulevard Median Green",
+      color: "#143322",
+      strokeColor: "#166534",
+    };
+    landuseFeatures.push(median);
+  }
+
+  // =========================================================================
+  // 2. Dense Urban Blocks & Buildings (Core 15 Grid Blocks)
+  // =========================================================================
+  // Grid: 3 rows (r=0..2), 5 cols (c=0..4).
+  // Inside each 200m x 150m cell, inset roads by 16m -> usable parcel: 168m x 118m.
 
   for (let r = 0; r < 3; r++) {
     for (let c = 0; c < 5; c++) {
-      const blockXMin = c * 200 + 18;
-      const blockXMax = (c + 1) * 200 - 18;
-      const blockYMin = r * 150 + 16;
-      const blockYMax = (r + 1) * 150 - 16;
+      const bXMin = c * 200 + 16;
+      const bXMax = (c + 1) * 200 - 16;
+      const bYMin = r * 150 + 16;
+      const bYMax = (r + 1) * 150 - 16;
 
-      // Urban parcel land use beneath buildings
-      const parcel = rectPolygon(blockXMin, blockYMin, blockXMax, blockYMax);
+      // Urban parcel foundation plinth
+      const parcel = rectPolygon(bXMin, bYMin, bXMax, bYMax);
       parcel.properties = {
         type: "urban_parcel",
-        name: `Block ${r + 1}-${c + 1}`,
-        color: "#0d131d",
-        strokeColor: "#172233",
+        name: `Sector Block ${r + 1}-${c + 1}`,
+        color: "#0c121d",
+        strokeColor: "#162233",
       };
       landuseFeatures.push(parcel);
 
-      // Check if this block contains a landmark or shelter
-      // Landmark coordinates check:
-      const isGovtSchool = r === 1 && c === 3; // near r1c3 Govt High School
-      const isCommunityHall = r === 1 && c === 0; // near r2c1 Community Hall
-      const isSportsComplex = r === 2 && c === 4; // near r3c4 District Sports Complex
-      const isClinic = r === 2 && c === 3; // near r3c3 Kamakshi Multi-Specialty Clinic
-      const isTemple = r === 1 && c === 2; // near r1c2 Dhandeeswaram Temple
-      const isPharmacy = r === 0 && c === 0; // near r0c1 Velachery Health Centre & Residential
-      const isBank = r === 2 && c === 2; // near r2c4 Perungudi Tech Park
+      // Check landmarks in this cell
+      const isGovtSchool = r === 1 && c === 3;
+      const isCommunityHall = r === 1 && c === 0;
+      const isSportsComplex = r === 2 && c === 4;
+      const isClinic = r === 2 && c === 3;
+      const isTemple = r === 1 && c === 2;
+      const isPharmacy = r === 0 && c === 0;
+      const isBank = r === 2 && c === 2;
 
       if (isGovtSchool) {
-        // Govt High School Campus: Main wing (20m), East wing (14m), schoolyard
-        const mainBuilding = rectPolygon(blockXMin + 12, blockYMin + 12, blockXMin + 85, blockYMin + 65);
-        mainBuilding.properties = {
-          name: "Govt School (Shelter S1)",
-          type: "shelter",
-          height: 18,
-          base_height: 0,
-          color: "#1e3a45",
-          highlightColor: "#06b6d4",
-        };
-        buildingsFeatures.push(mainBuilding);
+        // --- SHELTER S1: Govt High School Campus ---
+        addBuilding(bXMin + 10, bYMin + 10, bXMin + 85, bYMin + 65, 18, "Govt School (Shelter S1)", "shelter", "#1e3a45", "#06b6d4");
+        addBuilding(bXMin + 70, bYMin + 68, bXMin + 140, bYMin + 106, 14, "Velachery School Assembly Hall", "shelter_wing", "#1a323c");
+        addBuilding(bXMin + 92, bYMin + 12, bXMin + 155, bYMin + 58, 16, "Velachery School Science Block", "educational", "#1d3542");
+        addBuilding(bXMin + 12, bYMin + 72, bXMin + 62, bYMin + 108, 12, "Govt School Library Annex", "educational", "#172b36");
 
-        const eastWing = rectPolygon(blockXMin + 70, blockYMin + 65, blockXMin + 140, blockYMin + 105);
-        eastWing.properties = {
-          name: "Velachery School Assembly Hall",
-          type: "shelter_wing",
-          height: 14,
-          base_height: 0,
-          color: "#1a323c",
-        };
-        buildingsFeatures.push(eastWing);
-
+        // Schoolyard trees
+        addTree(bXMin + 78, bYMin + 60, 4.0, 7.5, "#15803d");
+        addTree(bXMin + 148, bYMin + 80, 3.5, 7.0, "#166534");
+        addTree(bXMin + 148, bYMin + 30, 3.8, 8.0, "#22c55e");
       } else if (isCommunityHall) {
-        // Community Hall: Civic structure with prominent entrance pavilion
-        const hall = rectPolygon(blockXMin + 25, blockYMin + 20, blockXMin + 135, blockYMin + 90);
-        hall.properties = {
-          name: "Community Hall (Shelter S2)",
-          type: "shelter",
-          height: 17,
-          base_height: 0,
-          color: "#1a353d",
-          highlightColor: "#06b6d4",
-        };
-        buildingsFeatures.push(hall);
+        // --- SHELTER S2: Community Hall ---
+        addBuilding(bXMin + 20, bYMin + 18, bXMin + 130, bYMin + 88, 17, "Community Hall (Shelter S2)", "shelter", "#1a353d", "#06b6d4");
+        addBuilding(bXMin + 135, bYMin + 20, bXMin + 160, bYMin + 75, 13, "Perungudi Relief Supply Depot", "civic", "#162f36");
+        addBuilding(bXMin + 22, bYMin + 92, bXMin + 90, bYMin + 112, 11, "Community Dispensary Annex", "medical", "#182f37");
+        addBuilding(bXMin + 96, bYMin + 92, bXMin + 158, bYMin + 112, 12, "Civic Ward Office", "civic", "#182d36");
 
+        addTree(bXMin + 10, bYMin + 50, 4.0, 7.5, "#15803d");
+        addTree(bXMin + 145, bYMin + 95, 3.5, 7.0, "#166534");
       } else if (isSportsComplex) {
-        // District Sports Complex: Grand Stadium arena & indoor sports hall
-        const stadium = rectPolygon(blockXMin + 15, blockYMin + 15, blockXMin + 145, blockYMin + 95);
-        stadium.properties = {
-          name: "District Sports Complex (Shelter S3)",
-          type: "shelter",
-          height: 28,
-          base_height: 0,
-          color: "#1c3d4a",
-          highlightColor: "#06b6d4",
-        };
-        buildingsFeatures.push(stadium);
+        // --- SHELTER S3: District Sports Complex ---
+        addBuilding(bXMin + 12, bYMin + 14, bXMin + 148, bYMin + 92, 28, "District Sports Complex (Shelter S3)", "shelter", "#1c3d4a", "#06b6d4");
+        addBuilding(bXMin + 18, bYMin + 96, bXMin + 95, bYMin + 114, 15, "Taramani Indoor Badminton Pavilion", "sports", "#18323c");
+        addBuilding(bXMin + 102, bYMin + 96, bXMin + 158, bYMin + 114, 16, "Sports Academy Training Centre", "sports", "#1a3440");
 
+        addTree(bXMin + 6, bYMin + 50, 4.2, 8.0, "#15803d");
+        addTree(bXMin + 155, bYMin + 50, 4.0, 8.0, "#22c55e");
       } else if (isClinic) {
-        // Kamakshi Multi-Specialty Clinic: Medical Cross footprint
-        const clinicMain = rectPolygon(blockXMin + 30, blockYMin + 25, blockXMin + 120, blockYMin + 85);
-        clinicMain.properties = {
-          name: "Kamakshi Multi-Specialty Clinic",
-          type: "medical",
-          height: 22,
-          base_height: 0,
-          color: "#273b3e",
-          highlightColor: "#10b981",
-        };
-        buildingsFeatures.push(clinicMain);
+        // --- MEDICAL: Kamakshi Multi-Specialty Clinic ---
+        addBuilding(bXMin + 25, bYMin + 22, bXMin + 115, bYMin + 82, 22, "Kamakshi Multi-Specialty Clinic", "medical", "#273b3e", "#10b981");
+        addBuilding(bXMin + 120, bYMin + 22, bXMin + 160, bYMin + 65, 17, "Kamakshi Diagnostic Imaging Center", "medical", "#213437");
+        addBuilding(bXMin + 25, bYMin + 88, bXMin + 95, bYMin + 112, 14, "Emergency Ambulance Depot", "medical", "#1e3033");
+        addBuilding(bXMin + 102, bYMin + 72, bXMin + 158, bYMin + 112, 18, "Specialty Medical Suites", "commercial", "#203238");
 
+        addTree(bXMin + 10, bYMin + 30, 3.5, 7.0, "#10b981");
+        addTree(bXMin + 140, bYMin + 95, 3.5, 7.0, "#15803d");
       } else if (isTemple) {
-        // Ancient Dhandeeswaram Temple: Stepped Dravidian gopuram tower
-        const templeBase = rectPolygon(blockXMin + 35, blockYMin + 25, blockXMin + 115, blockYMin + 90);
-        templeBase.properties = {
-          name: "Dhandeeswaram Temple Complex",
-          type: "temple",
-          height: 25,
-          base_height: 0,
-          color: "#35383a",
-          highlightColor: "#f59e0b",
-        };
-        buildingsFeatures.push(templeBase);
+        // --- TEMPLE: Dhandeeswaram Ancient Shiva Temple ---
+        addBuilding(bXMin + 30, bYMin + 22, bXMin + 110, bYMin + 85, 25, "Dhandeeswaram Temple Complex", "temple", "#35383a", "#f59e0b");
+        addBuilding(bXMin + 115, bYMin + 32, bXMin + 158, bYMin + 78, 14, "Temple Mandapam & Kitchen", "temple", "#2d3032");
+        addBuilding(bXMin + 32, bYMin + 90, bXMin + 90, bYMin + 112, 10, "Temple Vahana Chariot Pavilion", "temple", "#26292b");
 
+        // Temple Sacred Grove trees
+        addTree(bXMin + 12, bYMin + 30, 4.5, 8.5, "#15803d");
+        addTree(bXMin + 12, bYMin + 80, 4.0, 8.0, "#166534");
+        addTree(bXMin + 135, bYMin + 95, 4.2, 8.0, "#14532d");
       } else if (isPharmacy) {
-        const pharmacy = rectPolygon(blockXMin + 15, blockYMin + 15, blockXMin + 70, blockYMin + 60);
-        pharmacy.properties = {
-          name: "Velachery Health Centre",
-          type: "commercial",
-          height: 12,
-          base_height: 0,
-          color: "#1b2938",
-        };
-        buildingsFeatures.push(pharmacy);
+        // --- PHARMACY & RESIDENTIAL: Velachery Health Centre ---
+        addBuilding(bXMin + 10, bYMin + 12, bXMin + 65, bYMin + 55, 12, "Velachery Health Centre", "commercial", "#1b2938");
+        addBuilding(bXMin + 72, bYMin + 12, bXMin + 155, bYMin + 55, 20, "Ram Nagar Enclave Apartments - Wing A", "residential", "#182230");
+        addBuilding(bXMin + 12, bYMin + 62, bXMin + 85, bYMin + 112, 18, "Ram Nagar Enclave Apartments - Wing B", "residential", "#192433");
+        addBuilding(bXMin + 92, bYMin + 62, bXMin + 158, bYMin + 112, 22, "Ram Nagar Towers", "residential", "#1c2838");
 
-        const residentialA = rectPolygon(blockXMin + 85, blockYMin + 20, blockXMin + 145, blockYMin + 95);
-        residentialA.properties = {
-          name: "Ram Nagar Enclave Apartments",
-          type: "residential",
-          height: 22,
-          base_height: 0,
-          color: "#182230",
-        };
-        buildingsFeatures.push(residentialA);
-
+        addTree(bXMin + 78, bYMin + 58, 3.5, 6.5, "#15803d");
       } else if (isBank) {
-        const bank = rectPolygon(blockXMin + 30, blockYMin + 20, blockXMin + 110, blockYMin + 85);
-        bank.properties = {
-          name: "Perungudi Tech Park Tower",
-          type: "commercial",
-          height: 28,
-          base_height: 0,
-          color: "#223145",
-          highlightColor: "#38bdf8",
-        };
-        buildingsFeatures.push(bank);
+        // --- COMMERCIAL: Perungudi Tech Park ---
+        addBuilding(bXMin + 20, bYMin + 18, bXMin + 105, bYMin + 82, 30, "Perungudi Tech Park Tower", "commercial", "#223145", "#38bdf8");
+        addBuilding(bXMin + 112, bYMin + 18, bXMin + 160, bYMin + 82, 24, "Perungudi Tech Tower B", "commercial", "#1e2c3e");
+        addBuilding(bXMin + 20, bYMin + 88, bXMin + 90, bYMin + 112, 16, "Tech Park Conference Pavilion", "commercial", "#1a2636");
+        addBuilding(bXMin + 96, bYMin + 88, bXMin + 158, bYMin + 112, 14, "Tech Park Multi-Level Parking", "commercial", "#182332");
 
+        addTree(bXMin + 10, bYMin + 50, 3.8, 7.5, "#15803d");
+        addTree(bXMin + 104, bYMin + 50, 3.5, 7.0, "#22c55e");
       } else {
-        // Standard Urban / Residential / Commercial block (2 to 3 subdivided buildings)
-        const midX = (blockXMin + blockXMax) / 2;
-        const midY = (blockYMin + blockYMax) / 2;
+        // --- STANDARD DENSE URBAN / RESIDENTIAL BLOCK (8 to 12 Buildings) ---
+        // Subdivide into 2 rows (North & South) with central access lane and courtyard trees
+        const midY = (bYMin + bYMax) / 2;
+        const quarterWidth = (bXMax - bXMin) / 4;
 
-        const h1 = 12 + Math.floor(prng() * 18);
-        const b1 = rectPolygon(blockXMin + 10, blockYMin + 10, midX - 8, midY - 6);
-        b1.properties = {
-          name: `Urban Complex ${r}${c}-A`,
-          type: "residential",
-          height: h1,
-          base_height: 0,
-          color: "#16202c",
-        };
-        buildingsFeatures.push(b1);
+        // South Row: 4 residential/commercial buildings
+        for (let i = 0; i < 4; i++) {
+          const x1 = bXMin + i * quarterWidth + 4;
+          const x2 = x1 + quarterWidth - 8;
+          const y1 = bYMin + 6;
+          const y2 = midY - 6;
 
-        const h2 = 14 + Math.floor(prng() * 16);
-        const b2 = rectPolygon(midX + 8, blockYMin + 10, blockXMax - 10, midY - 6);
-        b2.properties = {
-          name: `Urban Complex ${r}${c}-B`,
-          type: "commercial",
-          height: h2,
-          base_height: 0,
-          color: "#1a2533",
-        };
-        buildingsFeatures.push(b2);
+          const h = 11 + Math.floor(prng() * 15);
+          const isComm = (r === 1 && i % 2 === 0);
+          const type = isComm ? "commercial" : "residential";
+          const color = isComm ? "#1c2837" : "#172230";
+          const bName = `${type === "commercial" ? "Velachery Arcade" : "Residential Flats"} ${r}${c}-${i + 1}`;
 
-        const h3 = 10 + Math.floor(prng() * 20);
-        const b3 = rectPolygon(blockXMin + 18, midY + 8, blockXMax - 18, blockYMax - 10);
-        b3.properties = {
-          name: `Urban Complex ${r}${c}-C`,
-          type: "residential",
-          height: h3,
-          base_height: 0,
-          color: "#182331",
-        };
-        buildingsFeatures.push(b3);
+          addBuilding(x1, y1, x2, y2, h, bName, type, color);
+
+          // Courtyard tree between buildings
+          if (i === 1 || i === 2) {
+            addTree((x1 + x2) / 2, midY, 3.0, 6.5, "#166534");
+          }
+        }
+
+        // North Row: 4 residential/commercial buildings
+        for (let i = 0; i < 4; i++) {
+          const x1 = bXMin + i * quarterWidth + 4;
+          const x2 = x1 + quarterWidth - 8;
+          const y1 = midY + 6;
+          const y2 = bYMax - 6;
+
+          const h = 12 + Math.floor(prng() * 16);
+          const isComm = (r === 2 && i % 2 === 1);
+          const type = isComm ? "commercial" : "residential";
+          const color = isComm ? "#1e2a3b" : "#192433";
+          const bName = `${type === "commercial" ? "Corporate Plaza" : "Apartments"} ${r}${c}-${i + 5}`;
+
+          addBuilding(x1, y1, x2, y2, h, bName, type, color);
+        }
       }
     }
   }
 
-  // Write out GeoJSON files
+  // =========================================================================
+  // 3. Perimeter Urban Fabric (Making the City Visually Huge & Continuous)
+  // =========================================================================
+
+  // A. North Perimeter: OMR IT Expressway Corridor (y: 470 to 630m, x: -80 to 1180m)
+  console.log("Generating OMR IT Corridor high-rise tech towers...");
+  for (let c = 0; c < 6; c++) {
+    const pXMin = c * 200 - 60;
+    const pXMax = pXMin + 160;
+
+    // Tech campus parcel
+    const campus = rectPolygon(pXMin, 470, pXMax, 620);
+    campus.properties = {
+      type: "urban_parcel",
+      name: `OMR Tech Campus ${c + 1}`,
+      color: "#0b111a",
+      strokeColor: "#172233",
+    };
+    landuseFeatures.push(campus);
+
+    // High-Rise IT Glass Towers (heights 32m to 50m)
+    const towerH1 = 34 + Math.floor(prng() * 18);
+    addBuilding(pXMin + 12, 485, pXMin + 75, 550, towerH1, `OMR IT Glass Tower ${c + 1}-A`, "commercial", "#223348", "#38bdf8");
+
+    const towerH2 = 28 + Math.floor(prng() * 16);
+    addBuilding(pXMin + 85, 490, pXMax - 12, 560, towerH2, `OMR Tech Tower ${c + 1}-B`, "commercial", "#1f2e42");
+
+    const podiumH = 14 + Math.floor(prng() * 6);
+    addBuilding(pXMin + 20, 568, pXMax - 20, 612, podiumH, `Tech Campus Multi-Level Deck ${c + 1}`, "commercial", "#192535");
+
+    // Campus boulevard trees
+    addTree(pXMin + 80, 480, 4.0, 8.0, "#15803d");
+    addTree(pXMin + 80, 565, 3.8, 7.5, "#22c55e");
+    addTree(pXMin + 5, 550, 3.5, 7.0, "#166534");
+  }
+
+  // B. West Perimeter: Velachery West & Adambakkam Residential Sector (x: -240 to -24m)
+  console.log("Generating Velachery West & Adambakkam residential settlements...");
+  for (let r = 0; r < 3; r++) {
+    const pYMin = r * 150 + 16;
+    const pYMax = (r + 1) * 150 - 16;
+
+    const westParcel = rectPolygon(-230, pYMin, -24, pYMax);
+    westParcel.properties = {
+      type: "urban_parcel",
+      name: `Adambakkam Residential Block ${r + 1}`,
+      color: "#0a1018",
+      strokeColor: "#152030",
+    };
+    landuseFeatures.push(westParcel);
+
+    // 4 to 6 residential apartment blocks per sector
+    for (let i = 0; i < 4; i++) {
+      const y1 = pYMin + i * 28 + 4;
+      const y2 = y1 + 22;
+      const h1 = 12 + Math.floor(prng() * 12);
+      addBuilding(-220, y1, -130, y2, h1, `Adambakkam Colony ${r + 1}-${i * 2 + 1}`, "residential", "#17212d");
+
+      const h2 = 14 + Math.floor(prng() * 10);
+      addBuilding(-120, y1, -34, y2, h2, `Adambakkam Colony ${r + 1}-${i * 2 + 2}`, "residential", "#192432");
+
+      addTree(-125, (y1 + y2) / 2, 3.2, 6.8, "#166534");
+    }
+  }
+
+  // C. East Perimeter: Perungudi / Thoraipakkam IT & Residential (x: 1024 to 1240m)
+  console.log("Generating Perungudi & Thoraipakkam eastern tech corridors...");
+  for (let r = 0; r < 3; r++) {
+    const pYMin = r * 150 + 16;
+    const pYMax = (r + 1) * 150 - 16;
+
+    const eastParcel = rectPolygon(1024, pYMin, 1240, pYMax);
+    eastParcel.properties = {
+      type: "urban_parcel",
+      name: `Perungudi East Tech Block ${r + 1}`,
+      color: "#0a1018",
+      strokeColor: "#152030",
+    };
+    landuseFeatures.push(eastParcel);
+
+    // Tech parks and residential towers
+    const hA = 22 + Math.floor(prng() * 16);
+    addBuilding(1034, pYMin + 10, 1126, pYMax - 10, hA, `Thoraipakkam Tech Park ${r + 1}-A`, "commercial", "#202f41", "#38bdf8");
+
+    const hB = 26 + Math.floor(prng() * 14);
+    addBuilding(1138, pYMin + 10, 1230, pYMax - 10, hB, `Thoraipakkam High-Rise ${r + 1}-B`, "residential", "#1c293a");
+
+    addTree(1132, (pYMin + pYMax) / 2, 3.8, 7.5, "#15803d");
+  }
+
+  // =========================================================================
+  // 4. City-Wide 3D Avenue & Street Trees (Over 250+ Volumetric Trees)
+  // =========================================================================
+  console.log("Planting city-wide 3D avenue trees, street lines and park groves...");
+
+  // A. Velachery Main Road Boulevard (y = 150m): North & South Curbs
+  for (let x = -180; x <= 1180; x += 28) {
+    // South sidewalk tree
+    addTree(x, 137, 3.6, 7.2, (x % 56 === 0) ? "#15803d" : "#166534");
+    // North sidewalk tree
+    addTree(x + 14, 163, 3.6, 7.2, (x % 56 === 0) ? "#1e7e34" : "#22c55e");
+  }
+
+  // B. Taramani Link Road Avenue (y = 300m): Curbs
+  for (let x = -160; x <= 1160; x += 35) {
+    addTree(x, 287, 3.5, 7.0, "#15803d");
+    addTree(x + 18, 313, 3.5, 7.0, "#166534");
+  }
+
+  // C. OMR IT Expressway Corridor (y = 450m): Center Median & Curbs
+  for (let x = -150; x <= 1150; x += 32) {
+    // Median trees
+    addTree(x, 450, 3.2, 6.5, "#22c55e");
+    // North curb trees
+    addTree(x + 16, 464, 3.8, 7.8, "#15803d");
+  }
+
+  // D. North-South Major Arterials (Sidewalk Trees)
+  // Col 0 (x = 0), Col 1 (x = 200), Col 2 (x = 400), Col 3 (x = 600), Col 4 (x = 800), Col 5 (x = 1000)
+  const northSouthAvenues = [0, 200, 400, 600, 800, 1000];
+  for (const avenueX of northSouthAvenues) {
+    for (let y = 15; y <= 435; y += 32) {
+      if (Math.abs(y - 150) > 20 && Math.abs(y - 300) > 20) {
+        addTree(avenueX - 12, y, 3.2, 6.8, "#166534");
+        addTree(avenueX + 12, y + 16, 3.2, 6.8, "#15803d");
+      }
+    }
+  }
+
+  // E. Ram Nagar Park Grove
+  for (let gx = 245; gx <= 315; gx += 22) {
+    for (let gy = 32; gy <= 75; gy += 20) {
+      addTree(gx, gy, 4.2, 8.2, "#15803d");
+    }
+  }
+
+  // F. Perungudi High Ground Nature Forest (Dense Canopy Cluster)
+  for (let px = 540; px <= 690; px += 26) {
+    for (let py = 265; py <= 340; py += 24) {
+      addTree(px, py, 4.6, 9.0, (px % 52 === 0) ? "#14532d" : "#15803d");
+    }
+  }
+
+  // G. Pallikaranai Wetland Buffer Riparian Trees (along Canal edge)
+  for (let wx = -180; wx <= 1180; wx += 35) {
+    addTree(wx, -14, 4.0, 7.5, "#15803d");
+    addTree(wx + 18, -10, 3.8, 7.0, "#166534");
+  }
+
+  // =========================================================================
+  // 5. Output Data Files
+  // =========================================================================
   const dataDir = path.join(__dirname, "../data");
 
   const buildingsGeoJSON = {
@@ -289,8 +531,8 @@ function main() {
   fs.writeFileSync(path.join(dataDir, "buildings.json"), JSON.stringify(buildingsGeoJSON, null, 2));
   fs.writeFileSync(path.join(dataDir, "landuse.json"), JSON.stringify(landuseGeoJSON, null, 2));
 
-  console.log(`Generated ${buildingsFeatures.length} 3D buildings in data/buildings.json`);
-  console.log(`Generated ${landuseFeatures.length} land-use features in data/landuse.json`);
+  console.log(`Successfully generated ${buildingsFeatures.length} 3D city features (buildings & 3D trees) in data/buildings.json`);
+  console.log(`Successfully generated ${landuseFeatures.length} land-use features (wetlands, canals, parks, temple tank) in data/landuse.json`);
 }
 
 main();

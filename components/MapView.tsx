@@ -65,12 +65,21 @@ export function MapView({
           },
         ],
       },
-      center: [startNode.lng + 0.002, startNode.lat + 0.001],
-      zoom: 15.6,
+      center: [startNode.lng + 0.0015, startNode.lat + 0.0005],
+      zoom: 16.4,
       pitch: 52,
       bearing: -16,
       attributionControl: false,
     });
+
+    // Add MapLibre Navigation Controls (Zoom In, Zoom Out, Pitch, Compass)
+    map.addControl(
+      new maplibregl.NavigationControl({
+        showCompass: true,
+        visualizePitch: true,
+      }),
+      "top-right"
+    );
 
     map.on("load", () => {
       if (!isMounted) return;
@@ -117,12 +126,12 @@ export function MapView({
         },
       });
 
-      // 2. Parks and Green Spaces
+      // 2. Parks, Plazas, Gardens & Sports Grounds
       map.addLayer({
         id: "landuse-parks-fill",
         type: "fill",
         source: "landuse",
-        filter: ["in", ["get", "type"], ["literal", ["park", "plaza"]]],
+        filter: ["in", ["get", "type"], ["literal", ["park", "plaza", "sports_ground"]]],
         paint: {
           "fill-color": ["get", "color"],
           "fill-opacity": 0.9,
@@ -133,7 +142,7 @@ export function MapView({
         id: "landuse-parks-line",
         type: "line",
         source: "landuse",
-        filter: ["in", ["get", "type"], ["literal", ["park", "plaza"]]],
+        filter: ["in", ["get", "type"], ["literal", ["park", "plaza", "sports_ground"]]],
         paint: {
           "line-color": ["get", "strokeColor"],
           "line-width": 1.5,
@@ -141,14 +150,14 @@ export function MapView({
         },
       });
 
-      // 3. Palar Riverbed (Water body)
+      // 3. Water Bodies, Marsh Basin, Canals & Temple Tank
       map.addLayer({
         id: "landuse-water-fill",
         type: "fill",
         source: "landuse",
-        filter: ["==", ["get", "type"], "water"],
+        filter: ["in", ["get", "type"], ["literal", ["water", "canal", "temple_tank"]]],
         paint: {
-          "fill-color": "#0a1c30",
+          "fill-color": ["get", "color"],
           "fill-opacity": 0.95,
         },
       });
@@ -157,11 +166,11 @@ export function MapView({
         id: "landuse-water-line",
         type: "line",
         source: "landuse",
-        filter: ["==", ["get", "type"], "water"],
+        filter: ["in", ["get", "type"], ["literal", ["water", "canal", "temple_tank"]]],
         paint: {
-          "line-color": "#1e40af",
+          "line-color": ["get", "strokeColor"],
           "line-width": 2,
-          "line-opacity": 0.8,
+          "line-opacity": 0.85,
         },
       });
 
@@ -479,6 +488,10 @@ export function MapView({
         center: [startNode.lng + 0.001, startNode.lat],
         speed: 1.2,
         curve: 1.1,
+        zoom: 16.5,
+        pitch: is3DMode ? 52 : 0,
+        bearing: is3DMode ? -16 : 0,
+        essential: true,
       });
     }
   }, [evacueeStartJunction, isMapLoaded]);
@@ -679,10 +692,10 @@ export function MapView({
           [maxLng + 0.0012, maxLat + 0.001],
         ],
         {
-          padding: { top: 65, bottom: 85, left: 65, right: 65 },
+          padding: { top: 55, bottom: 65, left: 55, right: 55 },
           duration: 900,
-          pitch: is3DMode ? 48 : 0,
-          maxZoom: 16.2,
+          pitch: is3DMode ? 52 : 0,
+          maxZoom: 17.0,
         }
       );
     }
@@ -704,7 +717,24 @@ export function MapView({
       map.easeTo({ pitch: 0, bearing: 0, duration: 800 });
       setIs3DMode(false);
     } else {
-      map.easeTo({ pitch: 52, bearing: -16, duration: 800 });
+      const graph = getGraph();
+      const allLngs = Object.values(graph.nodes).map((n) => n.lng);
+      const allLats = Object.values(graph.nodes).map((n) => n.lat);
+      const minLng = Math.min(...allLngs);
+      const maxLng = Math.max(...allLngs);
+      const minLat = Math.min(...allLats);
+      const maxLat = Math.max(...allLats);
+      const bounds: [[number, number], [number, number]] = [
+        [minLng, minLat],
+        [maxLng, maxLat],
+      ];
+      map.fitBounds(bounds, {
+        padding: { top: 75, bottom: 75, left: 75, right: 75 },
+        maxZoom: 17.2,
+        duration: 600,
+        pitch: 52,
+        bearing: -16,
+      });
       setIs3DMode(true);
     }
   };
@@ -712,21 +742,21 @@ export function MapView({
   const handleResetView = () => {
     const map = mapRef.current;
     if (!map) return;
-    const graph = getGraph();
-    const allLngs = Object.values(graph.nodes).map((n) => n.lng);
-    const allLats = Object.values(graph.nodes).map((n) => n.lat);
-    const minLng = Math.min(...allLngs);
-    const maxLng = Math.max(...allLngs);
-    const minLat = Math.min(...allLats);
-    const maxLat = Math.max(...allLats);
+    map.flyTo({
+      center: [80.2165, 12.9642],
+      zoom: 16.3,
+      pitch: is3DMode ? 52 : 0,
+      bearing: is3DMode ? -16 : 0,
+      duration: 700,
+    });
+  };
 
-    map.fitBounds(
-      [
-        [minLng - 0.001, minLat - 0.001],
-        [maxLng + 0.001, maxLat + 0.001],
-      ],
-      { padding: 45, duration: 600, pitch: is3DMode ? 50 : 0 }
-    );
+  const handleZoomIn = () => {
+    mapRef.current?.zoomIn({ duration: 300 });
+  };
+
+  const handleZoomOut = () => {
+    mapRef.current?.zoomOut({ duration: 300 });
   };
 
   return (
@@ -757,15 +787,31 @@ export function MapView({
           <button
             onClick={handleResetView}
             className="px-2.5 py-1 rounded text-[11px] font-mono text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all border-l border-slate-800"
-            title="Reset map camera to whole neighborhood bounds"
+            title="Reset map camera to whole neighborhood view"
           >
             RESET
           </button>
+          <div className="flex items-center border-l border-slate-800 pl-0.5">
+            <button
+              onClick={handleZoomIn}
+              className="px-2 py-1 rounded text-[12px] font-mono font-bold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all"
+              title="Zoom In (+)"
+            >
+              +
+            </button>
+            <button
+              onClick={handleZoomOut}
+              className="px-2 py-1 rounded text-[12px] font-mono font-bold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all"
+              title="Zoom Out (−)"
+            >
+              −
+            </button>
+          </div>
         </div>
 
         <div className="hidden md:flex items-center px-2 py-1 rounded-md bg-[#0c121d]/80 border border-slate-800/80 text-[10px] font-mono text-slate-400 backdrop-blur-md">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" />
-          <span>3D GIS ENGINE // PITCH 52°</span>
+          <span>3D GIS ENGINE // ZOOM 16.4</span>
         </div>
       </div>
     </div>
