@@ -236,7 +236,7 @@ export default function CursorGrid({
         const s = p.cellSize - 1;
 
         ctx.beginPath();
-        if (p.cellRadius > 0) {
+        if (p.cellRadius > 0 && typeof ctx.roundRect === "function") {
           ctx.roundRect(x, y, s, s, p.cellRadius);
         } else {
           ctx.rect(x, y, s, s);

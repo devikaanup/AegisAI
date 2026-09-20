@@ -143,11 +143,11 @@ export function RaceMode({
         lastWarningUpdateRef.current = timestamp;
         if (callbacksRef.current.committedRoute.edgeAnnotations) {
           const remainingEdges = callbacksRef.current.committedRoute.edgeAnnotations.filter(
-            (ann) => ann.floodArrivalMin > currentSimMin
+            (ann) => ann.floodArrivalMin != null && ann.floodArrivalMin > currentSimMin
           );
           if (remainingEdges.length > 0) {
             const nearest = remainingEdges[0];
-            const timeUntilFlood = (nearest.floodArrivalMin - currentSimMin).toFixed(1);
+            const timeUntilFlood = (nearest.floodArrivalMin! - currentSimMin).toFixed(1);
             setNextFloodWarning(
               `Flood front reaches ${nearest.name} in ~${timeUntilFlood} min`
             );
