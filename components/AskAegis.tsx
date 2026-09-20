@@ -10,7 +10,6 @@ interface AskAegisProps {
   currentInputs: SimulationInputs;
   previousInputs: SimulationInputs | null;
   currentContext: ExplanationContext;
-  externalQuery?: string | null;
   aiVoiceEnabled?: boolean;
 }
 
@@ -35,7 +34,6 @@ export function AskAegis({
   currentInputs,
   previousInputs,
   currentContext,
-  externalQuery,
   aiVoiceEnabled = true,
 }: AskAegisProps) {
   const [question, setQuestion] = useState("");
@@ -43,6 +41,12 @@ export function AskAegis({
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
   const prevInputsRef = useRef<SimulationInputs | null>(previousInputs);
+
+  // Guarantee clean, empty conversation on initial load or refresh
+  useEffect(() => {
+    setQuestion("");
+    setAnswer(null);
+  }, []);
 
   useEffect(() => {
     prevInputsRef.current = previousInputs;
@@ -112,16 +116,6 @@ export function AskAegis({
     [currentContext, currentInputs]
   );
 
-  // Trigger from AutoDemo external question
-  const lastProcessedExternalRef = useRef<string | null>(null);
-  useEffect(() => {
-    if (externalQuery && externalQuery !== lastProcessedExternalRef.current) {
-      lastProcessedExternalRef.current = externalQuery;
-      setIsExpanded(true);
-      handleAsk(externalQuery);
-    }
-  }, [externalQuery, handleAsk]);
-
   const isStateOutdated =
     answer &&
     (answer.inputsSnapshot.simulationMinute !== currentInputs.simulationMinute ||
@@ -144,12 +138,26 @@ export function AskAegis({
             Deterministic engine explains route reasoning.
           </p>
         </div>
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="text-slate-400 hover:text-white font-mono text-xs p-1"
-        >
-          {isExpanded ? "▲" : "▼"}
-        </button>
+        <div className="flex items-center space-x-1.5">
+          {answer && (
+            <button
+              onClick={() => {
+                setAnswer(null);
+                setQuestion("");
+              }}
+              className="text-[9px] font-mono text-slate-400 hover:text-rose-400 transition-colors"
+              title="Clear current question and answer"
+            >
+              CLEAR ✕
+            </button>
+          )}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-slate-400 hover:text-white font-mono text-xs p-1"
+          >
+            {isExpanded ? "▲" : "▼"}
+          </button>
+        </div>
       </div>
 
       {isExpanded && (
@@ -173,10 +181,12 @@ export function AskAegis({
               e.preventDefault();
               handleAsk(question);
             }}
+            autoComplete="off"
             className="flex items-center space-x-1.5"
           >
             <input
               type="text"
+              autoComplete="off"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask route explanation..."

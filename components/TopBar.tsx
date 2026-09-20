@@ -8,8 +8,6 @@ interface TopBarProps {
   onToggleAiNarration: () => void;
   aiVoiceEnabled: boolean;
   onToggleAiVoice: () => void;
-  onStartAutoDemo: () => void;
-  isAutoDemoActive: boolean;
   onToggleRaceMode: () => void;
   isRaceModeActive: boolean;
 }
@@ -20,8 +18,6 @@ export function TopBar({
   onToggleAiNarration,
   aiVoiceEnabled,
   onToggleAiVoice,
-  onStartAutoDemo,
-  isAutoDemoActive,
   onToggleRaceMode,
   isRaceModeActive,
 }: TopBarProps) {
@@ -94,18 +90,6 @@ export function TopBar({
             }`}
           />
           <span className="tracking-tight">AI Explain: {aiNarrationEnabled ? "ON" : "OFF"}</span>
-        </button>
-
-        {/* Auto Demo Button */}
-        <button
-          onClick={onStartAutoDemo}
-          className={`px-3 py-1 rounded text-xs font-mono font-bold border transition-all tracking-wider ${
-            isAutoDemoActive
-              ? "bg-amber-500 text-slate-950 border-amber-400 animate-pulse shadow-lg shadow-amber-500/30"
-              : "bg-[#141d2b] hover:bg-[#1a2638] border-[#25354c] text-slate-200"
-          }`}
-        >
-          {isAutoDemoActive ? "STOP DEMO" : "▶ 2-MIN DEMO"}
         </button>
 
         {/* Race Mode Button */}

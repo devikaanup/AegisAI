@@ -254,8 +254,15 @@ export function RaceMode({
         </div>
 
         {isCompleted && (
-          <div className="py-1 px-2 rounded bg-emerald-950/90 border border-emerald-500 text-emerald-200 text-xs font-mono font-bold text-center">
-            🎉 CITIZEN SAFELY REACHED {committedRoute.shelterName?.toUpperCase()} AHEAD OF FLOOD!
+          <div className="py-1.5 px-2.5 rounded bg-emerald-950/90 border border-emerald-500 text-emerald-200 text-xs font-mono font-bold flex items-center justify-between">
+            <span className="truncate">🎉 REACHED {committedRoute.shelterName?.toUpperCase()} AHEAD OF FLOOD!</span>
+            <button
+              onClick={onStop}
+              className="ml-2 px-2 py-0.5 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-[10px] font-extrabold uppercase transition-all shrink-0"
+              title="Reset departure time, water levels, and person location"
+            >
+              RESET ✕
+            </button>
           </div>
         )}
       </div>

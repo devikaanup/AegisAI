@@ -20,7 +20,6 @@ import { AskAegis } from "@/components/AskAegis";
 import { Timeline } from "@/components/Timeline";
 import { NoSafeEvacuationOverlay } from "@/components/NoSafeEvacuationOverlay";
 import { Toasts, ToastItem } from "@/components/Toasts";
-import { AutoDemo } from "@/components/AutoDemo";
 import { RaceMode } from "@/components/RaceMode";
 import { VoiceOverlay } from "@/components/VoiceOverlay";
 
@@ -44,13 +43,9 @@ export default function Home() {
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [aiNarrationEnabled, setAiNarrationEnabled] = useState(false);
   const [aiVoiceEnabled, setAiVoiceEnabled] = useState(true);
-  const [isAutoDemoActive, setIsAutoDemoActive] = useState(false);
   const [isRaceModeActive, setIsRaceModeActive] = useState(false);
   const [raceProgress, setRaceProgress] = useState<{ lng: number; lat: number } | null>(null);
   const [committedRoute, setCommittedRoute] = useState<any>(null);
-
-  // AutoDemo question trigger for Ask AEGIS
-  const [externalAskQuery, setExternalAskQuery] = useState<string | null>(null);
 
   // Sidebars collapse
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
@@ -129,8 +124,8 @@ export default function Home() {
       },
     ]);
 
-    // Spoken broadcast when voice is active and demo is not taking precedence
-    if (aiVoiceEnabled && !isAutoDemoActive) {
+    // Spoken broadcast when voice is active
+    if (aiVoiceEnabled) {
       if (
         latestEvent.type === "NO_SAFE_ROUTE" ||
         latestEvent.type === "ROUTE_BLOCKED" ||
@@ -187,7 +182,7 @@ export default function Home() {
                     : t
                 )
               );
-              if (aiVoiceEnabled && !isAutoDemoActive) {
+              if (aiVoiceEnabled) {
                 aiVoice?.speak(data.text);
               }
             }
@@ -197,7 +192,7 @@ export default function Home() {
         }
       }, 700);
     }
-  }, [simulationState.events, aiNarrationEnabled, aiVoiceEnabled, isAutoDemoActive, inputs, previousInputs]);
+  }, [simulationState.events, aiNarrationEnabled, aiVoiceEnabled, inputs, previousInputs]);
 
   // Clean old toasts after 7 seconds
   useEffect(() => {
@@ -213,33 +208,33 @@ export default function Home() {
     return buildExplanationContext(inputs, previousInputs);
   }, [inputs, previousInputs]);
 
-  // Race Mode toggle: commit route at departure
+  // Race Mode toggle: commit route at departure and save pre-race departure time
   const [raceDepartureMinute, setRaceDepartureMinute] = useState<number>(0);
+  const preRaceMinuteRef = useRef<number>(0);
+
+  const handleStopRaceMode = useCallback(() => {
+    setIsRaceModeActive(false);
+    setRaceProgress(null);
+    setCommittedRoute(null);
+    // Reset departure time and water levels to exactly how they were before race started
+    updateInputs({ simulationMinute: preRaceMinuteRef.current });
+    // Reset location of the person back to their start junction
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("aegis:evacuee-reset"));
+    }
+  }, [updateInputs]);
 
   const handleToggleRaceMode = () => {
     if (isRaceModeActive) {
-      setIsRaceModeActive(false);
-      setRaceProgress(null);
-      setCommittedRoute(null);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("aegis:evacuee-reset"));
-      }
+      handleStopRaceMode();
     } else {
-      setCommittedRoute(simulationState.currentRoute);
+      preRaceMinuteRef.current = inputs.simulationMinute;
+      const routeSnapshot = { ...simulationState.currentRoute };
+      setCommittedRoute(routeSnapshot);
       setRaceDepartureMinute(inputs.simulationMinute);
       setIsRaceModeActive(true);
     }
   };
-
-  const handleStartRaceMode = useCallback(() => {
-    setCommittedRoute(simulationState.currentRoute);
-    setRaceDepartureMinute(inputs.simulationMinute);
-    setIsRaceModeActive(true);
-  }, [simulationState.currentRoute, inputs.simulationMinute]);
-
-  const handleTriggerAsk = useCallback((question: string) => {
-    setExternalAskQuery(question);
-  }, []);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#0a0d12] text-slate-100 overflow-hidden font-sans select-none">
@@ -253,8 +248,6 @@ export default function Home() {
         onToggleAiNarration={() => setAiNarrationEnabled(!aiNarrationEnabled)}
         aiVoiceEnabled={aiVoiceEnabled}
         onToggleAiVoice={() => setAiVoiceEnabled(!aiVoiceEnabled)}
-        onStartAutoDemo={() => setIsAutoDemoActive(!isAutoDemoActive)}
-        isAutoDemoActive={isAutoDemoActive}
         onToggleRaceMode={handleToggleRaceMode}
         isRaceModeActive={isRaceModeActive}
       />
@@ -315,29 +308,12 @@ export default function Home() {
           {/* Race Mode Overlay Component */}
           <RaceMode
             isActive={isRaceModeActive}
-            onStop={() => {
-              setIsRaceModeActive(false);
-              setRaceProgress(null);
-              setCommittedRoute(null);
-            }}
+            onStop={handleStopRaceMode}
             committedRoute={committedRoute || simulationState.currentRoute}
             profile={simulationState.profile}
             departureMinute={raceDepartureMinute}
             onUpdateEvacueePosition={setRaceProgress}
             onAdvanceSimulationMinute={(min) => updateInputs({ simulationMinute: min })}
-            aiVoiceEnabled={aiVoiceEnabled}
-          />
-
-          {/* Auto Demo Component */}
-          <AutoDemo
-            isActive={isAutoDemoActive}
-            onStop={() => setIsAutoDemoActive(false)}
-            onSelectEvacuee={(id) => updateInputs({ evacueeId: id })}
-            onSelectProfile={(id) => updateInputs({ profileId: id })}
-            onChangeMinute={(min) => updateInputs({ simulationMinute: min })}
-            onChangePeopleEvacuating={(n) => updateInputs({ peopleEvacuating: n })}
-            onTriggerAsk={handleTriggerAsk}
-            onStartRaceMode={handleStartRaceMode}
             aiVoiceEnabled={aiVoiceEnabled}
           />
         </div>
@@ -355,7 +331,6 @@ export default function Home() {
             currentInputs={inputs}
             previousInputs={previousInputs}
             currentContext={explanationContext}
-            externalQuery={externalAskQuery}
             aiVoiceEnabled={aiVoiceEnabled}
           />
         </StatusPanel>
