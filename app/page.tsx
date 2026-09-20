@@ -9,7 +9,6 @@ import {
 } from "@/lib/simulation";
 import { buildExplanationContext } from "@/lib/explainContext";
 import { composeFallbackForEvent } from "@/lib/fallbackExplanations";
-import { aiVoice } from "@/lib/speech";
 import { Intro } from "@/components/Intro";
 import { TopBar } from "@/components/TopBar";
 import { MapView } from "@/components/MapView";
@@ -21,7 +20,6 @@ import { Timeline } from "@/components/Timeline";
 import { NoSafeEvacuationOverlay } from "@/components/NoSafeEvacuationOverlay";
 import { Toasts, ToastItem } from "@/components/Toasts";
 import { RaceMode } from "@/components/RaceMode";
-import { VoiceOverlay } from "@/components/VoiceOverlay";
 
 export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
@@ -41,8 +39,6 @@ export default function Home() {
   const [showStandardRoute, setShowStandardRoute] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
-  const [aiNarrationEnabled, setAiNarrationEnabled] = useState(false);
-  const [aiVoiceEnabled, setAiVoiceEnabled] = useState(true);
   const [isRaceModeActive, setIsRaceModeActive] = useState(false);
   const [raceProgress, setRaceProgress] = useState<{ lng: number; lat: number } | null>(null);
   const [committedRoute, setCommittedRoute] = useState<any>(null);
@@ -54,65 +50,64 @@ export default function Home() {
   // Toasts
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
-  // Check API key availability on mount
-  useEffect(() => {
-    fetch("/api/explain")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.hasKey) {
-          setAiNarrationEnabled(true);
-        }
-      })
-      .catch(() => {});
-  }, []);
-
   // Compute simulation state
   const simulationState = useMemo(() => {
-    return runSimulation(inputs, prevState);
+    return runSimulation(inputs, prevState || undefined);
   }, [inputs, prevState]);
 
-  // Update previous inputs / state ref
-  const updateInputs = useCallback((newInputs: Partial<SimulationInputs>) => {
+  // Update inputs helper
+  const updateInputs = useCallback((newPartial: Partial<SimulationInputs>) => {
     setInputs((curr) => {
       setPreviousInputs({ ...curr });
-      return { ...curr, ...newInputs };
+      return { ...curr, ...newPartial };
     });
   }, []);
 
-  // Timeline playback loop
+  // Update previous state when simulation runs
+  useEffect(() => {
+    setPrevState(simulationState);
+  }, [simulationState]);
+
+  // Playback timer loop
   useEffect(() => {
     if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setInputs((curr) => {
-        const next = curr.simulationMinute + 0.25 * playbackSpeed;
-        if (next >= 30) {
-          setIsPlaying(false);
-          return { ...curr, simulationMinute: 30 };
-        }
-        return { ...curr, simulationMinute: Number(next.toFixed(1)) };
-      });
-    }, 250);
 
-    return () => clearInterval(interval);
+    const intervalMs = 1000 / playbackSpeed;
+    const timer = setInterval(() => {
+      setInputs((curr) => {
+        if (curr.simulationMinute >= 30) {
+          setIsPlaying(false);
+          return curr;
+        }
+        setPreviousInputs({ ...curr });
+        return {
+          ...curr,
+          simulationMinute: Math.min(30, Number((curr.simulationMinute + 0.2).toFixed(1))),
+        };
+      });
+    }, intervalMs);
+
+    return () => clearInterval(timer);
   }, [isPlaying, playbackSpeed]);
 
-  // AI Narration throttle and debounce timers
-  const lastNarrationTimeRef = useRef<number>(0);
+  // Event narration & toast triggers
   const scrubDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastNarrationTimeRef = useRef<number>(0);
 
-  // Event narration & voice broadcast effect
   useEffect(() => {
-    if (simulationState.events.length === 0) return;
-    const latestEvent = simulationState.events[simulationState.events.length - 1];
-    if (!latestEvent) return;
+    if (!simulationState.events || simulationState.events.length === 0) return;
 
-    // Filter out simple recalculated if not accompanied by significant change
-    if (latestEvent.type === "ROUTE_RECALCULATED") return;
+    const latestEvent: SimulationEvent =
+      simulationState.events[simulationState.events.length - 1];
 
-    const deterministicText = composeFallbackForEvent(latestEvent);
-    const toastId = `toast_${latestEvent.id}_${Date.now()}`;
+    const deterministicText = composeFallbackForEvent(
+      latestEvent,
+      inputs.simulationMinute,
+      simulationState.currentRoute.shelterName || "Shelter"
+    );
 
-    // Add deterministic toast immediately
+    const toastId = `${latestEvent.type}-${latestEvent.minute}-${Date.now()}`;
+
     setToasts((prev) => [
       ...prev.slice(-3),
       {
@@ -124,89 +119,80 @@ export default function Home() {
       },
     ]);
 
-    // Spoken broadcast when voice is active
-    if (aiVoiceEnabled) {
-      if (
-        latestEvent.type === "NO_SAFE_ROUTE" ||
-        latestEvent.type === "ROUTE_BLOCKED" ||
-        latestEvent.type === "SHELTER_FULL" ||
-        latestEvent.type === "SHELTER_CHANGED"
-      ) {
-        aiVoice?.speak(deterministicText);
-      }
+    // Debounce and throttle AI upgrade
+    if (scrubDebounceTimerRef.current) {
+      clearTimeout(scrubDebounceTimerRef.current);
     }
 
-    // If AI narration is enabled, debounce and throttle AI upgrade
-    if (aiNarrationEnabled) {
-      if (scrubDebounceTimerRef.current) {
-        clearTimeout(scrubDebounceTimerRef.current);
+    scrubDebounceTimerRef.current = setTimeout(async () => {
+      const now = Date.now();
+      if (now - lastNarrationTimeRef.current < 3000) {
+        return;
       }
+      lastNarrationTimeRef.current = now;
 
-      scrubDebounceTimerRef.current = setTimeout(async () => {
-        const now = Date.now();
-        if (now - lastNarrationTimeRef.current < 3000) {
-          return;
-        }
-        lastNarrationTimeRef.current = now;
+      try {
+        const res = await fetch("/api/explain", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question: `Explain this emergency event: ${latestEvent.type} at minute ${latestEvent.minute}`,
+            inputs: {
+              evacueeId: inputs.evacueeId,
+              profile: inputs.profileId,
+              minute: inputs.simulationMinute,
+              peopleEvacuating: inputs.peopleEvacuating,
+            },
+            previousInputs: previousInputs
+              ? {
+                  evacueeId: previousInputs.evacueeId,
+                  profile: previousInputs.profileId,
+                  minute: previousInputs.simulationMinute,
+                  peopleEvacuating: previousInputs.peopleEvacuating,
+                }
+              : undefined,
+          }),
+        });
 
-        try {
-          const res = await fetch("/api/explain", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              question: `Explain this emergency event: ${latestEvent.type} at minute ${latestEvent.minute}`,
-              inputs: {
-                evacueeId: inputs.evacueeId,
-                profile: inputs.profileId,
-                minute: inputs.simulationMinute,
-                peopleEvacuating: inputs.peopleEvacuating,
-              },
-              previousInputs: previousInputs
-                ? {
-                    evacueeId: previousInputs.evacueeId,
-                    profile: previousInputs.profileId,
-                    minute: previousInputs.simulationMinute,
-                    peopleEvacuating: previousInputs.peopleEvacuating,
-                  }
-                : undefined,
-            }),
-          });
-
-          if (res.ok) {
-            const data = await res.json();
-            if (data.source === "gemini" && data.text) {
-              setToasts((prev) =>
-                prev.map((t) =>
-                  t.id === toastId
-                    ? { ...t, text: data.text, source: "gemini" }
-                    : t
-                )
-              );
-              if (aiVoiceEnabled) {
-                aiVoice?.speak(data.text);
-              }
-            }
+        if (res.ok) {
+          const data = await res.json();
+          if (data.source === "gemini" && data.text) {
+            setToasts((prev) =>
+              prev.map((t) =>
+                t.id === toastId
+                  ? { ...t, text: data.text, source: "gemini" }
+                  : t
+              )
+            );
           }
-        } catch {
-          // Maintain deterministic text
         }
-      }, 700);
-    }
-  }, [simulationState.events, aiNarrationEnabled, aiVoiceEnabled, inputs, previousInputs]);
+      } catch {
+        // Maintain deterministic text
+      }
+    }, 700);
+  }, [simulationState.events, inputs, previousInputs]);
 
   // Clean old toasts after 7 seconds
   useEffect(() => {
     if (toasts.length === 0) return;
     const timer = setTimeout(() => {
-      setToasts((prev) => prev.slice(1));
-    }, 7000);
+      const now = Date.now();
+      setToasts((prev) => prev.filter((t) => now - t.timestamp < 7000));
+    }, 1000);
     return () => clearTimeout(timer);
   }, [toasts]);
 
-  // Explanation context for Ask AEGIS
+  // Build context for AI Assistant
   const explanationContext = useMemo(() => {
-    return buildExplanationContext(inputs, previousInputs);
-  }, [inputs, previousInputs]);
+    return buildExplanationContext(
+      inputs,
+      simulationState.currentRoute,
+      simulationState.standardComparison,
+      simulationState.shelters,
+      simulationState.profile,
+      simulationState.rejections
+    );
+  }, [inputs, simulationState]);
 
   // Race Mode toggle: commit route at departure and save pre-race departure time
   const [raceDepartureMinute, setRaceDepartureMinute] = useState<number>(0);
@@ -236,6 +222,16 @@ export default function Home() {
     }
   };
 
+  // Open & scroll to AI Assistant chatbot
+  const handleOpenAiAssistant = useCallback(() => {
+    if (isRightCollapsed) {
+      setIsRightCollapsed(false);
+    }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("safepath:open-ai-chat"));
+    }
+  }, [isRightCollapsed]);
+
   return (
     <div className="h-screen w-screen flex flex-col bg-[#0a0d12] text-slate-100 overflow-hidden font-sans select-none">
       {/* 1. Intro Screen Overlay */}
@@ -244,21 +240,12 @@ export default function Home() {
       {/* 2. Top Bar */}
       <TopBar
         simulationMinute={inputs.simulationMinute}
-        aiNarrationEnabled={aiNarrationEnabled}
-        onToggleAiNarration={() => setAiNarrationEnabled(!aiNarrationEnabled)}
-        aiVoiceEnabled={aiVoiceEnabled}
-        onToggleAiVoice={() => setAiVoiceEnabled(!aiVoiceEnabled)}
+        onOpenAiAssistant={handleOpenAiAssistant}
         onToggleRaceMode={handleToggleRaceMode}
         isRaceModeActive={isRaceModeActive}
       />
 
-      {/* 3. Floating AI Voice Overlay HUD */}
-      <VoiceOverlay
-        isEnabled={aiVoiceEnabled}
-        onToggle={() => setAiVoiceEnabled(false)}
-      />
-
-      {/* 4. Main Console Workspace */}
+      {/* 3. Main Console Workspace */}
       <main className="flex-1 flex relative overflow-hidden h-[calc(100vh-3.25rem-4rem)]">
         {/* Left Sidebar: Mission Setup */}
         <ControlPanel
@@ -284,17 +271,16 @@ export default function Home() {
             }
             standardComparison={simulationState.standardComparison}
             showStandardRoute={showStandardRoute}
-            simulationMinute={inputs.simulationMinute}
-            profileId={inputs.profileId}
             evacueeStartJunction={simulationState.evacuee.startJunction}
+            simulationMinute={inputs.simulationMinute}
             shelters={simulationState.shelters}
-            raceProgress={raceProgress}
             isRaceMode={isRaceModeActive}
+            raceProgress={raceProgress}
           />
 
-          {/* Floating Compare Card - Collapsible to avoid blocking map */}
+          {/* Floating Compare HUD */}
           <CompareCard
-            currentRoute={
+            accessibleRoute={
               isRaceModeActive && committedRoute
                 ? committedRoute
                 : simulationState.currentRoute
@@ -305,7 +291,7 @@ export default function Home() {
             isInitiallyMinimized={true}
           />
 
-          {/* Race Mode Overlay Component */}
+          {/* Demo Mode Overlay Component */}
           <RaceMode
             isActive={isRaceModeActive}
             onStop={handleStopRaceMode}
@@ -314,7 +300,6 @@ export default function Home() {
             departureMinute={raceDepartureMinute}
             onUpdateEvacueePosition={setRaceProgress}
             onAdvanceSimulationMinute={(min) => updateInputs({ simulationMinute: min })}
-            aiVoiceEnabled={aiVoiceEnabled}
           />
         </div>
 
@@ -326,12 +311,11 @@ export default function Home() {
           isCollapsed={isRightCollapsed}
           onToggleCollapse={() => setIsRightCollapsed(!isRightCollapsed)}
         >
-          {/* Ask AEGIS Component */}
+          {/* Ask AI Assistant Component */}
           <AskAegis
             currentInputs={inputs}
             previousInputs={previousInputs}
             currentContext={explanationContext}
-            aiVoiceEnabled={aiVoiceEnabled}
           />
         </StatusPanel>
 
@@ -345,7 +329,7 @@ export default function Home() {
         />
       </main>
 
-      {/* 5. Bottom Timeline Controller */}
+      {/* 4. Bottom Timeline Controller */}
       <Timeline
         minute={inputs.simulationMinute}
         onChangeMinute={(min) => updateInputs({ simulationMinute: min })}
@@ -355,7 +339,7 @@ export default function Home() {
         onToggleSpeed={() => setPlaybackSpeed(playbackSpeed === 1 ? 2 : 1)}
       />
 
-      {/* 6. Notification Toasts Container */}
+      {/* 5. Notification Toasts Container */}
       <Toasts
         toasts={toasts}
         onDismiss={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))}

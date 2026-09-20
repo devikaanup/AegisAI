@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { RouteResult } from "@/lib/routing";
 import { getGraph } from "@/lib/graph";
 import { ProfileDefinition } from "@/lib/costFunctions";
-import { aiVoice } from "@/lib/speech";
 
 interface RaceModeProps {
   isActive: boolean;
@@ -14,7 +13,6 @@ interface RaceModeProps {
   departureMinute: number;
   onUpdateEvacueePosition: (pos: { lng: number; lat: number } | null) => void;
   onAdvanceSimulationMinute: (min: number) => void;
-  aiVoiceEnabled?: boolean;
 }
 
 export function RaceMode({
@@ -25,7 +23,6 @@ export function RaceMode({
   departureMinute,
   onUpdateEvacueePosition,
   onAdvanceSimulationMinute,
-  aiVoiceEnabled = true,
 }: RaceModeProps) {
   const [nextFloodWarning, setNextFloodWarning] = useState<string>("Analyzing hazard front...");
   const [progressPct, setProgressPct] = useState(0);
@@ -46,7 +43,6 @@ export function RaceMode({
     onAdvanceSimulationMinute,
     committedRoute,
     profile,
-    aiVoiceEnabled,
   });
 
   useEffect(() => {
@@ -56,112 +52,105 @@ export function RaceMode({
       onAdvanceSimulationMinute,
       committedRoute,
       profile,
-      aiVoiceEnabled,
     };
   });
 
   useEffect(() => {
     if (!isActive || !committedRoute || committedRoute.nodeIds.length === 0) {
       if (reqRef.current) cancelAnimationFrame(reqRef.current);
-      callbacksRef.current.onUpdateEvacueePosition(null);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent("aegis:evacuee-reset"));
-      }
+      startTimeRef.current = null;
       setProgressPct(0);
       setIsCompleted(false);
-      startTimeRef.current = null;
       lastSimMinDispatchedRef.current = -1;
       lastWarningUpdateRef.current = 0;
       lastProgressPctRef.current = -1;
       return;
     }
 
-    // Freeze departure minute at start of race
+    // Freeze departure minute at start of demo
     departureMinuteRef.current = departureMinute;
-    lastSimMinDispatchedRef.current = departureMinute;
+    setIsCompleted(false);
+    setProgressPct(0);
+    lastSimMinDispatchedRef.current = -1;
+    lastWarningUpdateRef.current = 0;
+    lastProgressPctRef.current = -1;
 
+    // Precalculate polyline points along the committed route
     const graph = getGraph();
-    const routeCoords: [number, number][] = committedRoute.nodeIds
-      .map((id) => {
-        const n = graph.nodes[id];
-        return n ? ([n.lng, n.lat] as [number, number]) : null;
-      })
-      .filter((c): c is [number, number] => c !== null);
+    const routeCoords: [number, number][] = committedRoute.nodeIds.map((nId) => {
+      const n = graph.nodes[nId];
+      return n ? [n.lng, n.lat] : [0, 0];
+    });
 
-    if (routeCoords.length === 0) return;
+    const segmentDistances: number[] = [];
+    let totalDist = 0;
+    for (let i = 0; i < routeCoords.length - 1; i++) {
+      const p1 = routeCoords[i];
+      const p2 = routeCoords[i + 1];
+      const d = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) * 111320;
+      segmentDistances.push(d);
+      totalDist += d;
+    }
 
-    const totalDistM = committedRoute.distanceM;
-    const walkSpeed = profile.speed; // m/s
-    const totalWalkDurationSec = totalDistM / walkSpeed;
+    const totalDurationSeconds = (committedRoute.totalTimeMin * 60) / speedMultiplier;
 
     const animate = (timestamp: number) => {
-      if (startTimeRef.current === null) {
-        startTimeRef.current = timestamp;
-      }
+      if (!startTimeRef.current) startTimeRef.current = timestamp;
+      const elapsedSeconds = (timestamp - startTimeRef.current) / 1000;
+      const fraction = Math.min(1, elapsedSeconds / Math.max(1, totalDurationSeconds));
 
-      const realElapsedSec = (timestamp - startTimeRef.current) / 1000;
-      const simSecWalked = realElapsedSec * speedMultiplier;
-      const simMinute = departureMinuteRef.current + simSecWalked / 60;
-      const fraction = Math.min(1, simSecWalked / totalWalkDurationSec);
+      const currentDist = fraction * totalDist;
+      let accum = 0;
+      let lng = routeCoords[0][0];
+      let lat = routeCoords[0][1];
 
-      // 1. Calculate and update 60 FPS marker position directly via DOM/CustomEvent without full React re-render
-      const totalPoints = routeCoords.length;
-      if (totalPoints > 1) {
-        const currentIdxFloat = fraction * (totalPoints - 1);
-        const currentIdx = Math.floor(currentIdxFloat);
-        const nextIdx = Math.min(totalPoints - 1, currentIdx + 1);
-        const subFrac = currentIdxFloat - currentIdx;
-
-        const lng =
-          routeCoords[currentIdx][0] +
-          subFrac * (routeCoords[nextIdx][0] - routeCoords[currentIdx][0]);
-        const lat =
-          routeCoords[currentIdx][1] +
-          subFrac * (routeCoords[nextIdx][1] - routeCoords[currentIdx][1]);
-
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(
-            new CustomEvent("aegis:evacuee-pos", { detail: { lng, lat } })
-          );
+      for (let i = 0; i < segmentDistances.length; i++) {
+        const segDist = segmentDistances[i];
+        if (accum + segDist >= currentDist || i === segmentDistances.length - 1) {
+          const segFraction = segDist > 0 ? (currentDist - accum) / segDist : 0;
+          const p1 = routeCoords[i];
+          const p2 = routeCoords[i + 1];
+          lng = p1[0] + (p2[0] - p1[0]) * segFraction;
+          lat = p1[1] + (p2[1] - p1[1]) * segFraction;
+          break;
         }
+        accum += segDist;
       }
 
-      // 2. Throttle simulation minute updates to 4Hz (every 0.25 min) to prevent CPU thrashing
-      const roundedMin = Math.min(30, Number(simMinute.toFixed(1)));
-      if (Math.abs(roundedMin - lastSimMinDispatchedRef.current) >= 0.25 || fraction >= 1) {
-        lastSimMinDispatchedRef.current = roundedMin;
-        callbacksRef.current.onAdvanceSimulationMinute(roundedMin);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("aegis:evacuee-pos", { detail: { lng, lat } })
+        );
       }
 
-      // 3. Throttle progress percentage update (only on integer change)
-      const currentPct = Math.round(fraction * 100);
-      if (currentPct !== lastProgressPctRef.current) {
-        lastProgressPctRef.current = currentPct;
-        setProgressPct(currentPct);
+      const simMinuteElapsed = fraction * committedRoute.totalTimeMin;
+      const currentSimMin = Math.min(30, departureMinuteRef.current + simMinuteElapsed);
+
+      if (Math.abs(currentSimMin - lastSimMinDispatchedRef.current) >= 0.1) {
+        lastSimMinDispatchedRef.current = currentSimMin;
+        callbacksRef.current.onAdvanceSimulationMinute(
+          Math.round(currentSimMin * 10) / 10
+        );
       }
 
-      // 4. Throttle hazard warning readout to 500ms
-      if (timestamp - lastWarningUpdateRef.current > 500) {
+      const pct = Math.round(fraction * 100);
+      if (pct !== lastProgressPctRef.current) {
+        lastProgressPctRef.current = pct;
+        setProgressPct(pct);
+      }
+
+      if (timestamp - lastWarningUpdateRef.current > 600) {
         lastWarningUpdateRef.current = timestamp;
-        const edgeCount = callbacksRef.current.committedRoute.edgeAnnotations.length;
-        if (edgeCount > 0) {
-          const currentEdgeIdx = Math.min(
-            edgeCount - 1,
-            Math.floor(fraction * edgeCount)
+        if (callbacksRef.current.committedRoute.edgeAnnotations) {
+          const remainingEdges = callbacksRef.current.committedRoute.edgeAnnotations.filter(
+            (ann) => ann.floodArrivalMin > currentSimMin
           );
-          const upcomingEdge =
-            callbacksRef.current.committedRoute.edgeAnnotations[
-              Math.min(edgeCount - 1, currentEdgeIdx + 1)
-            ] || callbacksRef.current.committedRoute.edgeAnnotations[currentEdgeIdx];
-
-          if (upcomingEdge && upcomingEdge.floodArrivalMin !== null) {
-            const remainingSimMin = upcomingEdge.floodArrivalMin - simMinute;
-            if (remainingSimMin > 0) {
-              const remainingSec = Math.round(remainingSimMin * 60);
-              setNextFloodWarning(`Flood reaches ${upcomingEdge.name} in ${remainingSec}s`);
-            } else {
-              setNextFloodWarning(`Water active on ${upcomingEdge.name}`);
-            }
+          if (remainingEdges.length > 0) {
+            const nearest = remainingEdges[0];
+            const timeUntilFlood = (nearest.floodArrivalMin - currentSimMin).toFixed(1);
+            setNextFloodWarning(
+              `Flood front reaches ${nearest.name} in ~${timeUntilFlood} min`
+            );
           } else {
             setNextFloodWarning("High ground ahead — path currently clear of water");
           }
@@ -170,11 +159,6 @@ export function RaceMode({
 
       if (fraction >= 1) {
         setIsCompleted(true);
-        if (callbacksRef.current.aiVoiceEnabled) {
-          aiVoice?.speak(
-            `Citizen has safely reached ${callbacksRef.current.committedRoute.shelterName || "designated safe shelter"}!`
-          );
-        }
         return;
       }
 
@@ -202,7 +186,7 @@ export function RaceMode({
           <div className="flex items-center space-x-2 min-w-0">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             <span className="text-[11px] font-mono font-extrabold text-emerald-300 uppercase tracking-wider truncate">
-              RACE // {profile.name} → {committedRoute.shelterName}
+              DEMO // {profile.name} → {committedRoute.shelterName}
             </span>
           </div>
 
@@ -214,7 +198,7 @@ export function RaceMode({
                 <button
                   key={spd}
                   onClick={() => setSpeedMultiplier(spd)}
-                  className={`px-1.5 py-0.5 rounded transition-all ${
+                  className={`px-1.5 py-0.5 rounded transition-all cursor-pointer ${
                     speedMultiplier === spd
                       ? "bg-emerald-500 text-slate-950 font-extrabold"
                       : "text-slate-400 hover:text-slate-200"
@@ -227,7 +211,7 @@ export function RaceMode({
 
             <button
               onClick={onStop}
-              className="px-2 py-0.5 rounded bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-[10px] font-mono font-bold text-rose-200 transition-colors"
+              className="px-2 py-0.5 rounded bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-[10px] font-mono font-bold text-rose-200 transition-colors cursor-pointer"
             >
               EXIT ✕
             </button>
@@ -258,7 +242,7 @@ export function RaceMode({
             <span className="truncate">🎉 REACHED {committedRoute.shelterName?.toUpperCase()} AHEAD OF FLOOD!</span>
             <button
               onClick={onStop}
-              className="ml-2 px-2 py-0.5 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-[10px] font-extrabold uppercase transition-all shrink-0"
+              className="ml-2 px-2 py-0.5 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-[10px] font-extrabold uppercase transition-all shrink-0 cursor-pointer"
               title="Reset departure time, water levels, and person location"
             >
               RESET ✕

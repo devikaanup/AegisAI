@@ -4,13 +4,11 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { SimulationInputs } from "@/lib/simulation";
 import { ExplanationContext } from "@/lib/explainContext";
 import { classifyIntent, composeFallbackExplanation } from "@/lib/fallbackExplanations";
-import { aiVoice } from "@/lib/speech";
 
 interface AskAegisProps {
   currentInputs: SimulationInputs;
   previousInputs: SimulationInputs | null;
   currentContext: ExplanationContext;
-  aiVoiceEnabled?: boolean;
 }
 
 interface AnswerState {
@@ -34,18 +32,45 @@ export function AskAegis({
   currentInputs,
   previousInputs,
   currentContext,
-  aiVoiceEnabled = true,
 }: AskAegisProps) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<AnswerState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isHighlighted, setIsHighlighted] = useState(false);
   const prevInputsRef = useRef<SimulationInputs | null>(previousInputs);
 
   // Guarantee clean, empty conversation on initial load or refresh
   useEffect(() => {
     setQuestion("");
     setAnswer(null);
+  }, []);
+
+  // Listen for guiding event from TopBar "Talk to an AI Assistant" button
+  useEffect(() => {
+    const handleOpenAiChat = () => {
+      setIsExpanded(true);
+      setIsHighlighted(true);
+
+      setTimeout(() => {
+        const container = document.getElementById("ask-ai-container");
+        const input = document.getElementById("ask-ai-input");
+
+        if (container) {
+          container.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        input?.focus();
+      }, 100);
+
+      const timeout = setTimeout(() => {
+        setIsHighlighted(false);
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    };
+
+    window.addEventListener("safepath:open-ai-chat", handleOpenAiChat);
+    return () => window.removeEventListener("safepath:open-ai-chat", handleOpenAiChat);
   }, []);
 
   useEffect(() => {
@@ -124,18 +149,25 @@ export function AskAegis({
       answer.inputsSnapshot.peopleEvacuating !== currentInputs.peopleEvacuating);
 
   return (
-    <div className="rounded-lg border border-[#1e293b] bg-[#0c121d] p-2.5 space-y-2 select-none">
+    <div
+      id="ask-ai-container"
+      className={`rounded-lg border bg-[#0c121d] p-2.5 space-y-2 select-none transition-all duration-500 ${
+        isHighlighted
+          ? "border-cyan-400 ring-2 ring-cyan-400/80 ring-offset-2 ring-offset-[#070a0f] shadow-lg shadow-cyan-500/20"
+          : "border-[#1e293b]"
+      }`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center space-x-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             <h3 className="text-[10px] font-mono font-extrabold tracking-widest uppercase text-cyan-300">
-              ASK SAFEPATH // INTEL
+              AI ASSISTANT // INTEL
             </h3>
           </div>
           <p className="text-[9px] text-slate-400 font-mono">
-            Deterministic engine explains route reasoning.
+            Ask anything about routes, hazards, water levels, or shelters.
           </p>
         </div>
         <div className="flex items-center space-x-1.5">
@@ -145,7 +177,7 @@ export function AskAegis({
                 setAnswer(null);
                 setQuestion("");
               }}
-              className="text-[9px] font-mono text-slate-400 hover:text-rose-400 transition-colors"
+              className="text-[9px] font-mono text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
               title="Clear current question and answer"
             >
               CLEAR ✕
@@ -153,7 +185,8 @@ export function AskAegis({
           )}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-slate-400 hover:text-white font-mono text-xs p-1"
+            className="text-slate-400 hover:text-white font-mono text-xs p-1 cursor-pointer"
+            aria-label={isExpanded ? "Collapse AI Assistant" : "Expand AI Assistant"}
           >
             {isExpanded ? "▲" : "▼"}
           </button>
@@ -163,12 +196,13 @@ export function AskAegis({
       {isExpanded && (
         <div className="space-y-2">
           {/* Suggestion Chips */}
-          <div className="flex flex-wrap gap-1">
+          <div className="grid grid-cols-1 gap-1">
             {CHIPS.map((chip, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => handleAsk(chip)}
-                className="px-1.5 py-0.5 rounded bg-[#141e2e] hover:bg-[#1b283d] border border-slate-700 text-[9px] text-slate-300 font-mono transition-all text-left leading-tight"
+                className="px-1.5 py-0.5 rounded bg-[#141e2e] hover:bg-[#1b283d] border border-slate-700 text-[9px] text-slate-300 font-mono transition-all text-left leading-tight cursor-pointer"
               >
                 {chip}
               </button>
@@ -185,20 +219,21 @@ export function AskAegis({
             className="flex items-center space-x-1.5"
           >
             <input
+              id="ask-ai-input"
               type="text"
               autoComplete="off"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask route explanation..."
+              placeholder="Ask the AI Assistant..."
               maxLength={300}
               className="flex-1 min-w-0 bg-[#070a0f] border border-[#25354c] rounded px-2 py-1 text-[11px] text-slate-200 font-mono focus:border-cyan-500 focus:outline-none placeholder:text-slate-600"
             />
             <button
               type="submit"
               disabled={isLoading || !question.trim()}
-              className="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 active:scale-95 disabled:opacity-50 text-[10px] font-mono font-bold text-slate-950 transition-all tracking-wider shrink-0"
+              className="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 active:scale-95 disabled:opacity-50 text-[10px] font-mono font-bold text-slate-950 transition-all tracking-wider shrink-0 cursor-pointer"
             >
-              {isLoading ? "..." : "QUERY"}
+              {isLoading ? "..." : "ASK"}
             </button>
           </form>
 

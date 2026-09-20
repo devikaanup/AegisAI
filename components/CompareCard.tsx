@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { RouteResult, StandardRouteComparison } from "@/lib/routing";
 
 interface CompareCardProps {
-  currentRoute: RouteResult;
+  currentRoute?: RouteResult;
+  accessibleRoute?: RouteResult;
   standardComparison: StandardRouteComparison;
   showStandardRoute: boolean;
   onToggleStandardRoute: () => void;
@@ -13,6 +14,7 @@ interface CompareCardProps {
 
 export function CompareCard({
   currentRoute,
+  accessibleRoute,
   standardComparison,
   showStandardRoute,
   onToggleStandardRoute,
@@ -20,14 +22,17 @@ export function CompareCard({
 }: CompareCardProps) {
   const [isMinimized, setIsMinimized] = useState(isInitiallyMinimized);
 
+  const route = currentRoute || accessibleRoute;
+  if (!route) return null;
+
   const stdFailure =
     standardComparison.failureText ||
     (standardComparison.reachesSafety ? "Passable (Unconstrained)" : "Inaccessible");
 
   const slackDisplay =
-    currentRoute.minFloodSlackMin === 999
+    route.minFloodSlackMin === 999
       ? "Clear"
-      : `+${currentRoute.minFloodSlackMin} min margin`;
+      : `+${route.minFloodSlackMin} min margin`;
 
   if (isMinimized) {
     return (
@@ -113,16 +118,16 @@ export function CompareCard({
             <span className="uppercase tracking-widest font-bold">Safe Accessible</span>
           </div>
           <div className="text-3xl font-mono font-black text-emerald-400 tabular-nums leading-none tracking-tight">
-            {currentRoute.distanceM}
+            {route.distanceM}
             <span className="text-xs text-emerald-400/70 font-normal ml-0.5">m</span>
           </div>
           <div className="text-[11px] font-mono text-slate-300">
-            {currentRoute.etaMin} min safe
+            {route.etaMin} min safe
           </div>
           <div className="pt-1.5 text-[10px] font-mono text-emerald-400 border-t border-emerald-900/40 flex items-start space-x-1">
             <span className="font-bold">✓</span>
             <span className="line-clamp-2 leading-tight">
-              {currentRoute.safetyStatus} · {slackDisplay}
+              {route.safetyStatus} · {slackDisplay}
             </span>
           </div>
         </div>

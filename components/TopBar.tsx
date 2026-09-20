@@ -4,20 +4,14 @@ import React from "react";
 
 interface TopBarProps {
   simulationMinute: number;
-  aiNarrationEnabled: boolean;
-  onToggleAiNarration: () => void;
-  aiVoiceEnabled: boolean;
-  onToggleAiVoice: () => void;
+  onOpenAiAssistant: () => void;
   onToggleRaceMode: () => void;
   isRaceModeActive: boolean;
 }
 
 export function TopBar({
   simulationMinute,
-  aiNarrationEnabled,
-  onToggleAiNarration,
-  aiVoiceEnabled,
-  onToggleAiVoice,
+  onOpenAiAssistant,
   onToggleRaceMode,
   isRaceModeActive,
 }: TopBarProps) {
@@ -57,52 +51,26 @@ export function TopBar({
 
       {/* Action Controls */}
       <div className="flex items-center space-x-2">
-        {/* AI Voice Overlay Toggle */}
+        {/* Talk to an AI Assistant Button */}
         <button
-          onClick={onToggleAiVoice}
-          className={`px-2.5 py-1 rounded text-xs font-mono flex items-center space-x-1.5 border transition-all ${
-            aiVoiceEnabled
-              ? "bg-cyan-950/60 border-cyan-400/80 text-cyan-200 shadow-sm shadow-cyan-900/40"
-              : "bg-[#0c121d] border-[#1e293b] text-slate-500 hover:text-slate-300"
-          }`}
-          title="Toggle browser Web Speech API voice overlay"
+          onClick={onOpenAiAssistant}
+          className="px-2.5 py-1 rounded text-xs font-mono flex items-center space-x-1.5 border transition-all bg-cyan-950/60 hover:bg-cyan-900/70 border-cyan-400/80 text-cyan-200 shadow-sm shadow-cyan-900/40 cursor-pointer"
+          title="Open AI Disaster Evacuation Assistant"
         >
-          <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              aiVoiceEnabled ? "bg-cyan-400 animate-pulse" : "bg-slate-600"
-            }`}
-          />
-          <span className="tracking-tight">{aiVoiceEnabled ? "🔊 Voice: ON" : "🔇 Voice: OFF"}</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="tracking-tight">💬 Talk to an AI Assistant</span>
         </button>
 
-        {/* AI Explanation Text Toggle */}
-        <button
-          onClick={onToggleAiNarration}
-          className={`px-2.5 py-1 rounded text-xs font-mono flex items-center space-x-1.5 border transition-all ${
-            aiNarrationEnabled
-              ? "bg-emerald-950/50 border-emerald-500/60 text-emerald-300"
-              : "bg-[#0c121d] border-[#1e293b] text-slate-500 hover:text-slate-300"
-          }`}
-          title="Toggle Gemini Natural Language event explanation"
-        >
-          <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              aiNarrationEnabled ? "bg-emerald-400 animate-pulse" : "bg-slate-600"
-            }`}
-          />
-          <span className="tracking-tight">AI Explain: {aiNarrationEnabled ? "ON" : "OFF"}</span>
-        </button>
-
-        {/* Race Mode Button */}
+        {/* Load Demo Button */}
         <button
           onClick={onToggleRaceMode}
-          className={`px-3 py-1 rounded text-xs font-mono font-bold border transition-all tracking-wider ${
+          className={`px-3 py-1 rounded text-xs font-mono font-bold border transition-all tracking-wider cursor-pointer ${
             isRaceModeActive
               ? "bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/30"
               : "bg-emerald-950/40 hover:bg-emerald-900/50 border-emerald-600/50 text-emerald-400"
           }`}
         >
-          {isRaceModeActive ? "STOP RACE" : "⚡ RACE MODE"}
+          {isRaceModeActive ? "STOP DEMO" : "⚡ LOAD DEMO"}
         </button>
       </div>
     </header>
