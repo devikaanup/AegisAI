@@ -127,11 +127,16 @@ export function AutoDemo({
       caption:
         "Step 8: Finale — Triggering Live Race Mode! Watch citizen evacuate alongside the real-time flood front.",
       action: () => {
+        callbacksRef.current.onSelectEvacuee("marcus");
         callbacksRef.current.onSelectProfile("wheelchair");
         callbacksRef.current.onChangeMinute(0);
-        callbacksRef.current.onStartRaceMode();
+        callbacksRef.current.onChangePeopleEvacuating(10);
+        setTimeout(() => {
+          callbacksRef.current.onStartRaceMode();
+          callbacksRef.current.onStop();
+        }, 800);
       },
-      durationMs: 12000,
+      durationMs: 14000,
     },
   ]);
 
@@ -155,8 +160,9 @@ export function AutoDemo({
       setCurrentCaption(steps[idx].caption);
       steps[idx].action();
 
-      // Speak caption if AI Voice is available and enabled
+      // Cleanly speak caption without audio pile-up
       if (callbacksRef.current.aiVoiceEnabled && aiVoice) {
+        aiVoice.cancel();
         aiVoice.speak(steps[idx].caption);
       }
 
@@ -180,14 +186,14 @@ export function AutoDemo({
   if (!isActive) return null;
 
   return (
-    <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 max-w-2xl w-full px-4 pointer-events-auto select-none animate-in fade-in duration-200">
-      <div className="p-4 rounded-xl border border-amber-500/80 bg-slate-950/95 backdrop-blur-md shadow-2xl space-y-3">
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 max-w-lg w-[calc(100%-2rem)] select-none animate-in fade-in duration-200 pointer-events-auto">
+      <div className="p-3 rounded-xl border border-amber-500/70 bg-[#0c121d]/95 backdrop-blur-md shadow-2xl space-y-2 text-slate-100">
         {/* Header with step progress and controls */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
-            <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
-              AUTONOMOUS STAGE DEMO (STEP {currentStepIndex + 1}/8)
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0" />
+            <span className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider">
+              AUTO STAGE DEMO // STEP {currentStepIndex + 1}/8
             </span>
           </div>
 
@@ -197,23 +203,23 @@ export function AutoDemo({
             </span>
             <button
               onClick={onStop}
-              className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200 border border-slate-700 hover:border-slate-600 transition-colors"
+              className="px-2 py-0.5 rounded bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-[10px] font-mono font-bold text-rose-200 transition-colors"
             >
-              STOP DEMO [ESC]
+              STOP [ESC]
             </button>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-slate-800">
+        <div className="w-full bg-[#070a0f] rounded-full h-1.5 overflow-hidden border border-slate-800">
           <div
-            className="bg-amber-400 h-full transition-all duration-500 rounded-full"
+            className="bg-gradient-to-r from-amber-500 to-amber-400 h-full transition-all duration-500 rounded-full"
             style={{ width: `${((currentStepIndex + 1) / 8) * 100}%` }}
           />
         </div>
 
         {/* Caption */}
-        <p className="text-sm font-mono text-slate-100 leading-relaxed font-semibold">
+        <p className="text-xs font-mono text-slate-200 leading-snug font-medium">
           {currentCaption}
         </p>
       </div>

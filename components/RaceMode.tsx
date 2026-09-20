@@ -27,7 +27,6 @@ export function RaceMode({
   onAdvanceSimulationMinute,
   aiVoiceEnabled = true,
 }: RaceModeProps) {
-  const [elapsedRealSec, setElapsedRealSec] = useState(0);
   const [nextFloodWarning, setNextFloodWarning] = useState<string>("Analyzing hazard front...");
   const [progressPct, setProgressPct] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -36,6 +35,10 @@ export function RaceMode({
   const reqRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const departureMinuteRef = useRef<number>(departureMinute);
+
+  const lastSimMinDispatchedRef = useRef<number>(-1);
+  const lastWarningUpdateRef = useRef<number>(0);
+  const lastProgressPctRef = useRef<number>(-1);
 
   const callbacksRef = useRef({
     onStop,
@@ -61,15 +64,21 @@ export function RaceMode({
     if (!isActive || !committedRoute || committedRoute.nodeIds.length === 0) {
       if (reqRef.current) cancelAnimationFrame(reqRef.current);
       callbacksRef.current.onUpdateEvacueePosition(null);
-      setElapsedRealSec(0);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("aegis:evacuee-reset"));
+      }
       setProgressPct(0);
       setIsCompleted(false);
       startTimeRef.current = null;
+      lastSimMinDispatchedRef.current = -1;
+      lastWarningUpdateRef.current = 0;
+      lastProgressPctRef.current = -1;
       return;
     }
 
     // Freeze departure minute at start of race
     departureMinuteRef.current = departureMinute;
+    lastSimMinDispatchedRef.current = departureMinute;
 
     const graph = getGraph();
     const routeCoords: [number, number][] = committedRoute.nodeIds
@@ -93,14 +102,9 @@ export function RaceMode({
       const realElapsedSec = (timestamp - startTimeRef.current) / 1000;
       const simSecWalked = realElapsedSec * speedMultiplier;
       const simMinute = departureMinuteRef.current + simSecWalked / 60;
-
-      callbacksRef.current.onAdvanceSimulationMinute(Math.min(30, simMinute));
-      setElapsedRealSec(Math.round(realElapsedSec));
-
       const fraction = Math.min(1, simSecWalked / totalWalkDurationSec);
-      setProgressPct(Math.round(fraction * 100));
 
-      // Calculate current position along the coordinates array
+      // 1. Calculate and update 60 FPS marker position directly via DOM/CustomEvent without full React re-render
       const totalPoints = routeCoords.length;
       if (totalPoints > 1) {
         const currentIdxFloat = fraction * (totalPoints - 1);
@@ -115,31 +119,52 @@ export function RaceMode({
           routeCoords[currentIdx][1] +
           subFrac * (routeCoords[nextIdx][1] - routeCoords[currentIdx][1]);
 
-        callbacksRef.current.onUpdateEvacueePosition({ lng, lat });
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("aegis:evacuee-pos", { detail: { lng, lat } })
+          );
+        }
       }
 
-      // Live flood countdown calculation
-      const edgeCount = callbacksRef.current.committedRoute.edgeAnnotations.length;
-      if (edgeCount > 0) {
-        const currentEdgeIdx = Math.min(
-          edgeCount - 1,
-          Math.floor(fraction * edgeCount)
-        );
-        const upcomingEdge =
-          callbacksRef.current.committedRoute.edgeAnnotations[
-            Math.min(edgeCount - 1, currentEdgeIdx + 1)
-          ] || callbacksRef.current.committedRoute.edgeAnnotations[currentEdgeIdx];
+      // 2. Throttle simulation minute updates to 4Hz (every 0.25 min) to prevent CPU thrashing
+      const roundedMin = Math.min(30, Number(simMinute.toFixed(1)));
+      if (Math.abs(roundedMin - lastSimMinDispatchedRef.current) >= 0.25 || fraction >= 1) {
+        lastSimMinDispatchedRef.current = roundedMin;
+        callbacksRef.current.onAdvanceSimulationMinute(roundedMin);
+      }
 
-        if (upcomingEdge && upcomingEdge.floodArrivalMin !== null) {
-          const remainingSimMin = upcomingEdge.floodArrivalMin - simMinute;
-          if (remainingSimMin > 0) {
-            const remainingSec = Math.round(remainingSimMin * 60);
-            setNextFloodWarning(`Flood reaches ${upcomingEdge.name} in ${remainingSec}s`);
+      // 3. Throttle progress percentage update (only on integer change)
+      const currentPct = Math.round(fraction * 100);
+      if (currentPct !== lastProgressPctRef.current) {
+        lastProgressPctRef.current = currentPct;
+        setProgressPct(currentPct);
+      }
+
+      // 4. Throttle hazard warning readout to 500ms
+      if (timestamp - lastWarningUpdateRef.current > 500) {
+        lastWarningUpdateRef.current = timestamp;
+        const edgeCount = callbacksRef.current.committedRoute.edgeAnnotations.length;
+        if (edgeCount > 0) {
+          const currentEdgeIdx = Math.min(
+            edgeCount - 1,
+            Math.floor(fraction * edgeCount)
+          );
+          const upcomingEdge =
+            callbacksRef.current.committedRoute.edgeAnnotations[
+              Math.min(edgeCount - 1, currentEdgeIdx + 1)
+            ] || callbacksRef.current.committedRoute.edgeAnnotations[currentEdgeIdx];
+
+          if (upcomingEdge && upcomingEdge.floodArrivalMin !== null) {
+            const remainingSimMin = upcomingEdge.floodArrivalMin - simMinute;
+            if (remainingSimMin > 0) {
+              const remainingSec = Math.round(remainingSimMin * 60);
+              setNextFloodWarning(`Flood reaches ${upcomingEdge.name} in ${remainingSec}s`);
+            } else {
+              setNextFloodWarning(`Water active on ${upcomingEdge.name}`);
+            }
           } else {
-            setNextFloodWarning(`Water active on ${upcomingEdge.name}`);
+            setNextFloodWarning("High ground ahead — path currently clear of water");
           }
-        } else {
-          setNextFloodWarning("High ground ahead — path currently clear of water");
         }
       }
 
@@ -147,7 +172,7 @@ export function RaceMode({
         setIsCompleted(true);
         if (callbacksRef.current.aiVoiceEnabled) {
           aiVoice?.speak(
-            `Citizen has safely reached ${callbacksRef.current.committedRoute.shelterName || "shelter"} with time to spare!`
+            `Citizen has safely reached ${callbacksRef.current.committedRoute.shelterName || "designated safe shelter"}!`
           );
         }
         return;
@@ -161,92 +186,76 @@ export function RaceMode({
     return () => {
       if (reqRef.current) cancelAnimationFrame(reqRef.current);
       startTimeRef.current = null;
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("aegis:evacuee-reset"));
+      }
     };
   }, [isActive, speedMultiplier]);
 
   if (!isActive) return null;
 
   return (
-    <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-40 max-w-xl w-full px-4 select-none animate-in fade-in duration-200">
-      <div className="p-4 rounded-xl border border-emerald-500/80 bg-slate-950/95 backdrop-blur-md shadow-2xl space-y-3">
+    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 max-w-lg w-[calc(100%-2rem)] select-none animate-in fade-in duration-200">
+      <div className="p-3 rounded-xl border border-emerald-500/70 bg-[#0c121d]/95 backdrop-blur-md shadow-2xl space-y-2 text-slate-100">
         {/* Top Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-              LIVE EVACUATION RACE (COMMITTED ROUTE)
+          <div className="flex items-center space-x-2 min-w-0">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="text-[11px] font-mono font-extrabold text-emerald-300 uppercase tracking-wider truncate">
+              RACE // {profile.name} → {committedRoute.shelterName}
             </span>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5 shrink-0">
             {/* Speed Toggle */}
-            <div className="flex items-center bg-slate-900 border border-slate-700 rounded px-1 text-[10px] font-mono">
-              <span className="text-slate-400 mr-1">Speed:</span>
-              <button
-                onClick={() => setSpeedMultiplier(10)}
-                className={`px-1.5 py-0.5 rounded ${
-                  speedMultiplier === 10 ? "bg-emerald-500 text-slate-950 font-bold" : "text-slate-300"
-                }`}
-              >
-                10x
-              </button>
-              <button
-                onClick={() => setSpeedMultiplier(15)}
-                className={`px-1.5 py-0.5 rounded ${
-                  speedMultiplier === 15 ? "bg-emerald-500 text-slate-950 font-bold" : "text-slate-300"
-                }`}
-              >
-                15x
-              </button>
-              <button
-                onClick={() => setSpeedMultiplier(25)}
-                className={`px-1.5 py-0.5 rounded ${
-                  speedMultiplier === 25 ? "bg-emerald-500 text-slate-950 font-bold" : "text-slate-300"
-                }`}
-              >
-                25x
-              </button>
+            <div className="flex items-center bg-[#070a0f] border border-slate-700/80 rounded px-1 text-[10px] font-mono">
+              <span className="text-slate-400 mr-1">Pace:</span>
+              {[10, 15, 25].map((spd) => (
+                <button
+                  key={spd}
+                  onClick={() => setSpeedMultiplier(spd)}
+                  className={`px-1.5 py-0.5 rounded transition-all ${
+                    speedMultiplier === spd
+                      ? "bg-emerald-500 text-slate-950 font-extrabold"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  {spd}x
+                </button>
+              ))}
             </div>
 
             <button
               onClick={onStop}
-              className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-mono text-slate-300 hover:text-white transition-colors"
+              className="px-2 py-0.5 rounded bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-[10px] font-mono font-bold text-rose-200 transition-colors"
             >
-              EXIT RACE
+              EXIT ✕
             </button>
           </div>
         </div>
 
-        {/* Live Warning / Countdown */}
-        <div className="p-2.5 rounded bg-slate-900/90 border border-slate-800 flex items-center justify-between text-xs font-mono">
-          <div className="flex items-center space-x-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-            <span className="text-amber-300 font-semibold">{nextFloodWarning}</span>
+        {/* Hazard Countdown & Metrics Strip */}
+        <div className="px-2.5 py-1.5 rounded-lg bg-[#070a0f]/80 border border-slate-800 flex items-center justify-between text-[11px] font-mono">
+          <div className="flex items-center space-x-2 truncate mr-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping shrink-0" />
+            <span className="text-amber-300 font-semibold truncate">{nextFloodWarning}</span>
           </div>
-          <span className="text-slate-400">
-            {profile.name} ({profile.speed} m/s)
+          <span className="text-slate-400 shrink-0 tabular-nums">
+            {Math.round((progressPct / 100) * committedRoute.distanceM)}m / {committedRoute.distanceM}m ({progressPct}%)
           </span>
         </div>
 
         {/* Progress Bar */}
-        <div className="space-y-1.5">
-          <div className="flex justify-between text-xs font-mono text-slate-300">
-            <span>Progress to {committedRoute.shelterName}</span>
-            <span className="font-bold text-emerald-400 tabular-nums">
-              {progressPct}% ({Math.round((progressPct / 100) * committedRoute.distanceM)}m / {committedRoute.distanceM}m)
-            </span>
-          </div>
-          <div className="w-full h-2 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
-            <div
-              className="h-full bg-emerald-500 transition-all duration-100 rounded-full"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
+        <div className="w-full h-1.5 rounded-full bg-[#070a0f] border border-slate-800 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-150 rounded-full"
+            style={{ width: `${progressPct}%` }}
+          />
         </div>
 
         {isCompleted && (
-          <div className="p-2.5 rounded bg-emerald-950/90 border border-emerald-500 text-emerald-200 text-xs font-mono font-bold text-center animate-in zoom-in-95">
-            🎉 CITIZEN SAFELY REACHED {committedRoute.shelterName?.toUpperCase()}!
+          <div className="py-1 px-2 rounded bg-emerald-950/90 border border-emerald-500 text-emerald-200 text-xs font-mono font-bold text-center">
+            🎉 CITIZEN SAFELY REACHED {committedRoute.shelterName?.toUpperCase()} AHEAD OF FLOOD!
           </div>
         )}
       </div>

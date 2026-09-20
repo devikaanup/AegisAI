@@ -220,6 +220,10 @@ export default function Home() {
     if (isRaceModeActive) {
       setIsRaceModeActive(false);
       setRaceProgress(null);
+      setCommittedRoute(null);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("aegis:evacuee-reset"));
+      }
     } else {
       setCommittedRoute(simulationState.currentRoute);
       setRaceDepartureMinute(inputs.simulationMinute);
@@ -280,7 +284,11 @@ export default function Home() {
         {/* Center: Offline Map Console */}
         <div className="flex-1 min-w-0 relative h-full bg-[#0a0d12]">
           <MapView
-            currentRoute={simulationState.currentRoute}
+            currentRoute={
+              isRaceModeActive && committedRoute
+                ? committedRoute
+                : simulationState.currentRoute
+            }
             standardComparison={simulationState.standardComparison}
             showStandardRoute={showStandardRoute}
             simulationMinute={inputs.simulationMinute}
@@ -288,11 +296,16 @@ export default function Home() {
             evacueeStartJunction={simulationState.evacuee.startJunction}
             shelters={simulationState.shelters}
             raceProgress={raceProgress}
+            isRaceMode={isRaceModeActive}
           />
 
           {/* Floating Compare Card - Collapsible to avoid blocking map */}
           <CompareCard
-            currentRoute={simulationState.currentRoute}
+            currentRoute={
+              isRaceModeActive && committedRoute
+                ? committedRoute
+                : simulationState.currentRoute
+            }
             standardComparison={simulationState.standardComparison}
             showStandardRoute={showStandardRoute}
             onToggleStandardRoute={() => setShowStandardRoute(!showStandardRoute)}
@@ -305,6 +318,7 @@ export default function Home() {
             onStop={() => {
               setIsRaceModeActive(false);
               setRaceProgress(null);
+              setCommittedRoute(null);
             }}
             committedRoute={committedRoute || simulationState.currentRoute}
             profile={simulationState.profile}

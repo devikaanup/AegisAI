@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import maplibregl from "maplibre-gl";
 import roadsGeoJSON from "@/data/roads.json";
 import floodPolygonsData from "@/data/floodPolygons.json";
@@ -21,6 +21,7 @@ interface MapViewProps {
   evacueeStartJunction: string;
   shelters: Record<string, ShelterState>;
   raceProgress?: { lng: number; lat: number } | null;
+  isRaceMode?: boolean;
 }
 
 export function MapView({
@@ -32,6 +33,7 @@ export function MapView({
   evacueeStartJunction,
   shelters,
   raceProgress,
+  isRaceMode = false,
 }: MapViewProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -615,7 +617,29 @@ export function MapView({
     shelters,
   ]);
 
-  // 4. Dedicated lightweight effect for smooth 60fps evacuee marker movement
+  // 4. Dedicated zero-react-overhead 60fps marker movement via DOM CustomEvent + fallback prop
+  useEffect(() => {
+    const posHandler = (e: Event) => {
+      const custom = e as CustomEvent<{ lng: number; lat: number }>;
+      if (evacueeMarkerRef.current && custom.detail) {
+        evacueeMarkerRef.current.setLngLat([custom.detail.lng, custom.detail.lat]);
+      }
+    };
+    const resetHandler = () => {
+      const graph = getGraph();
+      const startNode = graph.nodes[evacueeStartJunction];
+      if (evacueeMarkerRef.current && startNode) {
+        evacueeMarkerRef.current.setLngLat([startNode.lng, startNode.lat]);
+      }
+    };
+    window.addEventListener("aegis:evacuee-pos", posHandler);
+    window.addEventListener("aegis:evacuee-reset", resetHandler);
+    return () => {
+      window.removeEventListener("aegis:evacuee-pos", posHandler);
+      window.removeEventListener("aegis:evacuee-reset", resetHandler);
+    };
+  }, [evacueeStartJunction]);
+
   useEffect(() => {
     if (!evacueeMarkerRef.current) return;
     if (raceProgress) {
@@ -628,6 +652,48 @@ export function MapView({
       }
     }
   }, [raceProgress, evacueeStartJunction]);
+
+  // Frame active route and destination shelter in 3D camera
+  const frameRoute = useCallback(() => {
+    const map = mapRef.current;
+    if (!map || !currentRoute || currentRoute.nodeIds.length === 0) return;
+    const graph = getGraph();
+    const coords: [number, number][] = currentRoute.nodeIds
+      .map((id) => {
+        const n = graph.nodes[id];
+        return n ? ([n.lng, n.lat] as [number, number]) : null;
+      })
+      .filter((c): c is [number, number] => c !== null);
+
+    if (coords.length >= 2) {
+      const lngs = coords.map((c) => c[0]);
+      const lats = coords.map((c) => c[1]);
+      const minLng = Math.min(...lngs);
+      const maxLng = Math.max(...lngs);
+      const minLat = Math.min(...lats);
+      const maxLat = Math.max(...lats);
+
+      map.fitBounds(
+        [
+          [minLng - 0.0012, minLat - 0.001],
+          [maxLng + 0.0012, maxLat + 0.001],
+        ],
+        {
+          padding: { top: 65, bottom: 85, left: 65, right: 65 },
+          duration: 900,
+          pitch: is3DMode ? 48 : 0,
+          maxZoom: 16.2,
+        }
+      );
+    }
+  }, [currentRoute, is3DMode]);
+
+  // Smoothly frame the race track whenever Race Mode is engaged
+  useEffect(() => {
+    if (isRaceMode && isMapLoaded) {
+      frameRoute();
+    }
+  }, [isRaceMode, isMapLoaded, frameRoute]);
 
   // Camera Mode Toggles
   const handleToggle3D = () => {
@@ -682,12 +748,18 @@ export function MapView({
             {is3DMode ? "3D ISO" : "2D PLAN"}
           </button>
           <button
+            onClick={frameRoute}
+            className="px-2.5 py-1 rounded text-[11px] font-mono text-emerald-300 hover:text-emerald-200 hover:bg-emerald-950/40 transition-all border-l border-slate-800"
+            title="Auto-frame entire active evacuation route and target shelter"
+          >
+            FOCUS ROUTE
+          </button>
+          <button
             onClick={handleResetView}
-            className="px-2.5 py-1 rounded text-[11px] font-mono text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all flex items-center space-x-1"
+            className="px-2.5 py-1 rounded text-[11px] font-mono text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all border-l border-slate-800"
             title="Reset map camera to whole neighborhood bounds"
           >
-            <span>⤢</span>
-            <span>BOUNDS</span>
+            RESET
           </button>
         </div>
 
