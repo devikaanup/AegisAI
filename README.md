@@ -119,6 +119,20 @@ GEMINI_MODEL=gemini-2.5-flash
 ```
 *Note: If no key is provided, the application runs 100% offline using certified deterministic fallback explanations.*
 
+### 3. Configure MapTiler Basemap Key (Optional)
+
+AEGIS AI uses [MapTiler](https://www.maptiler.com/) for 3D building/terrain rendering. This is the **one live-network dependency** in an otherwise offline-capable app — the routing engine, hazard math, shelter logic, and Gemini fallback all remain fully static and offline-capable.
+
+Add your MapTiler key to `.env.local`:
+```bash
+NEXT_PUBLIC_MAPTILER_KEY=your_maptiler_key_here
+```
+
+> **Note on key exposure**: MapTiler keys are **publishable, domain-restricted client keys** — this is MapTiler's own documented convention. They are expected to appear in client-side browser requests and are secured by allowed-domain restriction in the MapTiler dashboard, **not** by keeping them secret. This is entirely separate from — and does not relax — the `GEMINI_API_KEY` rule, which is server-only and must never appear in `NEXT_PUBLIC_*` variables.
+
+If the MapTiler key is missing or unreachable, the app **automatically falls back** to a schematic offline map with identical routing/flood/shelter information. A one-line dismissible notice is shown in the map viewport.
+
+
 ### 3. Verification & Story Check
 ```bash
 # Run Vitest test suite (50 tests passing)

@@ -84,4 +84,39 @@ describe("Security, Privacy & Brand Integrity Verification", () => {
       }
     }
   });
+
+  it("NEXT_PUBLIC_MAPTILER_KEY is documented in .env.example as the intentional public basemap key", () => {
+    const envExample = fs.readFileSync(path.join(rootDir, ".env.example"), "utf-8");
+    expect(envExample).toContain("NEXT_PUBLIC_MAPTILER_KEY");
+  });
+
+  it("GEMINI_API_KEY is never exposed via a NEXT_PUBLIC_ variable in any source file", () => {
+    const allSourceFiles = [...componentsFiles, ...appFiles, ...libFiles];
+    for (const file of allSourceFiles) {
+      const content = fs.readFileSync(file, "utf-8");
+      expect(content).not.toContain("NEXT_PUBLIC_GEMINI_API_KEY");
+      expect(content).not.toContain("NEXT_PUBLIC_GEMINI_KEY");
+    }
+  });
+
+  it("MapView uses no Turf union/buffer calls — flood polygons read from precomputed cache via setData only", () => {
+    const mapViewContent = fs.readFileSync(
+      path.join(rootDir, "components/MapView.tsx"),
+      "utf-8"
+    );
+    expect(mapViewContent).not.toContain("turf");
+    expect(mapViewContent).not.toContain("union(");
+    expect(mapViewContent).not.toContain("buffer(");
+    // setData IS the correct pattern
+    expect(mapViewContent).toContain("setData");
+  });
+
+  it("MapView references NEXT_PUBLIC_MAPTILER_KEY for basemap and never GEMINI_API_KEY", () => {
+    const mapViewContent = fs.readFileSync(
+      path.join(rootDir, "components/MapView.tsx"),
+      "utf-8"
+    );
+    expect(mapViewContent).toContain("NEXT_PUBLIC_MAPTILER_KEY");
+    expect(mapViewContent).not.toContain("GEMINI_API_KEY");
+  });
 });
