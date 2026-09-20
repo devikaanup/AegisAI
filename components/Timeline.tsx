@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
 interface TimelineProps {
   minute: number;
@@ -23,78 +23,44 @@ export function Timeline({
   const sec = Math.round((minute - min) * 60);
   const formattedTime = `T+${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 
-  // Playback loop
-  const requestRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!isPlaying) {
-      lastTimeRef.current = null;
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      return;
-    }
-
-    const animate = (now: number) => {
-      if (lastTimeRef.current !== null) {
-        const deltaSec = (now - lastTimeRef.current) / 1000;
-        // 1 sim-minute per real second * speed
-        const nextMin = minute + deltaSec * playbackSpeed;
-        if (nextMin >= 30) {
-          onChangeMinute(30);
-          onTogglePlay();
-          return;
-        } else {
-          onChangeMinute(nextMin);
-        }
-      }
-      lastTimeRef.current = now;
-      requestRef.current = requestAnimationFrame(animate);
-    };
-
-    requestRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
-    };
-  }, [isPlaying, playbackSpeed, minute, onChangeMinute, onTogglePlay]);
-
   return (
-    <div className="h-20 border-t border-slate-800 bg-[#0a0d12] px-6 flex items-center justify-between z-40 select-none">
+    <div className="h-16 border-t border-[#1e293b] bg-[#070a0f] px-5 flex items-center justify-between z-40 select-none">
       {/* Play/Pause & Speed */}
-      <div className="flex items-center space-x-3 w-48">
+      <div className="flex items-center space-x-2.5 w-44">
         <button
           onClick={onTogglePlay}
-          className="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-bold flex items-center justify-center transition-all shadow-md"
-          title={isPlaying ? "Pause Timeline" : "Play Timeline"}
+          className="w-8 h-8 rounded-md bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black flex items-center justify-center transition-all shadow-md text-xs"
+          title={isPlaying ? "Pause Simulation Timeline" : "Play Simulation Timeline"}
         >
           {isPlaying ? "❚❚" : "▶"}
         </button>
 
         <button
           onClick={onToggleSpeed}
-          className="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono font-bold text-slate-300"
+          className="px-2 py-1 rounded bg-[#0c121d] hover:bg-[#141d2b] border border-[#25354c] text-[10px] font-mono font-extrabold text-slate-300"
         >
-          {playbackSpeed}x SPEED
+          {playbackSpeed}X SPEED
         </button>
       </div>
 
       {/* Main Timeline Scrubber */}
-      <div className="flex-1 max-w-4xl px-6 flex flex-col justify-center space-y-1">
+      <div className="flex-1 max-w-4xl px-4 flex flex-col justify-center space-y-0.5">
         <div className="flex items-center justify-between text-xs font-mono">
           <div className="flex items-center space-x-2">
-            <span className="text-slate-400">Timeline:</span>
-            <span className="font-bold text-amber-400 text-sm tracking-wider tabular-nums">
-              Evacuee departs at {formattedTime}
+            <span className="text-slate-400 text-[11px] uppercase tracking-wider">Departure:</span>
+            <span className="font-extrabold text-amber-400 text-xs tracking-widest tabular-nums">
+              {formattedTime}
             </span>
           </div>
-          <div className="flex items-center space-x-3 text-[11px] text-slate-500">
+          <div className="flex items-center space-x-3 text-[10px] text-slate-500 font-mono">
             <span>🌊 Row 0 Floods: T+04m</span>
-            <span>🌊 Row 1 Floods: T+10m</span>
-            <span>🌊 Ridge Safe: T+30m</span>
+            <span>🌊 Row 1 Impassable: T+10m</span>
+            <span>🛡️ High Ground: T+30m</span>
           </div>
         </div>
 
         {/* Range Slider with ticks */}
-        <div className="relative pt-1">
+        <div className="relative pt-0.5">
           <input
             type="range"
             min="0"
@@ -102,10 +68,10 @@ export function Timeline({
             step="0.1"
             value={minute}
             onChange={(e) => onChangeMinute(parseFloat(e.target.value))}
-            className="w-full accent-emerald-400 bg-slate-800 cursor-pointer h-2 rounded-lg"
+            className="w-full accent-cyan-400 bg-[#162233] cursor-pointer h-1.5 rounded-lg"
           />
 
-          <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+          <div className="flex justify-between text-[9px] font-mono text-slate-500 mt-0.5">
             <span>T+00m</span>
             <span>T+05m</span>
             <span>T+10m</span>
@@ -117,10 +83,10 @@ export function Timeline({
         </div>
       </div>
 
-      {/* Flood Status indicator */}
-      <div className="w-48 text-right font-mono text-xs">
-        <span className="text-slate-500 block">Hazard Extent</span>
-        <span className="text-blue-400 font-bold tabular-nums">
+      {/* Flood Status Indicator */}
+      <div className="w-44 text-right font-mono text-[11px]">
+        <span className="text-slate-500 block uppercase tracking-wider text-[9px]">Flood Crest</span>
+        <span className="text-cyan-400 font-bold tabular-nums">
           Depth: {Math.max(0, Math.round((minute - 4) * 4))} cm (Row 0)
         </span>
       </div>

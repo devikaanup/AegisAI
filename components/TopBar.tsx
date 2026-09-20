@@ -30,30 +30,30 @@ export function TopBar({
   const timeFormatted = `T+${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 
   return (
-    <header className="h-14 border-b border-slate-800 bg-[#0a0d12] px-4 flex items-center justify-between z-40 relative select-none">
-      {/* Brand & System Status */}
+    <header className="h-13 border-b border-[#1e293b] bg-[#070a0f] px-4 py-2 flex items-center justify-between z-40 relative select-none">
+      {/* Brand & Mission Status */}
       <div className="flex items-center space-x-3">
         <div className="flex items-center space-x-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-          <span className="font-mono font-extrabold text-white text-lg tracking-wider">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+          <span className="font-mono font-black text-white text-base tracking-widest">
             AEGIS AI
           </span>
         </div>
-        <span className="text-slate-600 font-mono">|</span>
-        <span className="text-xs font-mono text-slate-400 uppercase tracking-widest hidden sm:inline">
-          EOC Dispatch
+        <span className="text-slate-700 font-mono">/</span>
+        <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest hidden sm:inline">
+          DISPATCH CONTROL // SECTOR 04
         </span>
-        <span className="text-slate-600 font-mono hidden sm:inline">|</span>
-        <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+        <span className="text-slate-700 font-mono hidden sm:inline">/</span>
+        <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 text-[11px] font-mono">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-          <span>LIVE SIMULATION</span>
+          <span className="tracking-wider">LIVE 3D SIMULATION</span>
         </div>
       </div>
 
       {/* Center Departure Timestamp */}
-      <div className="flex items-center space-x-2 px-3 py-1 rounded bg-slate-900 border border-slate-800">
-        <span className="text-xs font-mono text-slate-400">Evacuee departs at:</span>
-        <span className="text-sm font-mono font-bold text-amber-400 tabular-nums tracking-wider">
+      <div className="flex items-center space-x-2 px-3 py-1 rounded-md bg-[#0c121d] border border-[#1e293b]">
+        <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Evacuee Departs:</span>
+        <span className="text-sm font-mono font-extrabold text-amber-400 tabular-nums tracking-widest">
           {timeFormatted}
         </span>
       </div>
@@ -65,56 +65,56 @@ export function TopBar({
           onClick={onToggleAiVoice}
           className={`px-2.5 py-1 rounded text-xs font-mono flex items-center space-x-1.5 border transition-all ${
             aiVoiceEnabled
-              ? "bg-purple-950/60 border-purple-400/80 text-purple-200 shadow-sm shadow-purple-900/40"
-              : "bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300"
+              ? "bg-cyan-950/60 border-cyan-400/80 text-cyan-200 shadow-sm shadow-cyan-900/40"
+              : "bg-[#0c121d] border-[#1e293b] text-slate-500 hover:text-slate-300"
           }`}
           title="Toggle browser Web Speech API voice overlay"
         >
           <span
             className={`w-1.5 h-1.5 rounded-full ${
-              aiVoiceEnabled ? "bg-purple-400 animate-pulse" : "bg-slate-600"
+              aiVoiceEnabled ? "bg-cyan-400 animate-pulse" : "bg-slate-600"
             }`}
           />
-          <span>{aiVoiceEnabled ? "🔊 Voice Overlay: ON" : "🔇 Voice Overlay: OFF"}</span>
+          <span className="tracking-tight">{aiVoiceEnabled ? "🔊 Voice: ON" : "🔇 Voice: OFF"}</span>
         </button>
 
-        {/* AI Narration Toggle */}
+        {/* AI Explanation Text Toggle */}
         <button
           onClick={onToggleAiNarration}
           className={`px-2.5 py-1 rounded text-xs font-mono flex items-center space-x-1.5 border transition-all ${
             aiNarrationEnabled
-              ? "bg-cyan-950/40 border-cyan-500/50 text-cyan-300"
-              : "bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300"
+              ? "bg-emerald-950/50 border-emerald-500/60 text-emerald-300"
+              : "bg-[#0c121d] border-[#1e293b] text-slate-500 hover:text-slate-300"
           }`}
-          title="Toggle Gemini NL event auto-narration"
+          title="Toggle Gemini Natural Language event explanation"
         >
           <span
             className={`w-1.5 h-1.5 rounded-full ${
-              aiNarrationEnabled ? "bg-cyan-400 animate-pulse" : "bg-slate-600"
+              aiNarrationEnabled ? "bg-emerald-400 animate-pulse" : "bg-slate-600"
             }`}
           />
-          <span>AI Text: {aiNarrationEnabled ? "ON" : "OFF"}</span>
+          <span className="tracking-tight">AI Explain: {aiNarrationEnabled ? "ON" : "OFF"}</span>
         </button>
 
         {/* Auto Demo Button */}
         <button
           onClick={onStartAutoDemo}
-          className={`px-3 py-1 rounded text-xs font-mono font-semibold border transition-all ${
+          className={`px-3 py-1 rounded text-xs font-mono font-bold border transition-all tracking-wider ${
             isAutoDemoActive
-              ? "bg-amber-500 text-slate-950 border-amber-400 animate-pulse"
-              : "bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200"
+              ? "bg-amber-500 text-slate-950 border-amber-400 animate-pulse shadow-lg shadow-amber-500/30"
+              : "bg-[#141d2b] hover:bg-[#1a2638] border-[#25354c] text-slate-200"
           }`}
         >
-          {isAutoDemoActive ? "STOP DEMO" : "▶ 2-MIN STAGE DEMO"}
+          {isAutoDemoActive ? "STOP DEMO" : "▶ 2-MIN DEMO"}
         </button>
 
         {/* Race Mode Button */}
         <button
           onClick={onToggleRaceMode}
-          className={`px-3 py-1 rounded text-xs font-mono font-semibold border transition-all ${
+          className={`px-3 py-1 rounded text-xs font-mono font-bold border transition-all tracking-wider ${
             isRaceModeActive
-              ? "bg-emerald-500 text-slate-950 border-emerald-400"
-              : "bg-emerald-950/40 hover:bg-emerald-900/40 border-emerald-600/50 text-emerald-400"
+              ? "bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/30"
+              : "bg-emerald-950/40 hover:bg-emerald-900/50 border-emerald-600/50 text-emerald-400"
           }`}
         >
           {isRaceModeActive ? "STOP RACE" : "⚡ RACE MODE"}

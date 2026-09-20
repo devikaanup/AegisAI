@@ -5,6 +5,8 @@ import maplibregl from "maplibre-gl";
 import roadsGeoJSON from "@/data/roads.json";
 import floodPolygonsData from "@/data/floodPolygons.json";
 import sheltersData from "@/data/shelters.json";
+import buildingsGeoJSON from "@/data/buildings.json";
+import landuseGeoJSON from "@/data/landuse.json";
 import { getGraph } from "@/lib/graph";
 import { RouteResult, StandardRouteComparison } from "@/lib/routing";
 import { ShelterState } from "@/lib/shelterEngine";
@@ -34,12 +36,13 @@ export function MapView({
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [is3DMode, setIs3DMode] = useState(true);
 
   const evacueeMarkerRef = useRef<maplibregl.Marker | null>(null);
   const shelterMarkersRef = useRef<maplibregl.Marker[]>([]);
   const obstacleMarkersRef = useRef<maplibregl.Marker[]>([]);
 
-  // 1. Initialize MapLibre with inline dark style and StrictMode safety
+  // 1. Initialize MapLibre with 3D Isometric View & Real-World GIS styling
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
     let isMounted = true;
@@ -56,46 +59,156 @@ export function MapView({
           {
             id: "background",
             type: "background",
-            paint: { "background-color": "#0a0d12" },
+            paint: { "background-color": "#070a0f" },
           },
         ],
       },
-      center: [startNode.lng, startNode.lat],
-      zoom: 15.2,
-      pitch: 15,
+      center: [startNode.lng + 0.002, startNode.lat + 0.001],
+      zoom: 15.6,
+      pitch: 52,
+      bearing: -16,
       attributionControl: false,
     });
 
     map.on("load", () => {
       if (!isMounted) return;
 
-      // 1. Base Road Network Source
+      // Enable 3D directional viewport light
+      try {
+        (map as any).setLight({
+          anchor: "viewport",
+          color: "#cbd5e1",
+          intensity: 0.5,
+          position: [1.15, 210, 35],
+        });
+      } catch {}
+
+      // ==========================================
+      // A. Natural & Urban Land Use Layers
+      // ==========================================
+      map.addSource("landuse", {
+        type: "geojson",
+        data: landuseGeoJSON as any,
+      });
+
+      // 1. Urban Parcels (Blocks foundation)
+      map.addLayer({
+        id: "landuse-parcels-fill",
+        type: "fill",
+        source: "landuse",
+        filter: ["==", ["get", "type"], "urban_parcel"],
+        paint: {
+          "fill-color": ["get", "color"],
+          "fill-opacity": 0.85,
+        },
+      });
+
+      map.addLayer({
+        id: "landuse-parcels-line",
+        type: "line",
+        source: "landuse",
+        filter: ["==", ["get", "type"], "urban_parcel"],
+        paint: {
+          "line-color": ["get", "strokeColor"],
+          "line-width": 1.2,
+          "line-opacity": 0.5,
+        },
+      });
+
+      // 2. Parks and Green Spaces
+      map.addLayer({
+        id: "landuse-parks-fill",
+        type: "fill",
+        source: "landuse",
+        filter: ["in", ["get", "type"], ["literal", ["park", "plaza"]]],
+        paint: {
+          "fill-color": ["get", "color"],
+          "fill-opacity": 0.9,
+        },
+      });
+
+      map.addLayer({
+        id: "landuse-parks-line",
+        type: "line",
+        source: "landuse",
+        filter: ["in", ["get", "type"], ["literal", ["park", "plaza"]]],
+        paint: {
+          "line-color": ["get", "strokeColor"],
+          "line-width": 1.5,
+          "line-opacity": 0.8,
+        },
+      });
+
+      // 3. Palar Riverbed (Water body)
+      map.addLayer({
+        id: "landuse-water-fill",
+        type: "fill",
+        source: "landuse",
+        filter: ["==", ["get", "type"], "water"],
+        paint: {
+          "fill-color": "#0a1c30",
+          "fill-opacity": 0.95,
+        },
+      });
+
+      map.addLayer({
+        id: "landuse-water-line",
+        type: "line",
+        source: "landuse",
+        filter: ["==", ["get", "type"], "water"],
+        paint: {
+          "line-color": "#1e40af",
+          "line-width": 2,
+          "line-opacity": 0.8,
+        },
+      });
+
+      // ==========================================
+      // B. Realistic Road Network Layers
+      // ==========================================
       map.addSource("roads-base", {
         type: "geojson",
         data: roadsGeoJSON as any,
       });
 
+      // Sidewalk Curbs / Roadbed casing
       map.addLayer({
-        id: "roads-base-casing",
+        id: "roads-curb-casing",
         type: "line",
         source: "roads-base",
         paint: {
-          "line-color": "#141b26",
-          "line-width": 6,
+          "line-color": "#1e2837",
+          "line-width": 10,
         },
       });
 
+      // Asphalt Pavement
       map.addLayer({
-        id: "roads-base-line",
+        id: "roads-asphalt",
         type: "line",
         source: "roads-base",
         paint: {
-          "line-color": "#1e293b",
-          "line-width": 3,
+          "line-color": "#121722",
+          "line-width": 6.5,
         },
       });
 
-      // 2. Precomputed Flood Extent Source
+      // Road Dashed Centerlines
+      map.addLayer({
+        id: "roads-centerline",
+        type: "line",
+        source: "roads-base",
+        paint: {
+          "line-color": "#28374c",
+          "line-width": 1.2,
+          "line-dasharray": [3, 3],
+          "line-opacity": 0.7,
+        },
+      });
+
+      // ==========================================
+      // C. Precomputed Flood Extent Surface
+      // ==========================================
       map.addSource("flood-extent", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
@@ -106,7 +219,7 @@ export function MapView({
         type: "fill",
         source: "flood-extent",
         paint: {
-          "fill-color": "#1e3a8a",
+          "fill-color": "#1e40af",
           "fill-opacity": 0.45,
         },
       });
@@ -116,13 +229,15 @@ export function MapView({
         type: "line",
         source: "flood-extent",
         paint: {
-          "line-color": "#3b82f6",
+          "line-color": "#60a5fa",
           "line-width": 2.5,
           "line-blur": 1,
         },
       });
 
-      // 3. Dynamic Hazard Overlay for Roads (Threatened / Impassable)
+      // ==========================================
+      // D. Dynamic Road Hazard Colors (Threatened/Impassable)
+      // ==========================================
       map.addSource("roads-hazard", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
@@ -134,12 +249,36 @@ export function MapView({
         source: "roads-hazard",
         paint: {
           "line-color": ["get", "color"],
-          "line-width": 3.5,
-          "line-opacity": 0.85,
+          "line-width": 5,
+          "line-opacity": 0.9,
         },
       });
 
-      // 4. Standard Route Source (Dashed Red)
+      // ==========================================
+      // E. 3D Extruded Buildings (fill-extrusion)
+      // ==========================================
+      map.addSource("buildings-3d", {
+        type: "geojson",
+        data: buildingsGeoJSON as any,
+      });
+
+      map.addLayer({
+        id: "buildings-3d-layer",
+        type: "fill-extrusion",
+        source: "buildings-3d",
+        paint: {
+          "fill-extrusion-color": ["get", "color"],
+          "fill-extrusion-height": ["get", "height"],
+          "fill-extrusion-base": ["get", "base_height"],
+          "fill-extrusion-opacity": 0.92,
+          "fill-extrusion-vertical-gradient": true,
+        },
+      });
+
+      // ==========================================
+      // F. Navigation Routes
+      // ==========================================
+      // Standard Route (Dashed Red)
       map.addSource("route-standard", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
@@ -152,90 +291,149 @@ export function MapView({
         paint: {
           "line-color": "#ef4444",
           "line-width": 4,
-          "line-dasharray": [2, 2],
-          "line-opacity": 0.85,
+          "line-dasharray": [2.5, 2],
+          "line-opacity": 0.9,
         },
       });
 
-      // 5. Accessible Safe Route Source (Glowing Emerald)
+      // Accessible Safe Route (Glowing Emerald Pipeline)
       map.addSource("route-accessible", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
       });
 
+      // 1. Ground halo glow
       map.addLayer({
         id: "route-accessible-glow",
         type: "line",
         source: "route-accessible",
         paint: {
           "line-color": "#10b981",
-          "line-width": 12,
-          "line-opacity": 0.25,
+          "line-width": 14,
+          "line-opacity": 0.35,
           "line-blur": 4,
         },
       });
 
+      // 2. Outer pipeline casing
+      map.addLayer({
+        id: "route-accessible-casing",
+        type: "line",
+        source: "route-accessible",
+        paint: {
+          "line-color": "#047857",
+          "line-width": 7.5,
+          "line-opacity": 0.95,
+        },
+      });
+
+      // 3. Neon Core
       map.addLayer({
         id: "route-accessible-line",
         type: "line",
         source: "route-accessible",
         paint: {
-          "line-color": "#10b981",
-          "line-width": 5,
-          "line-opacity": 0.95,
+          "line-color": "#34d399",
+          "line-width": 4.5,
+          "line-opacity": 1.0,
         },
       });
 
-      // 6. Shelters as Custom Markers
+      // ==========================================
+      // G. 3D Elevation POI Markers: Shelters
+      // ==========================================
       shelterMarkersRef.current = [];
       for (const s of sheltersData) {
         const jNode = graph.nodes[s.junctionId];
         if (!jNode) continue;
 
         const el = document.createElement("div");
-        el.className = "shelter-marker select-none cursor-pointer";
+        el.className = "shelter-marker-root select-none cursor-pointer";
         el.innerHTML = `
-          <div class="px-2 py-1 rounded bg-slate-900/90 border border-cyan-500 shadow-lg text-[11px] font-mono text-cyan-300 flex items-center space-x-1.5 whitespace-nowrap">
-            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-            <span class="font-bold">${s.name}</span>
+          <div class="flex flex-col items-center group">
+            <div class="px-2.5 py-1 rounded-md bg-[#0c121c]/95 border border-cyan-500 shadow-xl text-[10px] font-mono text-cyan-300 flex items-center space-x-1.5 whitespace-nowrap backdrop-blur-md">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span class="font-extrabold uppercase tracking-wide">${s.name}</span>
+            </div>
+            <div class="w-0.5 h-3.5 bg-gradient-to-b from-cyan-400 to-transparent"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50"></div>
           </div>
         `;
 
-        const marker = new maplibregl.Marker({ element: el })
+        const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
           .setLngLat([jNode.lng, jNode.lat])
           .addTo(map);
 
         shelterMarkersRef.current.push(marker);
       }
 
-      // 7. Obstacle Badges
+      // ==========================================
+      // H. Anchored Obstacle Callout Annotations
+      // ==========================================
       obstacleMarkersRef.current = [];
       const obstacles = [
-        { name: "Steps", lngLat: [graph.nodes["r1c1"]?.lng ?? 79.1538, (graph.nodes["r1c1"]?.lat ?? 12.9693) + 0.0006] },
-        { name: "Kerb 15cm", lngLat: [(graph.nodes["r0c1"]?.lng ?? 79.1538) + 0.0009, graph.nodes["r0c1"]?.lat ?? 12.968] },
-        { name: "Slope 9%", lngLat: [(graph.nodes["r2c3"]?.lng ?? 79.1575) - 0.0005, graph.nodes["r2c3"]?.lat ?? 12.9707] },
-        { name: "Unsignalized 4-lane", lngLat: [(graph.nodes["r1c2"]?.lng ?? 79.1557) + 0.0009, graph.nodes["r1c2"]?.lat ?? 12.9693] },
-        { name: "Rough: Gravel", lngLat: [(graph.nodes["r2c0"]?.lng ?? 79.152) + 0.0009, graph.nodes["r2c0"]?.lat ?? 12.9707] },
+        {
+          name: "STEPS — NOT ACCESSIBLE",
+          icon: "⛔",
+          color: "border-rose-500/80 text-rose-300 bg-rose-950/90",
+          lngLat: [graph.nodes["r1c1"]?.lng ?? 79.1538, (graph.nodes["r1c1"]?.lat ?? 12.9693) + 0.0006],
+        },
+        {
+          name: "KERB 15cm",
+          icon: "⚠️",
+          color: "border-amber-500/80 text-amber-300 bg-amber-950/90",
+          lngLat: [(graph.nodes["r0c1"]?.lng ?? 79.1538) + 0.0009, graph.nodes["r0c1"]?.lat ?? 12.968],
+        },
+        {
+          name: "SLOPE 9%",
+          icon: "⚠️",
+          color: "border-amber-500/80 text-amber-300 bg-amber-950/90",
+          lngLat: [(graph.nodes["r2c3"]?.lng ?? 79.1575) - 0.0005, graph.nodes["r2c3"]?.lat ?? 12.9707],
+        },
+        {
+          name: "4-LANE CROSSING",
+          icon: "⚠️",
+          color: "border-amber-500/80 text-amber-300 bg-amber-950/90",
+          lngLat: [(graph.nodes["r1c2"]?.lng ?? 79.1557) + 0.0009, graph.nodes["r1c2"]?.lat ?? 12.9693],
+        },
+        {
+          name: "ROUGH GRAVEL",
+          icon: "⚠️",
+          color: "border-slate-600 text-slate-300 bg-slate-950/90",
+          lngLat: [(graph.nodes["r2c0"]?.lng ?? 79.152) + 0.0009, graph.nodes["r2c0"]?.lat ?? 12.9707],
+        },
       ];
 
       for (const obs of obstacles) {
         const el = document.createElement("div");
-        el.className = "px-1.5 py-0.5 rounded bg-slate-950/80 border border-slate-700 text-[9px] font-mono text-slate-300 shadow pointer-events-none";
-        el.innerText = obs.name;
-        const marker = new maplibregl.Marker({ element: el })
+        el.className = "select-none pointer-events-none";
+        el.innerHTML = `
+          <div class="flex flex-col items-center">
+            <div class="px-2 py-0.5 rounded-md border text-[9px] font-mono font-bold tracking-tight shadow-xl flex items-center space-x-1 whitespace-nowrap backdrop-blur-md ${obs.color}">
+              <span>${obs.icon}</span>
+              <span>${obs.name}</span>
+            </div>
+            <div class="w-px h-2.5 bg-slate-400/60"></div>
+            <div class="w-1 h-1 rounded-full bg-slate-400"></div>
+          </div>
+        `;
+        const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
           .setLngLat(obs.lngLat as [number, number])
           .addTo(map);
         obstacleMarkersRef.current.push(marker);
       }
 
-      // 8. Evacuee Marker
+      // ==========================================
+      // I. Evacuee Tactical Radar Beacon Marker
+      // ==========================================
       const evacueeEl = document.createElement("div");
-      evacueeEl.className = "evacuee-marker select-none";
+      evacueeEl.className = "evacuee-marker-root select-none pointer-events-none";
       evacueeEl.innerHTML = `
         <div class="relative flex items-center justify-center">
-          <div class="w-6 h-6 rounded-full bg-emerald-500/40 animate-ping absolute"></div>
-          <div class="w-5 h-5 rounded-full bg-emerald-500 border-2 border-white shadow-xl flex items-center justify-center text-[10px] text-slate-950 font-bold">
-            🚶
+          <div class="w-8 h-8 rounded-full bg-emerald-500/25 animate-ping absolute"></div>
+          <div class="w-6 h-6 rounded-full border border-emerald-400/60 animate-pulse absolute"></div>
+          <div class="w-4 h-4 rounded-full bg-emerald-400 border-2 border-white shadow-xl flex items-center justify-center text-[8px] text-slate-950 font-black">
+            ●
           </div>
         </div>
       `;
@@ -244,22 +442,6 @@ export function MapView({
         .setLngLat([startNode.lng, startNode.lat])
         .addTo(map);
 
-      // Fit bounds to neighborhood
-      const allLngs = Object.values(graph.nodes).map((n) => n.lng);
-      const allLats = Object.values(graph.nodes).map((n) => n.lat);
-      const minLng = Math.min(...allLngs);
-      const maxLng = Math.max(...allLngs);
-      const minLat = Math.min(...allLats);
-      const maxLat = Math.max(...allLats);
-
-      map.fitBounds(
-        [
-          [minLng - 0.001, minLat - 0.001],
-          [maxLng + 0.001, maxLat + 0.001],
-        ],
-        { padding: 40, duration: 0 }
-      );
-
       setIsMapLoaded(true);
     });
 
@@ -267,7 +449,6 @@ export function MapView({
 
     return () => {
       isMounted = false;
-      // Clean up markers
       shelterMarkersRef.current.forEach((m) => m.remove());
       shelterMarkersRef.current = [];
       obstacleMarkersRef.current.forEach((m) => m.remove());
@@ -293,7 +474,7 @@ export function MapView({
     const startNode = graph.nodes[evacueeStartJunction];
     if (startNode) {
       map.flyTo({
-        center: [startNode.lng, startNode.lat],
+        center: [startNode.lng + 0.001, startNode.lat],
         speed: 1.2,
         curve: 1.1,
       });
@@ -391,7 +572,7 @@ export function MapView({
       }
     }
 
-    // F. Update Shelter Marker status labels
+    // E. Update Shelter Marker status labels & occupancy meters
     for (let i = 0; i < sheltersData.length; i++) {
       const s = sheltersData[i];
       const marker = shelterMarkersRef.current[i];
@@ -402,19 +583,24 @@ export function MapView({
         const isFull = sState.isFull;
 
         el.innerHTML = `
-          <div class="px-2 py-1 rounded border shadow-lg text-[11px] font-mono flex items-center space-x-1.5 whitespace-nowrap transition-all ${
-            isSelected
-              ? "bg-cyan-950/90 border-cyan-400 text-cyan-200 ring-2 ring-cyan-400/30 scale-105"
-              : isFull
-              ? "bg-rose-950/90 border-rose-500 text-rose-300"
-              : "bg-slate-900/90 border-slate-700 text-slate-300"
-          }">
-            <span class="w-2 h-2 rounded-full ${
-              isSelected ? "bg-cyan-400 animate-pulse" : isFull ? "bg-rose-500" : "bg-slate-500"
-            }"></span>
-            <span class="font-bold">${s.name}</span>
-            <span class="text-[10px] text-slate-400">(${sState.currentOccupancy}/${sState.capacity})</span>
-            ${isFull ? '<span class="px-1 bg-rose-800 text-white text-[9px] rounded font-bold">FULL</span>' : ""}
+          <div class="flex flex-col items-center group transition-transform ${isSelected ? "scale-105" : ""}">
+            <div class="px-2.5 py-1 rounded-md border shadow-2xl text-[10px] font-mono flex items-center space-x-1.5 whitespace-nowrap transition-all ${
+              isSelected
+                ? "bg-cyan-950/95 border-cyan-400 text-cyan-200 ring-2 ring-cyan-400/40"
+                : isFull
+                ? "bg-rose-950/95 border-rose-500 text-rose-300"
+                : "bg-slate-900/90 border-slate-700 text-slate-300"
+            }">
+              <span class="w-2 h-2 rounded-full ${
+                isSelected ? "bg-cyan-400 animate-pulse" : isFull ? "bg-rose-500" : "bg-slate-500"
+              }"></span>
+              <span class="font-bold tracking-wide">${s.name}</span>
+              <span class="text-[9px] text-slate-400 tabular-nums">(${sState.currentOccupancy}/${sState.capacity})</span>
+              ${isSelected ? '<span class="px-1 bg-cyan-500/20 text-cyan-300 text-[8px] rounded font-bold">ASSIGNED</span>' : ""}
+              ${isFull ? '<span class="px-1 bg-rose-800 text-white text-[8px] rounded font-bold">FULL</span>' : ""}
+            </div>
+            <div class="w-0.5 h-3 bg-gradient-to-b ${isSelected ? "from-cyan-400" : isFull ? "from-rose-500" : "from-slate-600"} to-transparent"></div>
+            <div class="w-1.5 h-1.5 rounded-full ${isSelected ? "bg-cyan-400 shadow-md shadow-cyan-400" : isFull ? "bg-rose-500" : "bg-slate-500"}"></div>
           </div>
         `;
       }
@@ -443,6 +629,20 @@ export function MapView({
     }
   }, [raceProgress, evacueeStartJunction]);
 
+  // Camera Mode Toggles
+  const handleToggle3D = () => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (is3DMode) {
+      map.easeTo({ pitch: 0, bearing: 0, duration: 800 });
+      setIs3DMode(false);
+    } else {
+      map.easeTo({ pitch: 52, bearing: -16, duration: 800 });
+      setIs3DMode(true);
+    }
+  };
+
   const handleResetView = () => {
     const map = mapRef.current;
     if (!map) return;
@@ -459,24 +659,42 @@ export function MapView({
         [minLng - 0.001, minLat - 0.001],
         [maxLng + 0.001, maxLat + 0.001],
       ],
-      { padding: 40, duration: 600 }
+      { padding: 45, duration: 600, pitch: is3DMode ? 50 : 0 }
     );
   };
 
   return (
-    <div className="relative w-full h-full bg-[#0a0d12] overflow-hidden">
+    <div className="relative w-full h-full bg-[#070a0f] overflow-hidden">
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* Floating Map Navigation Controls */}
-      <div className="absolute top-3 left-3 z-20 flex items-center space-x-1.5 select-none">
-        <button
-          onClick={handleResetView}
-          className="px-2.5 py-1 rounded-md bg-[#0c111a]/85 hover:bg-slate-800 border border-slate-700/80 text-[11px] font-mono text-slate-300 hover:text-white backdrop-blur-md shadow transition-colors flex items-center space-x-1"
-          title="Reset map camera to whole neighborhood view"
-        >
-          <span>⤢</span>
-          <span>Fit Neighborhood</span>
-        </button>
+      {/* Floating Tactical GIS Controls */}
+      <div className="absolute top-3 left-3 z-20 flex items-center space-x-2 select-none">
+        <div className="flex items-center rounded-lg bg-[#0c121d]/90 border border-slate-700/80 shadow-xl backdrop-blur-md p-0.5">
+          <button
+            onClick={handleToggle3D}
+            className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold transition-all ${
+              is3DMode
+                ? "bg-cyan-950/80 border border-cyan-500/60 text-cyan-300 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+            title="Toggle between 3D Isometric View and 2D Top-down View"
+          >
+            {is3DMode ? "3D ISO" : "2D PLAN"}
+          </button>
+          <button
+            onClick={handleResetView}
+            className="px-2.5 py-1 rounded text-[11px] font-mono text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all flex items-center space-x-1"
+            title="Reset map camera to whole neighborhood bounds"
+          >
+            <span>⤢</span>
+            <span>BOUNDS</span>
+          </button>
+        </div>
+
+        <div className="hidden md:flex items-center px-2 py-1 rounded-md bg-[#0c121d]/80 border border-slate-800/80 text-[10px] font-mono text-slate-400 backdrop-blur-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" />
+          <span>3D GIS ENGINE // PITCH 52°</span>
+        </div>
       </div>
     </div>
   );

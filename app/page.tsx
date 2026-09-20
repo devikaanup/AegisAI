@@ -262,7 +262,7 @@ export default function Home() {
       />
 
       {/* 4. Main Console Workspace */}
-      <main className="flex-1 flex relative overflow-hidden h-[calc(100vh-3.5rem-5rem)]">
+      <main className="flex-1 flex relative overflow-hidden h-[calc(100vh-3.25rem-4rem)]">
         {/* Left Sidebar: Mission Setup */}
         <ControlPanel
           selectedEvacueeId={inputs.evacueeId}

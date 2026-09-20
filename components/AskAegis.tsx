@@ -130,17 +130,17 @@ export function AskAegis({
       answer.inputsSnapshot.peopleEvacuating !== currentInputs.peopleEvacuating);
 
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900/90 p-3.5 space-y-3 select-none">
+    <div className="rounded-lg border border-[#1e293b] bg-[#0c121d] p-3 space-y-2.5 select-none">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-purple-400" />
-            <h3 className="text-xs font-mono font-bold tracking-wider uppercase text-purple-300">
-              ASK AEGIS
+            <span className="w-2 h-2 rounded-full bg-cyan-400" />
+            <h3 className="text-[11px] font-mono font-extrabold tracking-widest uppercase text-cyan-300">
+              ASK AEGIS // INTEL EXPLAINER
             </h3>
           </div>
-          <p className="text-[11px] text-slate-400 font-mono">
+          <p className="text-[10px] text-slate-400 font-mono">
             Explains the engine&apos;s decision. It never makes one.
           </p>
         </div>
@@ -153,14 +153,14 @@ export function AskAegis({
       </div>
 
       {isExpanded && (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {/* Suggestion Chips */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1">
             {CHIPS.map((chip, idx) => (
               <button
                 key={idx}
                 onClick={() => handleAsk(chip)}
-                className="px-2 py-1 rounded bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-[11px] text-slate-300 font-mono transition-all text-left"
+                className="px-2 py-0.5 rounded bg-[#141e2e] hover:bg-[#1b283d] border border-slate-700 text-[10px] text-slate-300 font-mono transition-all text-left"
               >
                 {chip}
               </button>
@@ -179,36 +179,36 @@ export function AskAegis({
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask an emergency route question..."
+              placeholder="Ask route explanation..."
               maxLength={300}
-              className="flex-1 bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono focus:border-purple-500 focus:outline-none placeholder:text-slate-600"
+              className="flex-1 bg-[#070a0f] border border-[#25354c] rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono focus:border-cyan-500 focus:outline-none placeholder:text-slate-600"
             />
             <button
               type="submit"
               disabled={isLoading || !question.trim()}
-              className="px-3 py-1.5 rounded bg-purple-600 hover:bg-purple-500 active:scale-95 disabled:opacity-50 text-xs font-mono font-bold text-white transition-all"
+              className="px-3 py-1.5 rounded bg-cyan-600 hover:bg-cyan-500 active:scale-95 disabled:opacity-50 text-xs font-mono font-bold text-slate-950 transition-all tracking-wider"
             >
-              {isLoading ? "..." : "ASK"}
+              {isLoading ? "..." : "QUERY"}
             </button>
           </form>
 
           {/* Answer Card */}
           {answer && (
-            <div className="p-3 rounded bg-slate-950 border border-purple-900/40 space-y-2">
-              <div className="flex items-center justify-between text-[10px] font-mono">
+            <div className="p-2.5 rounded-md bg-[#070a0f] border border-cyan-900/40 space-y-1.5">
+              <div className="flex items-center justify-between text-[9px] font-mono">
                 <span className="text-slate-400 truncate max-w-[200px]">
                   &ldquo;{answer.question}&rdquo;
                 </span>
                 <span
-                  className={`px-1.5 py-0.5 rounded border ${
+                  className={`px-1.5 py-0.2 rounded border ${
                     answer.source === "gemini"
-                      ? "bg-purple-950/60 border-purple-500 text-purple-300"
+                      ? "bg-cyan-950/60 border-cyan-500 text-cyan-300"
                       : "bg-emerald-950/60 border-emerald-500 text-emerald-300"
                   }`}
                 >
                   {answer.source === "gemini"
-                    ? "AI explanation · grounded in engine output"
-                    : "Verified system explanation"}
+                    ? "AI Grounded Analysis"
+                    : "Verified System Analysis"}
                 </span>
               </div>
 
