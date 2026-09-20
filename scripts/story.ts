@@ -6,7 +6,7 @@ import { buildExplanationContext } from "../lib/explainContext";
 
 function main() {
   console.log("============================================================");
-  console.log("SafePath AI — SIMULATION STORY VERIFICATION (npm run story)");
+  console.log("SAFEPATH — SIMULATION STORY VERIFICATION (npm run story)");
   console.log("============================================================\n");
 
   const evacuees = getAllEvacuees();

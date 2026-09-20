@@ -26,7 +26,7 @@ export function TopBar({
         <div className="flex items-center space-x-2">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
           <span className="font-mono font-black text-white text-base tracking-widest">
-            SafePath AI
+            SAFEPATH
           </span>
         </div>
         <span className="text-slate-700 font-mono">/</span>

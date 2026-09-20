@@ -40,7 +40,7 @@ export function Intro({ onStart }: IntroProps) {
         {/* Title */}
         <div className="space-y-2">
           <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white font-mono">
-            SafePath AI
+            SAFEPATH
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 font-medium max-w-2xl mx-auto">
             Inclusive evacuation routing for the people who cannot afford a standard route.

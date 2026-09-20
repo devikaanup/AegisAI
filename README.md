@@ -1,8 +1,8 @@
-# SafePath AI — Inclusive Disaster Evacuation Router
+# SAFEPATH — Inclusive Disaster Evacuation Router
 
 > **"A route can be short but unsafe. The same street, the same flood, five different people, five different answers."**
 
-SafePath AI is a mission-critical emergency evacuation decision engine paired with a constrained natural-language explanation layer. It rejects the dangerous assumption of standard GPS mapping apps—that all citizens can traverse stairs, overcome 15cm unramped curbs, withstand 10% inclines, or walk at 5 km/h while a flash flood overtakes urban corridors.
+SAFEPATH is a mission-critical emergency evacuation decision engine paired with a constrained natural-language explanation layer. It rejects the dangerous assumption of standard GPS mapping apps—that all citizens can traverse stairs, overcome 15cm unramped curbs, withstand 10% inclines, or walk at 5 km/h while a flash flood overtakes urban corridors.
 
 ---
 
@@ -10,7 +10,7 @@ SafePath AI is a mission-critical emergency evacuation decision engine paired wi
 
 ```
 +---------------------------------------------------------------------------------------------------+
-|                                     SAFEPATH AI ARCHITECTURE                                       |
+|                                       SAFEPATH ARCHITECTURE                                       |
 +---------------------------------------------------------------------------------------------------+
                                                   |
                                                   v
@@ -66,7 +66,7 @@ SafePath AI is a mission-critical emergency evacuation decision engine paired wi
 
 > **"Gemini doesn't decide who evacuates where. Our graph engine does. Gemini makes those decisions understandable to humans."**
 
-In life-safety disaster operations, probabilistic black-box models hallucinate barriers, miscalculate flood velocities, and fail under pressure. In SafePath AI:
+In life-safety disaster operations, probabilistic black-box models hallucinate barriers, miscalculate flood velocities, and fail under pressure. In SAFEPATH:
 1. **The Graph Engine Decides**: Multi-sink binary heap Dijkstra determines earliest feasible arrival across time-dependent flood depth curves, physical barrier profiles, and dynamic shelter occupancies.
 2. **Gemini Explains**: Operating strictly behind a server-only trust boundary (`lib/gemini.ts`), Gemini translates compact factual facts into clear emergency briefings.
 3. **Grounding Verification**: If Gemini hallucinates a single number not present in the engine context, the output is discarded and replaced with a verified deterministic system explanation.
@@ -172,7 +172,7 @@ Open [http://localhost:3000](http://localhost:3000) in a desktop/tablet browser 
   - S1 (Govt School) capacity bars rise to **50/50 [FULL]**.
   - Toast: `SHELTER FULL — Govt School reached capacity`.
   - Engine automatically reroutes Marcus to **Community Hall** (`800m · 11.1 min`).
-  - Click **"Why did the shelter change?"**: SafePath AI confirms Govt School reached capacity and redirected traffic to the nearest reachable facility.
+  - Click **"Why did the shelter change?"**: SAFEPATH confirms Govt School reached capacity and redirected traffic to the nearest reachable facility.
 
 ### Step 6: Live Race Mode Finale (1:20 - 1:30)
 - **Action**: Click **⚡ RACE MODE**.
