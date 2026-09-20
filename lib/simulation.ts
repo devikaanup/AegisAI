@@ -163,8 +163,13 @@ export function runSimulation(
       }
     }
 
+    const sameSubject =
+      prevInputs.evacueeId === inputs.evacueeId &&
+      prevInputs.profileId === inputs.profileId;
+
     // SHELTER_CHANGED
     if (
+      sameSubject &&
       previousState.currentRoute.shelterId &&
       currentRoute.shelterId &&
       previousState.currentRoute.shelterId !== currentRoute.shelterId
@@ -190,6 +195,7 @@ export function runSimulation(
 
     // ROUTE_BLOCKED (flood cutoff on previous path)
     if (
+      sameSubject &&
       previousState.currentRoute.shelterId &&
       (!currentRoute.shelterId || currentRoute.shelterId !== previousState.currentRoute.shelterId) &&
       previousState.inputs.simulationMinute !== inputs.simulationMinute
@@ -209,7 +215,11 @@ export function runSimulation(
     }
 
     // NO_SAFE_ROUTE
-    if (currentRoute.safetyStatus === "WILL_NOT_REACH_SAFETY" && previousState.currentRoute.safetyStatus !== "WILL_NOT_REACH_SAFETY") {
+    if (
+      sameSubject &&
+      currentRoute.safetyStatus === "WILL_NOT_REACH_SAFETY" &&
+      previousState.currentRoute.safetyStatus !== "WILL_NOT_REACH_SAFETY"
+    ) {
       newEvents.push({
         id: `ev_nosafe_${now}`,
         type: "NO_SAFE_ROUTE",

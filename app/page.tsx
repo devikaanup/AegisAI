@@ -57,6 +57,9 @@ export default function Home() {
 
   // Update inputs helper
   const updateInputs = useCallback((newPartial: Partial<SimulationInputs>) => {
+    if (newPartial.evacueeId !== undefined) {
+      setToasts([]);
+    }
     setInputs((curr) => {
       setPreviousInputs({ ...curr });
       return { ...curr, ...newPartial };
@@ -93,6 +96,7 @@ export default function Home() {
   // Event narration & toast triggers
   const scrubDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastNarrationTimeRef = useRef<number>(0);
+  const lastNotifiedEventIdRef = useRef<string>("");
 
   useEffect(() => {
     if (!simulationState.events || simulationState.events.length === 0) return;
@@ -100,12 +104,25 @@ export default function Home() {
     const latestEvent: SimulationEvent =
       simulationState.events[simulationState.events.length - 1];
 
+    // Only notify on genuine disaster / hazard events, NEVER on routine route recalculations
+    const NOTIFIABLE_EVENTS = new Set([
+      "ROUTE_BLOCKED",
+      "SHELTER_FULL",
+      "SHELTER_CHANGED",
+      "NO_SAFE_ROUTE",
+    ]);
+
+    if (!NOTIFIABLE_EVENTS.has(latestEvent.type)) return;
+
+    // Deduplicate: do not re-toast the same event ID when user interacts with other controls
+    if (latestEvent.id === lastNotifiedEventIdRef.current) return;
+    lastNotifiedEventIdRef.current = latestEvent.id;
+
     const deterministicText = composeFallbackForEvent(latestEvent);
+    const toastId = latestEvent.id;
 
-    const toastId = `${latestEvent.type}-${latestEvent.minute}-${Date.now()}`;
-
-    setToasts((prev) => [
-      ...prev.slice(-3),
+    // Show at most 1 high-priority notification at a time to prevent UI spam
+    setToasts([
       {
         id: toastId,
         type: latestEvent.type,
@@ -122,7 +139,7 @@ export default function Home() {
 
     scrubDebounceTimerRef.current = setTimeout(async () => {
       const now = Date.now();
-      if (now - lastNarrationTimeRef.current < 3000) {
+      if (now - lastNarrationTimeRef.current < 4000) {
         return;
       }
       lastNarrationTimeRef.current = now;
@@ -168,12 +185,12 @@ export default function Home() {
     }, 700);
   }, [simulationState.events, inputs, previousInputs]);
 
-  // Clean old toasts after 7 seconds
+  // Clean old toasts after 4 seconds
   useEffect(() => {
     if (toasts.length === 0) return;
     const timer = setTimeout(() => {
       const now = Date.now();
-      setToasts((prev) => prev.filter((t) => now - t.timestamp < 7000));
+      setToasts((prev) => prev.filter((t) => now - t.timestamp < 4000));
     }, 1000);
     return () => clearTimeout(timer);
   }, [toasts]);
