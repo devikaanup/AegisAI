@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import roadsGeoJSON from "@/data/roads.json";
 import floodPolygonsData from "@/data/floodPolygons.json";
@@ -33,13 +33,16 @@ export function MapView({
 }: MapViewProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+
   const evacueeMarkerRef = useRef<maplibregl.Marker | null>(null);
   const shelterMarkersRef = useRef<maplibregl.Marker[]>([]);
   const obstacleMarkersRef = useRef<maplibregl.Marker[]>([]);
 
-  // 1. Initialize MapLibre with inline dark style
+  // 1. Initialize MapLibre with inline dark style and StrictMode safety
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
+    let isMounted = true;
 
     const graph = getGraph();
     const startNode = graph.nodes[evacueeStartJunction] || Object.values(graph.nodes)[0];
@@ -64,13 +67,14 @@ export function MapView({
     });
 
     map.on("load", () => {
+      if (!isMounted) return;
+
       // 1. Base Road Network Source
       map.addSource("roads-base", {
         type: "geojson",
         data: roadsGeoJSON as any,
       });
 
-      // Roads styling
       map.addLayer({
         id: "roads-base-casing",
         type: "line",
@@ -97,7 +101,6 @@ export function MapView({
         data: { type: "FeatureCollection", features: [] },
       });
 
-      // Flood polygon fill
       map.addLayer({
         id: "flood-extent-fill",
         type: "fill",
@@ -108,7 +111,6 @@ export function MapView({
         },
       });
 
-      // Flood wavefront edge glow
       map.addLayer({
         id: "flood-extent-stroke",
         type: "line",
@@ -161,7 +163,6 @@ export function MapView({
         data: { type: "FeatureCollection", features: [] },
       });
 
-      // Glow layer
       map.addLayer({
         id: "route-accessible-glow",
         type: "line",
@@ -174,7 +175,6 @@ export function MapView({
         },
       });
 
-      // Core route line
       map.addLayer({
         id: "route-accessible-line",
         type: "line",
@@ -186,7 +186,8 @@ export function MapView({
         },
       });
 
-      // 6. Add Shelters as Custom Markers
+      // 6. Shelters as Custom Markers
+      shelterMarkersRef.current = [];
       for (const s of sheltersData) {
         const jNode = graph.nodes[s.junctionId];
         if (!jNode) continue;
@@ -207,13 +208,14 @@ export function MapView({
         shelterMarkersRef.current.push(marker);
       }
 
-      // 7. Add Obstacle Badges
+      // 7. Obstacle Badges
+      obstacleMarkersRef.current = [];
       const obstacles = [
-        { name: "Steps", lngLat: [graph.nodes["r1c1"].lng, graph.nodes["r1c1"].lat + 0.0006] },
-        { name: "Kerb 15cm", lngLat: [graph.nodes["r0c1"].lng + 0.0009, graph.nodes["r0c1"].lat] },
-        { name: "Slope 9%", lngLat: [graph.nodes["r2c3"].lng - 0.0005, graph.nodes["r2c3"].lat] },
-        { name: "Unsignalized 4-lane", lngLat: [graph.nodes["r1c2"].lng + 0.0009, graph.nodes["r1c2"].lat] },
-        { name: "Rough: Gravel", lngLat: [graph.nodes["r2c0"].lng + 0.0009, graph.nodes["r2c0"].lat] },
+        { name: "Steps", lngLat: [graph.nodes["r1c1"]?.lng ?? 79.1538, (graph.nodes["r1c1"]?.lat ?? 12.9693) + 0.0006] },
+        { name: "Kerb 15cm", lngLat: [(graph.nodes["r0c1"]?.lng ?? 79.1538) + 0.0009, graph.nodes["r0c1"]?.lat ?? 12.968] },
+        { name: "Slope 9%", lngLat: [(graph.nodes["r2c3"]?.lng ?? 79.1575) - 0.0005, graph.nodes["r2c3"]?.lat ?? 12.9707] },
+        { name: "Unsignalized 4-lane", lngLat: [(graph.nodes["r1c2"]?.lng ?? 79.1557) + 0.0009, graph.nodes["r1c2"]?.lat ?? 12.9693] },
+        { name: "Rough: Gravel", lngLat: [(graph.nodes["r2c0"]?.lng ?? 79.152) + 0.0009, graph.nodes["r2c0"]?.lat ?? 12.9707] },
       ];
 
       for (const obs of obstacles) {
@@ -257,27 +259,58 @@ export function MapView({
         ],
         { padding: 40, duration: 0 }
       );
+
+      setIsMapLoaded(true);
     });
 
     mapRef.current = map;
 
     return () => {
-      map.remove();
+      isMounted = false;
+      // Clean up markers
+      shelterMarkersRef.current.forEach((m) => m.remove());
+      shelterMarkersRef.current = [];
+      obstacleMarkersRef.current.forEach((m) => m.remove());
+      obstacleMarkersRef.current = [];
+      if (evacueeMarkerRef.current) {
+        evacueeMarkerRef.current.remove();
+        evacueeMarkerRef.current = null;
+      }
+
+      try {
+        map.remove();
+      } catch {}
       mapRef.current = null;
+      setIsMapLoaded(false);
     };
   }, []);
 
-  // 2. Update Map Layers via .setData() ONLY
+  // 2. Smooth flyTo on evacuee change
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !isMapLoaded) return;
+    const graph = getGraph();
+    const startNode = graph.nodes[evacueeStartJunction];
+    if (startNode) {
+      map.flyTo({
+        center: [startNode.lng, startNode.lat],
+        speed: 1.2,
+        curve: 1.1,
+      });
+    }
+  }, [evacueeStartJunction, isMapLoaded]);
+
+  // 3. Update Map Layers via .setData() ONLY
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isMapLoaded || !map.isStyleLoaded()) return;
     const graph = getGraph();
 
-    // A. Update Precomputed Flood Polygon (Direct Object Lookup, Zero Runtime Turf Calls!)
+    // A. Update Precomputed Flood Polygon
     const minuteFloor = Math.max(0, Math.min(30, Math.floor(simulationMinute)));
     const poly = (floodPolygonsData as Record<string, any>)[String(minuteFloor)];
-    const floodSrc = map.getSource("flood-extent") as maplibregl.GeoJSONSource;
-    if (floodSrc) {
+    const floodSrc = map.getSource("flood-extent") as maplibregl.GeoJSONSource | undefined;
+    if (floodSrc && typeof floodSrc.setData === "function") {
       floodSrc.setData(poly || { type: "FeatureCollection", features: [] });
     }
 
@@ -289,24 +322,26 @@ export function MapView({
         if (state === "threatened" || state === "impassable") {
           const fNode = graph.nodes[edge.from];
           const tNode = graph.nodes[edge.to];
-          hazardFeatures.push({
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: [
-                [fNode.lng, fNode.lat],
-                [tNode.lng, tNode.lat],
-              ],
-            },
-            properties: {
-              color: state === "impassable" ? "#ef4444" : "#f59e0b",
-            },
-          });
+          if (fNode && tNode) {
+            hazardFeatures.push({
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [fNode.lng, fNode.lat],
+                  [tNode.lng, tNode.lat],
+                ],
+              },
+              properties: {
+                color: state === "impassable" ? "#ef4444" : "#f59e0b",
+              },
+            });
+          }
         }
       }
     }
-    const hazardSrc = map.getSource("roads-hazard") as maplibregl.GeoJSONSource;
-    if (hazardSrc) {
+    const hazardSrc = map.getSource("roads-hazard") as maplibregl.GeoJSONSource | undefined;
+    if (hazardSrc && typeof hazardSrc.setData === "function") {
       hazardSrc.setData({ type: "FeatureCollection", features: hazardFeatures });
     }
 
@@ -314,12 +349,12 @@ export function MapView({
     const accessibleCoords: [number, number][] = currentRoute.nodeIds
       .map((nId) => {
         const n = graph.nodes[nId];
-        return n ? [n.lng, n.lat] as [number, number] : null;
+        return n ? ([n.lng, n.lat] as [number, number]) : null;
       })
       .filter((c): c is [number, number] => c !== null);
 
-    const accSrc = map.getSource("route-accessible") as maplibregl.GeoJSONSource;
-    if (accSrc) {
+    const accSrc = map.getSource("route-accessible") as maplibregl.GeoJSONSource | undefined;
+    if (accSrc && typeof accSrc.setData === "function") {
       accSrc.setData(
         accessibleCoords.length >= 2
           ? {
@@ -332,13 +367,13 @@ export function MapView({
     }
 
     // D. Update Standard Route Line
-    const stdSrc = map.getSource("route-standard") as maplibregl.GeoJSONSource;
-    if (stdSrc) {
+    const stdSrc = map.getSource("route-standard") as maplibregl.GeoJSONSource | undefined;
+    if (stdSrc && typeof stdSrc.setData === "function") {
       if (showStandardRoute) {
         const stdCoords: [number, number][] = standardComparison.nodeIds
           .map((nId) => {
             const n = graph.nodes[nId];
-            return n ? [n.lng, n.lat] as [number, number] : null;
+            return n ? ([n.lng, n.lat] as [number, number]) : null;
           })
           .filter((c): c is [number, number] => c !== null);
 
@@ -353,18 +388,6 @@ export function MapView({
         );
       } else {
         stdSrc.setData({ type: "FeatureCollection", features: [] });
-      }
-    }
-
-    // E. Update Evacuee Marker Position (Start position or Race progress)
-    if (evacueeMarkerRef.current) {
-      if (raceProgress) {
-        evacueeMarkerRef.current.setLngLat([raceProgress.lng, raceProgress.lat]);
-      } else {
-        const startNode = graph.nodes[evacueeStartJunction];
-        if (startNode) {
-          evacueeMarkerRef.current.setLngLat([startNode.lng, startNode.lat]);
-        }
       }
     }
 
@@ -397,19 +420,64 @@ export function MapView({
       }
     }
   }, [
+    isMapLoaded,
     currentRoute,
     standardComparison,
     showStandardRoute,
     simulationMinute,
     profileId,
-    evacueeStartJunction,
     shelters,
-    raceProgress,
   ]);
+
+  // 4. Dedicated lightweight effect for smooth 60fps evacuee marker movement
+  useEffect(() => {
+    if (!evacueeMarkerRef.current) return;
+    if (raceProgress) {
+      evacueeMarkerRef.current.setLngLat([raceProgress.lng, raceProgress.lat]);
+    } else {
+      const graph = getGraph();
+      const startNode = graph.nodes[evacueeStartJunction];
+      if (startNode) {
+        evacueeMarkerRef.current.setLngLat([startNode.lng, startNode.lat]);
+      }
+    }
+  }, [raceProgress, evacueeStartJunction]);
+
+  const handleResetView = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const graph = getGraph();
+    const allLngs = Object.values(graph.nodes).map((n) => n.lng);
+    const allLats = Object.values(graph.nodes).map((n) => n.lat);
+    const minLng = Math.min(...allLngs);
+    const maxLng = Math.max(...allLngs);
+    const minLat = Math.min(...allLats);
+    const maxLat = Math.max(...allLats);
+
+    map.fitBounds(
+      [
+        [minLng - 0.001, minLat - 0.001],
+        [maxLng + 0.001, maxLat + 0.001],
+      ],
+      { padding: 40, duration: 600 }
+    );
+  };
 
   return (
     <div className="relative w-full h-full bg-[#0a0d12] overflow-hidden">
       <div ref={mapContainerRef} className="w-full h-full" />
+
+      {/* Floating Map Navigation Controls */}
+      <div className="absolute top-3 left-3 z-20 flex items-center space-x-1.5 select-none">
+        <button
+          onClick={handleResetView}
+          className="px-2.5 py-1 rounded-md bg-[#0c111a]/85 hover:bg-slate-800 border border-slate-700/80 text-[11px] font-mono text-slate-300 hover:text-white backdrop-blur-md shadow transition-colors flex items-center space-x-1"
+          title="Reset map camera to whole neighborhood view"
+        >
+          <span>⤢</span>
+          <span>Fit Neighborhood</span>
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { SimulationInputs } from "@/lib/simulation";
 import { ExplanationContext } from "@/lib/explainContext";
 import { classifyIntent, composeFallbackExplanation } from "@/lib/fallbackExplanations";
+import { aiVoice } from "@/lib/speech";
 
 interface AskAegisProps {
   currentInputs: SimulationInputs;
   previousInputs: SimulationInputs | null;
   currentContext: ExplanationContext;
+  externalQuery?: string | null;
+  aiVoiceEnabled?: boolean;
 }
 
 interface AnswerState {
@@ -32,6 +35,8 @@ export function AskAegis({
   currentInputs,
   previousInputs,
   currentContext,
+  externalQuery,
+  aiVoiceEnabled = true,
 }: AskAegisProps) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<AnswerState | null>(null);
@@ -43,66 +48,79 @@ export function AskAegis({
     prevInputsRef.current = previousInputs;
   }, [previousInputs]);
 
-  const handleAsk = async (qText: string) => {
-    if (!qText.trim()) return;
-    const cleanQ = qText.trim();
-    setIsLoading(true);
+  const handleAsk = useCallback(
+    async (qText: string) => {
+      if (!qText.trim()) return;
+      const cleanQ = qText.trim();
+      setIsLoading(true);
 
-    // 1. Show instant deterministic fallback so user never waits with an empty box
-    const intent = classifyIntent(cleanQ);
-    const instantFallback = composeFallbackExplanation(intent, currentContext);
+      // 1. Show instant deterministic fallback so user never waits with an empty box
+      const intent = classifyIntent(cleanQ);
+      const instantFallback = composeFallbackExplanation(intent, currentContext);
 
-    setAnswer({
-      question: cleanQ,
-      text: instantFallback,
-      source: "verified",
-      intent,
-      inputsSnapshot: { ...currentInputs },
-    });
-
-    try {
-      const res = await fetch("/api/explain", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: cleanQ,
-          inputs: {
-            evacueeId: currentInputs.evacueeId,
-            profile: currentInputs.profileId,
-            minute: currentInputs.simulationMinute,
-            peopleEvacuating: currentInputs.peopleEvacuating,
-          },
-          previousInputs: prevInputsRef.current
-            ? {
-                evacueeId: prevInputsRef.current.evacueeId,
-                profile: prevInputsRef.current.profileId,
-                minute: prevInputsRef.current.simulationMinute,
-                peopleEvacuating: prevInputsRef.current.peopleEvacuating,
-              }
-            : undefined,
-        }),
+      setAnswer({
+        question: cleanQ,
+        text: instantFallback,
+        source: "verified",
+        intent,
+        inputsSnapshot: { ...currentInputs },
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        if (data.text) {
-          setAnswer({
+      try {
+        const res = await fetch("/api/explain", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
             question: cleanQ,
-            text: data.text,
-            source: data.source || "verified",
-            notice: data.notice,
-            intent: data.intent || intent,
-            inputsSnapshot: { ...currentInputs },
-          });
+            inputs: {
+              evacueeId: currentInputs.evacueeId,
+              profile: currentInputs.profileId,
+              minute: currentInputs.simulationMinute,
+              peopleEvacuating: currentInputs.peopleEvacuating,
+            },
+            previousInputs: prevInputsRef.current
+              ? {
+                  evacueeId: prevInputsRef.current.evacueeId,
+                  profile: prevInputsRef.current.profileId,
+                  minute: prevInputsRef.current.simulationMinute,
+                  peopleEvacuating: prevInputsRef.current.peopleEvacuating,
+                }
+              : undefined,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.text) {
+            setAnswer({
+              question: cleanQ,
+              text: data.text,
+              source: data.source || "verified",
+              notice: data.notice,
+              intent: data.intent || intent,
+              inputsSnapshot: { ...currentInputs },
+            });
+          }
         }
+      } catch {
+        // Keep verified fallback already displayed
+      } finally {
+        setIsLoading(false);
+        setQuestion("");
       }
-    } catch {
-      // Keep verified fallback already displayed
-    } finally {
-      setIsLoading(false);
-      setQuestion("");
+    },
+    [currentContext, currentInputs]
+  );
+
+  // Trigger from AutoDemo external question
+  const lastProcessedExternalRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (externalQuery && externalQuery !== lastProcessedExternalRef.current) {
+      lastProcessedExternalRef.current = externalQuery;
+      setIsExpanded(true);
+      handleAsk(externalQuery);
     }
-  };
+  }, [externalQuery, handleAsk]);
 
   const isStateOutdated =
     answer &&

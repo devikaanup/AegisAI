@@ -1,6 +1,6 @@
 export const ANCHOR_LNGLAT: [number, number] = [79.152, 12.968]; // [lng, lat] SW corner, Katpadi, Vellore
 
-export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
 export const GEMINI_TIMEOUT_MS = 6000; // 6-second abort controller timeout
 

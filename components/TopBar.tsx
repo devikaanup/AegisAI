@@ -6,6 +6,8 @@ interface TopBarProps {
   simulationMinute: number;
   aiNarrationEnabled: boolean;
   onToggleAiNarration: () => void;
+  aiVoiceEnabled: boolean;
+  onToggleAiVoice: () => void;
   onStartAutoDemo: () => void;
   isAutoDemoActive: boolean;
   onToggleRaceMode: () => void;
@@ -16,6 +18,8 @@ export function TopBar({
   simulationMinute,
   aiNarrationEnabled,
   onToggleAiNarration,
+  aiVoiceEnabled,
+  onToggleAiVoice,
   onStartAutoDemo,
   isAutoDemoActive,
   onToggleRaceMode,
@@ -55,23 +59,41 @@ export function TopBar({
       </div>
 
       {/* Action Controls */}
-      <div className="flex items-center space-x-2.5">
+      <div className="flex items-center space-x-2">
+        {/* AI Voice Overlay Toggle */}
+        <button
+          onClick={onToggleAiVoice}
+          className={`px-2.5 py-1 rounded text-xs font-mono flex items-center space-x-1.5 border transition-all ${
+            aiVoiceEnabled
+              ? "bg-purple-950/60 border-purple-400/80 text-purple-200 shadow-sm shadow-purple-900/40"
+              : "bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300"
+          }`}
+          title="Toggle browser Web Speech API voice overlay"
+        >
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              aiVoiceEnabled ? "bg-purple-400 animate-pulse" : "bg-slate-600"
+            }`}
+          />
+          <span>{aiVoiceEnabled ? "🔊 Voice Overlay: ON" : "🔇 Voice Overlay: OFF"}</span>
+        </button>
+
         {/* AI Narration Toggle */}
         <button
           onClick={onToggleAiNarration}
           className={`px-2.5 py-1 rounded text-xs font-mono flex items-center space-x-1.5 border transition-all ${
             aiNarrationEnabled
-              ? "bg-purple-950/40 border-purple-500/50 text-purple-300"
+              ? "bg-cyan-950/40 border-cyan-500/50 text-cyan-300"
               : "bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300"
           }`}
           title="Toggle Gemini NL event auto-narration"
         >
           <span
             className={`w-1.5 h-1.5 rounded-full ${
-              aiNarrationEnabled ? "bg-purple-400 animate-pulse" : "bg-slate-600"
+              aiNarrationEnabled ? "bg-cyan-400 animate-pulse" : "bg-slate-600"
             }`}
           />
-          <span>AI Narration: {aiNarrationEnabled ? "ON" : "OFF"}</span>
+          <span>AI Text: {aiNarrationEnabled ? "ON" : "OFF"}</span>
         </button>
 
         {/* Auto Demo Button */}
@@ -83,7 +105,7 @@ export function TopBar({
               : "bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200"
           }`}
         >
-          {isAutoDemoActive ? "STOP DEMO" : "2-MIN STAGE DEMO"}
+          {isAutoDemoActive ? "STOP DEMO" : "▶ 2-MIN STAGE DEMO"}
         </button>
 
         {/* Race Mode Button */}

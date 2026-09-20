@@ -59,7 +59,10 @@ Respond to the user's question strictly according to the system rules and using 
       ],
       generationConfig: {
         temperature: 0.15,
-        maxOutputTokens: 300,
+        maxOutputTokens: 1024,
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
       },
     };
 

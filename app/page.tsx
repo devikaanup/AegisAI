@@ -9,6 +9,7 @@ import {
 } from "@/lib/simulation";
 import { buildExplanationContext } from "@/lib/explainContext";
 import { composeFallbackForEvent } from "@/lib/fallbackExplanations";
+import { aiVoice } from "@/lib/speech";
 import { Intro } from "@/components/Intro";
 import { TopBar } from "@/components/TopBar";
 import { MapView } from "@/components/MapView";
@@ -21,6 +22,7 @@ import { NoSafeEvacuationOverlay } from "@/components/NoSafeEvacuationOverlay";
 import { Toasts, ToastItem } from "@/components/Toasts";
 import { AutoDemo } from "@/components/AutoDemo";
 import { RaceMode } from "@/components/RaceMode";
+import { VoiceOverlay } from "@/components/VoiceOverlay";
 
 export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
@@ -41,10 +43,14 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [aiNarrationEnabled, setAiNarrationEnabled] = useState(false);
+  const [aiVoiceEnabled, setAiVoiceEnabled] = useState(true);
   const [isAutoDemoActive, setIsAutoDemoActive] = useState(false);
   const [isRaceModeActive, setIsRaceModeActive] = useState(false);
   const [raceProgress, setRaceProgress] = useState<{ lng: number; lat: number } | null>(null);
   const [committedRoute, setCommittedRoute] = useState<any>(null);
+
+  // AutoDemo question trigger for Ask AEGIS
+  const [externalAskQuery, setExternalAskQuery] = useState<string | null>(null);
 
   // Sidebars collapse
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
@@ -78,11 +84,28 @@ export default function Home() {
     });
   }, []);
 
+  // Timeline playback loop
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setInputs((curr) => {
+        const next = curr.simulationMinute + 0.25 * playbackSpeed;
+        if (next >= 30) {
+          setIsPlaying(false);
+          return { ...curr, simulationMinute: 30 };
+        }
+        return { ...curr, simulationMinute: Number(next.toFixed(1)) };
+      });
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, playbackSpeed]);
+
   // AI Narration throttle and debounce timers
   const lastNarrationTimeRef = useRef<number>(0);
   const scrubDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Event narration effect
+  // Event narration & voice broadcast effect
   useEffect(() => {
     if (simulationState.events.length === 0) return;
     const latestEvent = simulationState.events[simulationState.events.length - 1];
@@ -106,6 +129,18 @@ export default function Home() {
       },
     ]);
 
+    // Spoken broadcast when voice is active and demo is not taking precedence
+    if (aiVoiceEnabled && !isAutoDemoActive) {
+      if (
+        latestEvent.type === "NO_SAFE_ROUTE" ||
+        latestEvent.type === "ROUTE_BLOCKED" ||
+        latestEvent.type === "SHELTER_FULL" ||
+        latestEvent.type === "SHELTER_CHANGED"
+      ) {
+        aiVoice?.speak(deterministicText);
+      }
+    }
+
     // If AI narration is enabled, debounce and throttle AI upgrade
     if (aiNarrationEnabled) {
       if (scrubDebounceTimerRef.current) {
@@ -115,7 +150,6 @@ export default function Home() {
       scrubDebounceTimerRef.current = setTimeout(async () => {
         const now = Date.now();
         if (now - lastNarrationTimeRef.current < 3000) {
-          // Throttled: skip burst narration
           return;
         }
         lastNarrationTimeRef.current = now;
@@ -153,6 +187,9 @@ export default function Home() {
                     : t
                 )
               );
+              if (aiVoiceEnabled && !isAutoDemoActive) {
+                aiVoice?.speak(data.text);
+              }
             }
           }
         } catch {
@@ -160,7 +197,7 @@ export default function Home() {
         }
       }, 700);
     }
-  }, [simulationState.events, aiNarrationEnabled, inputs, previousInputs]);
+  }, [simulationState.events, aiNarrationEnabled, aiVoiceEnabled, isAutoDemoActive, inputs, previousInputs]);
 
   // Clean old toasts after 7 seconds
   useEffect(() => {
@@ -177,20 +214,28 @@ export default function Home() {
   }, [inputs, previousInputs]);
 
   // Race Mode toggle: commit route at departure
+  const [raceDepartureMinute, setRaceDepartureMinute] = useState<number>(0);
+
   const handleToggleRaceMode = () => {
     if (isRaceModeActive) {
       setIsRaceModeActive(false);
       setRaceProgress(null);
     } else {
       setCommittedRoute(simulationState.currentRoute);
+      setRaceDepartureMinute(inputs.simulationMinute);
       setIsRaceModeActive(true);
     }
   };
 
-  const handleStartRaceMode = () => {
+  const handleStartRaceMode = useCallback(() => {
     setCommittedRoute(simulationState.currentRoute);
+    setRaceDepartureMinute(inputs.simulationMinute);
     setIsRaceModeActive(true);
-  };
+  }, [simulationState.currentRoute, inputs.simulationMinute]);
+
+  const handleTriggerAsk = useCallback((question: string) => {
+    setExternalAskQuery(question);
+  }, []);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#0a0d12] text-slate-100 overflow-hidden font-sans select-none">
@@ -202,13 +247,21 @@ export default function Home() {
         simulationMinute={inputs.simulationMinute}
         aiNarrationEnabled={aiNarrationEnabled}
         onToggleAiNarration={() => setAiNarrationEnabled(!aiNarrationEnabled)}
+        aiVoiceEnabled={aiVoiceEnabled}
+        onToggleAiVoice={() => setAiVoiceEnabled(!aiVoiceEnabled)}
         onStartAutoDemo={() => setIsAutoDemoActive(!isAutoDemoActive)}
         isAutoDemoActive={isAutoDemoActive}
         onToggleRaceMode={handleToggleRaceMode}
         isRaceModeActive={isRaceModeActive}
       />
 
-      {/* 3. Main Console Workspace */}
+      {/* 3. Floating AI Voice Overlay HUD */}
+      <VoiceOverlay
+        isEnabled={aiVoiceEnabled}
+        onToggle={() => setAiVoiceEnabled(false)}
+      />
+
+      {/* 4. Main Console Workspace */}
       <main className="flex-1 flex relative overflow-hidden h-[calc(100vh-3.5rem-5rem)]">
         {/* Left Sidebar: Mission Setup */}
         <ControlPanel
@@ -237,7 +290,7 @@ export default function Home() {
             raceProgress={raceProgress}
           />
 
-          {/* Floating Compare Card */}
+          {/* Floating Compare Card - Collapsible to avoid blocking map */}
           <CompareCard
             currentRoute={simulationState.currentRoute}
             standardComparison={simulationState.standardComparison}
@@ -254,9 +307,10 @@ export default function Home() {
             }}
             committedRoute={committedRoute || simulationState.currentRoute}
             profile={simulationState.profile}
-            departureMinute={inputs.simulationMinute}
+            departureMinute={raceDepartureMinute}
             onUpdateEvacueePosition={setRaceProgress}
             onAdvanceSimulationMinute={(min) => updateInputs({ simulationMinute: min })}
+            aiVoiceEnabled={aiVoiceEnabled}
           />
 
           {/* Auto Demo Component */}
@@ -267,8 +321,9 @@ export default function Home() {
             onSelectProfile={(id) => updateInputs({ profileId: id })}
             onChangeMinute={(min) => updateInputs({ simulationMinute: min })}
             onChangePeopleEvacuating={(n) => updateInputs({ peopleEvacuating: n })}
-            onTriggerAsk={() => {}}
+            onTriggerAsk={handleTriggerAsk}
             onStartRaceMode={handleStartRaceMode}
+            aiVoiceEnabled={aiVoiceEnabled}
           />
         </div>
 
@@ -285,6 +340,8 @@ export default function Home() {
             currentInputs={inputs}
             previousInputs={previousInputs}
             currentContext={explanationContext}
+            externalQuery={externalAskQuery}
+            aiVoiceEnabled={aiVoiceEnabled}
           />
         </StatusPanel>
 
@@ -298,7 +355,7 @@ export default function Home() {
         />
       </main>
 
-      {/* 4. Bottom Timeline Controller */}
+      {/* 5. Bottom Timeline Controller */}
       <Timeline
         minute={inputs.simulationMinute}
         onChangeMinute={(min) => updateInputs({ simulationMinute: min })}
@@ -308,7 +365,7 @@ export default function Home() {
         onToggleSpeed={() => setPlaybackSpeed(playbackSpeed === 1 ? 2 : 1)}
       />
 
-      {/* 5. Notification Toasts Container */}
+      {/* 6. Notification Toasts Container */}
       <Toasts
         toasts={toasts}
         onDismiss={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))}

@@ -14,12 +14,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark h-full">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/maplibre-gl@5.2.0/dist/maplibre-gl.css"
-        />
-      </head>
       <body className="h-full bg-[#0a0d12] text-slate-100 antialiased overflow-hidden">
         {children}
       </body>
