@@ -92,7 +92,7 @@ export function RaceMode({
       totalDist += d;
     }
 
-    const totalDurationSeconds = (committedRoute.totalTimeMin * 60) / speedMultiplier;
+    const totalDurationSeconds = (committedRoute.etaMin * 60) / speedMultiplier;
 
     const animate = (timestamp: number) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
@@ -123,7 +123,7 @@ export function RaceMode({
         );
       }
 
-      const simMinuteElapsed = fraction * committedRoute.totalTimeMin;
+      const simMinuteElapsed = fraction * committedRoute.etaMin;
       const currentSimMin = Math.min(30, departureMinuteRef.current + simMinuteElapsed);
 
       if (Math.abs(currentSimMin - lastSimMinDispatchedRef.current) >= 0.1) {

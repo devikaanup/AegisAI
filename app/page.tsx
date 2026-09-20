@@ -100,11 +100,7 @@ export default function Home() {
     const latestEvent: SimulationEvent =
       simulationState.events[simulationState.events.length - 1];
 
-    const deterministicText = composeFallbackForEvent(
-      latestEvent,
-      inputs.simulationMinute,
-      simulationState.currentRoute.shelterName || "Shelter"
-    );
+    const deterministicText = composeFallbackForEvent(latestEvent);
 
     const toastId = `${latestEvent.type}-${latestEvent.minute}-${Date.now()}`;
 
@@ -184,15 +180,8 @@ export default function Home() {
 
   // Build context for AI Assistant
   const explanationContext = useMemo(() => {
-    return buildExplanationContext(
-      inputs,
-      simulationState.currentRoute,
-      simulationState.standardComparison,
-      simulationState.shelters,
-      simulationState.profile,
-      simulationState.rejections
-    );
-  }, [inputs, simulationState]);
+    return buildExplanationContext(inputs, previousInputs);
+  }, [inputs, previousInputs]);
 
   // Race Mode toggle: commit route at departure and save pre-race departure time
   const [raceDepartureMinute, setRaceDepartureMinute] = useState<number>(0);
@@ -273,6 +262,7 @@ export default function Home() {
             showStandardRoute={showStandardRoute}
             evacueeStartJunction={simulationState.evacuee.startJunction}
             simulationMinute={inputs.simulationMinute}
+            profileId={inputs.profileId}
             shelters={simulationState.shelters}
             isRaceMode={isRaceModeActive}
             raceProgress={raceProgress}
