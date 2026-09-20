@@ -50,12 +50,12 @@ export function ControlPanel({
   }
 
   return (
-    <aside className="w-76 border-r border-[#1e293b] bg-[#0c121d] flex flex-col h-full z-30 overflow-y-auto select-none">
+    <aside className="w-[250px] flex-shrink-0 border-r border-[#1e293b] bg-[#0c121d] flex flex-col h-full z-30 overflow-y-auto select-none">
       {/* Header */}
-      <div className="p-3.5 border-b border-[#1e293b] flex items-center justify-between">
+      <div className="p-2.5 border-b border-[#1e293b] flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400" />
-          <h2 className="text-[11px] font-mono uppercase tracking-widest font-extrabold text-slate-200">
+          <h2 className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-slate-200">
             MISSION SETUP
           </h2>
         </div>
@@ -68,20 +68,20 @@ export function ControlPanel({
         </button>
       </div>
 
-      <div className="p-3.5 space-y-4">
+      <div className="p-2.5 space-y-3">
         {/* 1. Evacuee Persona */}
         <div className="space-y-1">
-          <label className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">
+          <label className="text-[9px] font-mono text-slate-400 uppercase tracking-wider block">
             Focus Citizen (Evacuee)
           </label>
           <select
             value={selectedEvacueeId}
             onChange={(e) => onSelectEvacuee(e.target.value)}
-            className="w-full bg-[#070a0f] border border-[#25354c] text-slate-100 text-xs rounded-md px-2.5 py-2 font-mono focus:border-cyan-500 focus:outline-none"
+            className="w-full bg-[#070a0f] border border-[#25354c] text-slate-100 text-xs rounded-md px-2 py-1.5 font-mono focus:border-cyan-500 focus:outline-none"
           >
             {evacuees.map((e) => (
               <option key={e.id} value={e.id}>
-                {e.name} (Start: {e.startJunction}, {e.profile})
+                {e.name} ({e.startJunction}, {e.profile})
               </option>
             ))}
           </select>

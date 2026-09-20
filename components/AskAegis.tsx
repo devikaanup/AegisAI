@@ -130,18 +130,18 @@ export function AskAegis({
       answer.inputsSnapshot.peopleEvacuating !== currentInputs.peopleEvacuating);
 
   return (
-    <div className="rounded-lg border border-[#1e293b] bg-[#0c121d] p-3 space-y-2.5 select-none">
+    <div className="rounded-lg border border-[#1e293b] bg-[#0c121d] p-2.5 space-y-2 select-none">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400" />
-            <h3 className="text-[11px] font-mono font-extrabold tracking-widest uppercase text-cyan-300">
-              ASK AEGIS // INTEL EXPLAINER
+          <div className="flex items-center space-x-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+            <h3 className="text-[10px] font-mono font-extrabold tracking-widest uppercase text-cyan-300">
+              ASK AEGIS // INTEL
             </h3>
           </div>
-          <p className="text-[10px] text-slate-400 font-mono">
-            Explains the engine&apos;s decision. It never makes one.
+          <p className="text-[9px] text-slate-400 font-mono">
+            Deterministic engine explains route reasoning.
           </p>
         </div>
         <button
@@ -153,14 +153,14 @@ export function AskAegis({
       </div>
 
       {isExpanded && (
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {/* Suggestion Chips */}
           <div className="flex flex-wrap gap-1">
             {CHIPS.map((chip, idx) => (
               <button
                 key={idx}
                 onClick={() => handleAsk(chip)}
-                className="px-2 py-0.5 rounded bg-[#141e2e] hover:bg-[#1b283d] border border-slate-700 text-[10px] text-slate-300 font-mono transition-all text-left"
+                className="px-1.5 py-0.5 rounded bg-[#141e2e] hover:bg-[#1b283d] border border-slate-700 text-[9px] text-slate-300 font-mono transition-all text-left leading-tight"
               >
                 {chip}
               </button>
@@ -181,12 +181,12 @@ export function AskAegis({
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask route explanation..."
               maxLength={300}
-              className="flex-1 bg-[#070a0f] border border-[#25354c] rounded px-2.5 py-1.5 text-xs text-slate-200 font-mono focus:border-cyan-500 focus:outline-none placeholder:text-slate-600"
+              className="flex-1 min-w-0 bg-[#070a0f] border border-[#25354c] rounded px-2 py-1 text-[11px] text-slate-200 font-mono focus:border-cyan-500 focus:outline-none placeholder:text-slate-600"
             />
             <button
               type="submit"
               disabled={isLoading || !question.trim()}
-              className="px-3 py-1.5 rounded bg-cyan-600 hover:bg-cyan-500 active:scale-95 disabled:opacity-50 text-xs font-mono font-bold text-slate-950 transition-all tracking-wider"
+              className="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 active:scale-95 disabled:opacity-50 text-[10px] font-mono font-bold text-slate-950 transition-all tracking-wider shrink-0"
             >
               {isLoading ? "..." : "QUERY"}
             </button>
@@ -194,21 +194,21 @@ export function AskAegis({
 
           {/* Answer Card */}
           {answer && (
-            <div className="p-2.5 rounded-md bg-[#070a0f] border border-cyan-900/40 space-y-1.5">
-              <div className="flex items-center justify-between text-[9px] font-mono">
-                <span className="text-slate-400 truncate max-w-[200px]">
+            <div className="p-2 rounded-md bg-[#070a0f] border border-cyan-900/40 space-y-1">
+              <div className="flex items-center justify-between text-[8px] font-mono gap-1">
+                <span className="text-slate-400 truncate max-w-[130px]">
                   &ldquo;{answer.question}&rdquo;
                 </span>
                 <span
-                  className={`px-1.5 py-0.2 rounded border ${
+                  className={`px-1 py-0.2 rounded border shrink-0 ${
                     answer.source === "gemini"
                       ? "bg-cyan-950/60 border-cyan-500 text-cyan-300"
                       : "bg-emerald-950/60 border-emerald-500 text-emerald-300"
                   }`}
                 >
                   {answer.source === "gemini"
-                    ? "AI Grounded Analysis"
-                    : "Verified System Analysis"}
+                    ? "AI Grounded"
+                    : "Verified System"}
                 </span>
               </div>
 

@@ -48,7 +48,7 @@ export function CompareCard({
   }
 
   return (
-    <div className="absolute top-3 right-3 z-20 w-88 max-w-sm rounded-xl border border-[#25354c] bg-[#0c121d]/95 backdrop-blur-md p-3.5 shadow-2xl text-slate-100 select-none transition-all animate-in fade-in duration-150">
+    <div className="absolute top-3 right-3 z-20 w-[300px] max-w-[calc(100%-1.5rem)] rounded-xl border border-[#25354c] bg-[#0c121d]/95 backdrop-blur-md p-3 shadow-2xl text-slate-100 select-none transition-all animate-in fade-in duration-150">
       {/* Header Banner */}
       <div className="flex items-center justify-between border-b border-[#1e293b] pb-2 mb-2.5">
         <div className="flex items-center space-x-2">

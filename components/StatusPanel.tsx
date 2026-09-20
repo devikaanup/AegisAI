@@ -67,12 +67,12 @@ export function StatusPanel({
   const statusBadge = getStatusBadge(currentRoute.safetyStatus);
 
   return (
-    <aside className="w-88 border-l border-[#1e293b] bg-[#0c121d] flex flex-col h-full z-30 overflow-y-auto select-none">
+    <aside className="w-[290px] flex-shrink-0 border-l border-[#1e293b] bg-[#0c121d] flex flex-col h-full z-30 overflow-y-auto select-none">
       {/* Header */}
-      <div className="p-3.5 border-b border-[#1e293b] flex items-center justify-between">
+      <div className="p-2.5 border-b border-[#1e293b] flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-cyan-400" />
-          <h2 className="text-[11px] font-mono uppercase tracking-widest font-extrabold text-slate-200">
+          <h2 className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-slate-200">
             EVACUATION TELEMETRY
           </h2>
         </div>
@@ -85,19 +85,19 @@ export function StatusPanel({
         </button>
       </div>
 
-      <div className="p-3.5 space-y-4">
+      <div className="p-2.5 space-y-3">
         {/* Status Pill */}
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <div
-            className={`px-3 py-2 rounded-md border flex items-center justify-center space-x-2 font-mono font-extrabold text-xs tracking-wider ${statusBadge.bg}`}
+            className={`px-2.5 py-1.5 rounded-md border flex items-center justify-center space-x-1.5 font-mono font-extrabold text-[11px] tracking-wider text-center ${statusBadge.bg}`}
           >
-            <span className={`w-2 h-2 rounded-full ${statusBadge.dot}`} />
-            <span>{statusBadge.text}</span>
+            <span className={`w-2 h-2 rounded-full shrink-0 ${statusBadge.dot}`} />
+            <span className="truncate">{statusBadge.text}</span>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] font-mono px-1 text-slate-400">
-            <span>Target Destination:</span>
-            <span className="font-bold text-white uppercase">
+          <div className="flex items-center justify-between text-[10px] font-mono px-0.5 text-slate-400">
+            <span className="shrink-0">Target Destination:</span>
+            <span className="font-bold text-white uppercase truncate text-right ml-1">
               {currentRoute.shelterName || "NO REACHABLE SHELTER"}
             </span>
           </div>
@@ -110,11 +110,11 @@ export function StatusPanel({
         />
 
         {/* Deterministic Factor Checklist */}
-        <div className="p-2.5 rounded-lg bg-[#070a0f]/80 border border-[#1e293b] space-y-2">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-300 font-bold block">
+        <div className="p-2 rounded-lg bg-[#070a0f]/80 border border-[#1e293b] space-y-1.5">
+          <span className="text-[9px] font-mono uppercase tracking-wider text-slate-300 font-bold block">
             DETERMINISTIC ROUTE VERIFICATION
           </span>
-          <div className="space-y-1 text-xs text-slate-300 font-mono">
+          <div className="space-y-1 text-[11px] text-slate-300 font-mono">
             <div className="flex items-center space-x-2">
               <span className="text-emerald-400">✓</span>
               <span>No stairs on transit path</span>

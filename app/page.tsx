@@ -278,7 +278,7 @@ export default function Home() {
         />
 
         {/* Center: Offline Map Console */}
-        <div className="flex-1 relative h-full bg-[#0a0d12]">
+        <div className="flex-1 min-w-0 relative h-full bg-[#0a0d12]">
           <MapView
             currentRoute={simulationState.currentRoute}
             standardComparison={simulationState.standardComparison}
@@ -296,6 +296,7 @@ export default function Home() {
             standardComparison={simulationState.standardComparison}
             showStandardRoute={showStandardRoute}
             onToggleStandardRoute={() => setShowStandardRoute(!showStandardRoute)}
+            isInitiallyMinimized={true}
           />
 
           {/* Race Mode Overlay Component */}
