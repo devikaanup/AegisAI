@@ -1,0 +1,23 @@
+[
+  {
+    "id": "S1",
+    "name": "Govt School",
+    "junctionId": "r3c1",
+    "capacity": 50,
+    "baselineOccupancy": 32
+  },
+  {
+    "id": "S2",
+    "name": "Community Hall",
+    "junctionId": "r3c4",
+    "capacity": 100,
+    "baselineOccupancy": 60
+  },
+  {
+    "id": "S3",
+    "name": "District Sports Complex",
+    "junctionId": "r2c5",
+    "capacity": 200,
+    "baselineOccupancy": 90
+  }
+]

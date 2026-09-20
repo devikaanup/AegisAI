@@ -1,0 +1,170 @@
+{
+  "profiles": {
+    "wheelchair": {
+      "id": "wheelchair",
+      "name": "Wheelchair User",
+      "speed": 1.2,
+      "depthToleranceCm": 10,
+      "hardBlocks": {
+        "stairs": true,
+        "maxKerbCm": 5,
+        "maxSlopePct": 8,
+        "blockedSurfaces": [
+          "gravel",
+          "dirt",
+          "cobble"
+        ]
+      },
+      "needs": [
+        "No stairs",
+        "Kerbs <= 5cm",
+        "Slope <= 8%",
+        "Paved surfaces only"
+      ],
+      "hardConstraints": [
+        "stairs",
+        "kerb > 5cm",
+        "slope > 8%",
+        "rough surface"
+      ]
+    },
+    "stroller_newborn": {
+      "id": "stroller_newborn",
+      "name": "Parent + Stroller",
+      "speed": 1,
+      "depthToleranceCm": 10,
+      "hardBlocks": {
+        "stairs": true,
+        "maxKerbCm": 5,
+        "maxSlopePct": 8,
+        "blockedSurfaces": [
+          "gravel",
+          "dirt",
+          "cobble"
+        ]
+      },
+      "penalties": {
+        "unsignalizedMultiLaneCrossing": 1.3
+      },
+      "needs": [
+        "No stairs",
+        "Kerbs <= 5cm",
+        "Slope <= 8%",
+        "Protected crossings"
+      ],
+      "hardConstraints": [
+        "stairs",
+        "kerb > 5cm",
+        "slope > 8%",
+        "rough surface"
+      ]
+    },
+    "mobility_limited": {
+      "id": "mobility_limited",
+      "name": "Mobility Limited",
+      "speed": 0.9,
+      "depthToleranceCm": 15,
+      "hardBlocks": {
+        "stairs": true
+      },
+      "penalties": {
+        "roughSurface": 1.4,
+        "kerbAbove5": 1.3,
+        "slopeOver4Factor": 0.15
+      },
+      "needs": [
+        "No stairs",
+        "Gentle slopes",
+        "Smooth terrain"
+      ],
+      "hardConstraints": [
+        "stairs"
+      ]
+    },
+    "pregnant": {
+      "id": "pregnant",
+      "name": "Pregnant",
+      "speed": 1,
+      "depthToleranceCm": 15,
+      "hardBlocks": {},
+      "penalties": {
+        "stairs": 2.5,
+        "roughSurface": 2,
+        "slopeAbove6": 1.5,
+        "kerbAbove5": 1.2
+      },
+      "needs": [
+        "Paved walkways",
+        "Low grade inclines",
+        "Avoid stairs if possible"
+      ],
+      "hardConstraints": []
+    },
+    "cognitive": {
+      "id": "cognitive",
+      "name": "Cognitive Accessibility",
+      "speed": 1.1,
+      "depthToleranceCm": 20,
+      "hardBlocks": {},
+      "penalties": {
+        "unsignalizedMultiLaneCrossing": 2,
+        "highDegreeJunctionFactor": 0.25,
+        "poiLandmarkBonus": 0.85
+      },
+      "needs": [
+        "Simple intersections",
+        "Recognizable landmarks",
+        "Signalized crossings"
+      ],
+      "hardConstraints": []
+    },
+    "standard": {
+      "id": "standard",
+      "name": "Standard Walker",
+      "speed": 1.4,
+      "depthToleranceCm": 999,
+      "hardBlocks": {},
+      "needs": [
+        "Shortest path"
+      ],
+      "hardConstraints": []
+    }
+  },
+  "evacuees": [
+    {
+      "id": "marcus",
+      "name": "Marcus",
+      "startJunction": "r1c1",
+      "profile": "wheelchair",
+      "displaySpeed": 1.2
+    },
+    {
+      "id": "ravi",
+      "name": "Ravi",
+      "startJunction": "r0c3",
+      "profile": "mobility_limited",
+      "displaySpeed": 0.9
+    },
+    {
+      "id": "priya",
+      "name": "Priya",
+      "startJunction": "r1c4",
+      "profile": "pregnant",
+      "displaySpeed": 1
+    },
+    {
+      "id": "meera",
+      "name": "Meera",
+      "startJunction": "r0c0",
+      "profile": "stroller_newborn",
+      "displaySpeed": 1
+    },
+    {
+      "id": "arjun",
+      "name": "Arjun",
+      "startJunction": "r1c2",
+      "profile": "cognitive",
+      "displaySpeed": 1.1
+    }
+  ]
+}

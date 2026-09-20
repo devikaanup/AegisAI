@@ -1,0 +1,4703 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c0->s_r0c0_r0c1_1",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c0-r0c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.968
+          ],
+          [
+            79.15236914293327,
+            12.967980132699369
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c0_r0c1_1->s_r0c0_r0c1_2",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c0-r0c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15236914293327,
+            12.967980132699369
+          ],
+          [
+            79.15273828586655,
+            12.967980483031262
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c0_r0c1_2->s_r0c0_r0c1_3",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r0c0-r0c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15273828586655,
+            12.967980483031262
+          ],
+          [
+            79.15310742879981,
+            12.968019542624527
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c0_r0c1_3->s_r0c0_r0c1_4",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c0-r0c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15310742879981,
+            12.968019542624527
+          ],
+          [
+            79.15347657173308,
+            12.968009045176258
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c1->s_r0c0_r0c1_4",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c0-r0c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.967999993498818
+          ],
+          [
+            79.15347657173308,
+            12.968009045176258
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c0->s_r0c0_r1c0_1",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c0-r1c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.968
+          ],
+          [
+            79.15200447196075,
+            12.968337245136361
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c0_r1c0_1->s_r0c0_r1c0_2",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c0-r1c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15200447196075,
+            12.968337245136361
+          ],
+          [
+            79.15200768443664,
+            12.968674490272681
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c0_r1c0_2->s_r0c0_r1c0_3",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c0-r1c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15200768443664,
+            12.968674490272681
+          ],
+          [
+            79.15199828405252,
+            12.969011735409186
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c0->s_r0c0_r1c0_3",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c0-r1c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.96934898054559
+          ],
+          [
+            79.15199828405252,
+            12.969011735409186
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c1->s_r0c1_r0c2_1",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c1-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.967999993498818
+          ],
+          [
+            79.1542148575996,
+            12.96800304926826
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c1_r0c2_1->s_r0c1_r0c2_2",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c1-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1542148575996,
+            12.96800304926826
+          ],
+          [
+            79.15458400053284,
+            12.968002757477159
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c1_r0c2_2->s_r0c1_r0c2_3",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r0c1-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15458400053284,
+            12.968002757477159
+          ],
+          [
+            79.15495314346607,
+            12.9680027295641
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c1_r0c2_3->s_r0c1_r0c2_4",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c1-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15495314346607,
+            12.9680027295641
+          ],
+          [
+            79.1553222863993,
+            12.968010085555079
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c2->s_r0c1_r0c2_4",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c1-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.967999973995267
+          ],
+          [
+            79.1553222863993,
+            12.968010085555079
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c1->s_r0c1_r1c1_1",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c1-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.967999993498818
+          ],
+          [
+            79.15386569585364,
+            12.968337238493692
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c1_r1c1_1->s_r0c1_r1c1_2",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c1-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15386569585364,
+            12.968337238493692
+          ],
+          [
+            79.1538486133528,
+            12.968674483751176
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c1_r1c1_2->s_r0c1_r1c1_3",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c1-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1538486133528,
+            12.968674483751176
+          ],
+          [
+            79.15385248887853,
+            12.9690117288602
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c1->s_r0c1_r1c1_3",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c1-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.969348974044404
+          ],
+          [
+            79.15385248887853,
+            12.9690117288602
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c2->s_r0c2_r0c3_1",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c2-r0c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.967999973995267
+          ],
+          [
+            79.15606057226572,
+            12.967981240229467
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c2_r0c3_1->s_r0c2_r0c3_2",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c2-r0c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15606057226572,
+            12.967981240229467
+          ],
+          [
+            79.15642971519887,
+            12.968018730981212
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c2_r0c3_2->s_r0c2_r0c3_3",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r0c2-r0c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15642971519887,
+            12.968018730981212
+          ],
+          [
+            79.15679885813202,
+            12.96800406162049
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c2_r0c3_3->s_r0c2_r0c3_4",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c2-r0c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15679885813202,
+            12.96800406162049
+          ],
+          [
+            79.15716800106517,
+            12.968026886093302
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c3->s_r0c2_r0c3_4",
+        "name": "Riverside Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c2-r0c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.96799994148935
+          ],
+          [
+            79.15716800106517,
+            12.968026886093302
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c2->s_r0c2_r1c2_1",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c2-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.967999973995267
+          ],
+          [
+            79.15568296797181,
+            12.968337219250742
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c2_r1c2_1->s_r0c2_r1c2_2",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c2-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15568296797181,
+            12.968337219250742
+          ],
+          [
+            79.15571820618032,
+            12.968674463889426
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c2_r1c2_2->s_r0c2_r1c2_3",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c2-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15571820618032,
+            12.968674463889426
+          ],
+          [
+            79.15571086282218,
+            12.969011709129934
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c2->s_r0c2_r1c2_3",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c2-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.969348954540855
+          ],
+          [
+            79.15571086282218,
+            12.969011709129934
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c3->s_r0c3_r1c3_1",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c3-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.96799994148935
+          ],
+          [
+            79.15755595057354,
+            12.968337186227616
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c3_r1c3_1->s_r0c3_r1c3_2",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c3-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15755595057354,
+            12.968337186227616
+          ],
+          [
+            79.1575402431568,
+            12.968674431696632
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c3_r1c3_2->s_r0c3_r1c3_3",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c3-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1575402431568,
+            12.968674431696632
+          ],
+          [
+            79.15755068240418,
+            12.96901167661207
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c3->s_r0c3_r1c3_3",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c3-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.969348922034936
+          ],
+          [
+            79.15755068240418,
+            12.96901167661207
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c4->s_r0c4_r0c5_1",
+        "name": "Riverside Rd",
+        "surface": "dirt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r0c4-r0c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.967999895981066
+          ],
+          [
+            79.15975200159642,
+            12.96799433464882
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c4_r0c5_1->s_r0c4_r0c5_2",
+        "name": "Riverside Rd",
+        "surface": "dirt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c4-r0c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15975200159642,
+            12.96799433464882
+          ],
+          [
+            79.16012114452934,
+            12.968014455510138
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c4_r0c5_2->s_r0c4_r0c5_3",
+        "name": "Riverside Rd",
+        "surface": "dirt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r0c4-r0c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16012114452934,
+            12.968014455510138
+          ],
+          [
+            79.16049028746222,
+            12.968014130484013
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c4_r0c5_3->s_r0c4_r0c5_4",
+        "name": "Riverside Rd",
+        "surface": "dirt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r0c4-r0c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16049028746222,
+            12.968014130484013
+          ],
+          [
+            79.16085943039508,
+            12.96798040151006
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c5->s_r0c4_r0c5_4",
+        "name": "Riverside Rd",
+        "surface": "dirt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r0c4-r0c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.967999837470414
+          ],
+          [
+            79.16085943039508,
+            12.96798040151006
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c4->s_r0c4_r1c4_1",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c4-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.967999895981066
+          ],
+          [
+            79.1594072490932,
+            12.96833714042904
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c4_r1c4_1->s_r0c4_r1c4_2",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c4-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1594072490932,
+            12.96833714042904
+          ],
+          [
+            79.15937161565036,
+            12.968674386570427
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c4_r1c4_2->s_r0c4_r1c4_3",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c4-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15937161565036,
+            12.968674386570427
+          ],
+          [
+            79.15940337637097,
+            12.969011630811295
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c4->s_r0c4_r1c4_3",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c4-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.969348876526652
+          ],
+          [
+            79.15940337637097,
+            12.969011630811295
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c5->s_r0c5_r1c5_1",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c5-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.967999837470414
+          ],
+          [
+            79.16121277873971,
+            12.968337083162668
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c5_r1c5_1->s_r0c5_r1c5_2",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c5-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16121277873971,
+            12.968337083162668
+          ],
+          [
+            79.16124789186719,
+            12.968674327062034
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r0c5_r1c5_2->s_r0c5_r1c5_3",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c5-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16124789186719,
+            12.968674327062034
+          ],
+          [
+            79.16120902051985,
+            12.969011573567585
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c5->s_r0c5_r1c5_3",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r0c5-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.969348818016002
+          ],
+          [
+            79.16120902051985,
+            12.969011573567585
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c0->s_r1c0_r1c1_1",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c0-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.96934898054559
+          ],
+          [
+            79.15236914293327,
+            12.969319658947414
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c0_r1c1_1->s_r1c0_r1c1_2",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r1c0-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15236914293327,
+            12.969319658947414
+          ],
+          [
+            79.15273828586655,
+            12.969353024410918
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c0_r1c1_2->s_r1c0_r1c1_3",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c0-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15273828586655,
+            12.969353024410918
+          ],
+          [
+            79.15310742879981,
+            12.969344949094594
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c0_r1c1_3->s_r1c0_r1c1_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r1c0-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15310742879981,
+            12.969344949094594
+          ],
+          [
+            79.15347657173308,
+            12.969341859014424
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c1->s_r1c0_r1c1_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c0-r1c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.969348974044404
+          ],
+          [
+            79.15347657173308,
+            12.969341859014424
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c0->s_r1c0_r2c0_1",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c0-r2c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.96934898054559
+          ],
+          [
+            79.15201465951117,
+            12.969686225681576
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c0_r2c0_1->s_r1c0_r2c0_2",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c0-r2c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15201465951117,
+            12.969686225681576
+          ],
+          [
+            79.15203161800021,
+            12.970023470816477
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c0_r2c0_2->s_r1c0_r2c0_3",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c0-r2c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15203161800021,
+            12.970023470816477
+          ],
+          [
+            79.15202309466255,
+            12.970360715953761
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c0->s_r1c0_r2c0_3",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c0-r2c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.970697961091174
+          ],
+          [
+            79.15202309466255,
+            12.970360715953761
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c1->s_r1c1_r1c2_1",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c1-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.969348974044404
+          ],
+          [
+            79.1542148575996,
+            12.969333393500603
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c1_r1c2_1->s_r1c1_r1c2_2",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r1c1-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1542148575996,
+            12.969333393500603
+          ],
+          [
+            79.15458400053284,
+            12.969337975141219
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c1_r1c2_2->s_r1c1_r1c2_3",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c1-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15458400053284,
+            12.969337975141219
+          ],
+          [
+            79.15495314346607,
+            12.969353355555533
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c1_r1c2_3->s_r1c1_r1c2_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r1c1-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15495314346607,
+            12.969353355555533
+          ],
+          [
+            79.1553222863993,
+            12.969335916925273
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c2->s_r1c1_r1c2_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c1-r1c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.969348954540855
+          ],
+          [
+            79.1553222863993,
+            12.969335916925273
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c1->s_r1c1_r2c1_1",
+        "name": "Temple Steps",
+        "surface": "asphalt",
+        "stairs": true,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.3,
+        "coarseId": "r1c1-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.969348974044404
+          ],
+          [
+            79.15384112239141,
+            12.969798634258579
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c1_r2c1_1->s_r1c1_r2c1_2",
+        "name": "Temple Steps",
+        "surface": "asphalt",
+        "stairs": true,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.7,
+        "coarseId": "r1c1-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384112239141,
+            12.969798634258579
+          ],
+          [
+            79.15384933828732,
+            12.97024829438258
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c1->s_r1c1_r2c1_2",
+        "name": "Temple Steps",
+        "surface": "asphalt",
+        "stairs": true,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.3,
+        "coarseId": "r1c1-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.97069795458999
+          ],
+          [
+            79.15384933828732,
+            12.97024829438258
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c2->s_r1c2_r1c3_1",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "unsignalized",
+        "slope": 0.2,
+        "coarseId": "r1c2-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.969348954540855
+          ],
+          [
+            79.15606057226572,
+            12.969347164334273
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c2_r1c3_1->s_r1c2_r1c3_2",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "unsignalized",
+        "slope": 0.3,
+        "coarseId": "r1c2-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15606057226572,
+            12.969347164334273
+          ],
+          [
+            79.15642971519887,
+            12.96937156266999
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c2_r1c3_2->s_r1c2_r1c3_3",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "unsignalized",
+        "slope": 0.2,
+        "coarseId": "r1c2-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15642971519887,
+            12.96937156266999
+          ],
+          [
+            79.15679885813202,
+            12.969377725342033
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c2_r1c3_3->s_r1c2_r1c3_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "unsignalized",
+        "slope": 0.3,
+        "coarseId": "r1c2-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15679885813202,
+            12.969377725342033
+          ],
+          [
+            79.15716800106517,
+            12.969360609518557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c3->s_r1c2_r1c3_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "unsignalized",
+        "slope": 0.2,
+        "coarseId": "r1c2-r1c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.969348922034936
+          ],
+          [
+            79.15716800106517,
+            12.969360609518557
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c2->s_r1c2_r2c2_1",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c2-r2c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.969348954540855
+          ],
+          [
+            79.15572090564987,
+            12.969686199260291
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c2_r2c2_1->s_r1c2_r2c2_2",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c2-r2c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15572090564987,
+            12.969686199260291
+          ],
+          [
+            79.15571341718156,
+            12.970023444502935
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c2_r2c2_2->s_r1c2_r2c2_3",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c2-r2c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15571341718156,
+            12.970023444502935
+          ],
+          [
+            79.15570698349705,
+            12.970360689730436
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c2->s_r1c2_r2c2_3",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c2-r2c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.970697935086442
+          ],
+          [
+            79.15570698349705,
+            12.970360689730436
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c3->s_r1c3_r1c4_1",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c3-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.969348922034936
+          ],
+          [
+            79.15790628693136,
+            12.969325394979695
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r1c4_1->s_r1c3_r1c4_2",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r1c3-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15790628693136,
+            12.969325394979695
+          ],
+          [
+            79.15827542986443,
+            12.969325630466995
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r1c4_2->s_r1c3_r1c4_3",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c3-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15827542986443,
+            12.969325630466995
+          ],
+          [
+            79.15864457279747,
+            12.96933375970915
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r1c4_3->s_r1c3_r1c4_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r1c3-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15864457279747,
+            12.96933375970915
+          ],
+          [
+            79.15901371573048,
+            12.969338100298776
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c4->s_r1c3_r1c4_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c3-r1c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.969348876526652
+          ],
+          [
+            79.15901371573048,
+            12.969338100298776
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c3->s_r1c3_r2c3_1",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 9.1,
+        "coarseId": "r1c3-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.969348922034936
+          ],
+          [
+            79.15755465762354,
+            12.969686166800617
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r2c3_1->s_r1c3_r2c3_2",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 9.1,
+        "coarseId": "r1c3-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15755465762354,
+            12.969686166800617
+          ],
+          [
+            79.15755934230998,
+            12.970023411837655
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r2c3_2->s_r1c3_r2c3_3",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 8.8,
+        "coarseId": "r1c3-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15755934230998,
+            12.970023411837655
+          ],
+          [
+            79.15755922689029,
+            12.9703606569765
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c3->s_r1c3_r2c3_3",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 9.1,
+        "coarseId": "r1c3-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.970697902580522
+          ],
+          [
+            79.15755922689029,
+            12.9703606569765
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c4->s_r1c4_r1c5_1",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c4-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.969348876526652
+          ],
+          [
+            79.15975200159642,
+            12.969363567397501
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c4_r1c5_1->s_r1c4_r1c5_2",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c4-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15975200159642,
+            12.969363567397501
+          ],
+          [
+            79.16012114452934,
+            12.969351279072253
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c4_r1c5_2->s_r1c4_r1c5_3",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r1c4-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16012114452934,
+            12.969351279072253
+          ],
+          [
+            79.16049028746222,
+            12.969350367834366
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c4_r1c5_3->s_r1c4_r1c5_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c4-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16049028746222,
+            12.969350367834366
+          ],
+          [
+            79.16085943039508,
+            12.96935503841283
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c5->s_r1c4_r1c5_4",
+        "name": "Market St",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 15,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r1c4-r1c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.969348818016002
+          ],
+          [
+            79.16085943039508,
+            12.96935503841283
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c4->s_r1c4_r2c4_1",
+        "name": "Bazaar Steps",
+        "surface": "asphalt",
+        "stairs": true,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 3.9,
+        "coarseId": "r1c4-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.969348876526652
+          ],
+          [
+            79.1593783156037,
+            12.969798536836493
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c4_r2c4_1->s_r1c4_r2c4_2",
+        "name": "Bazaar Steps",
+        "surface": "asphalt",
+        "stairs": true,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.2,
+        "coarseId": "r1c4-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1593783156037,
+            12.969798536836493
+          ],
+          [
+            79.15941170580828,
+            12.97024819607592
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c4->s_r1c4_r2c4_2",
+        "name": "Bazaar Steps",
+        "surface": "asphalt",
+        "stairs": true,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 3.9,
+        "coarseId": "r1c4-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.970697857072238
+          ],
+          [
+            79.15941170580828,
+            12.97024819607592
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c5->s_r1c5_r2c5_1",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c5-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.969348818016002
+          ],
+          [
+            79.16124946200516,
+            12.9696860624158
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c5_r2c5_1->s_r1c5_r2c5_2",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c5-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16124946200516,
+            12.9696860624158
+          ],
+          [
+            79.16124374652937,
+            12.970023307753907
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c5_r2c5_2->s_r1c5_r2c5_3",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c5-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16124374652937,
+            12.970023307753907
+          ],
+          [
+            79.16120701579241,
+            12.970360554183628
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c5->s_r1c5_r2c5_3",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r1c5-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.970697798561588
+          ],
+          [
+            79.16120701579241,
+            12.970360554183628
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c0->s_r2c0_r2c1_1",
+        "name": "Temple Rd",
+        "surface": "gravel",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c0-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.970697961091174
+          ],
+          [
+            79.15236914293327,
+            12.970680598419497
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c0_r2c1_1->s_r2c0_r2c1_2",
+        "name": "Temple Rd",
+        "surface": "gravel",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c0-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15236914293327,
+            12.970680598419497
+          ],
+          [
+            79.15273828586655,
+            12.970684251606762
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c0_r2c1_2->s_r2c0_r2c1_3",
+        "name": "Temple Rd",
+        "surface": "gravel",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r2c0-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15273828586655,
+            12.970684251606762
+          ],
+          [
+            79.15310742879981,
+            12.970699572199873
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c0_r2c1_3->s_r2c0_r2c1_4",
+        "name": "Temple Rd",
+        "surface": "gravel",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c0-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15310742879981,
+            12.970699572199873
+          ],
+          [
+            79.15347657173308,
+            12.970704552279082
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c1->s_r2c0_r2c1_4",
+        "name": "Temple Rd",
+        "surface": "gravel",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c0-r2c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.97069795458999
+          ],
+          [
+            79.15347657173308,
+            12.970704552279082
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c0->s_r2c0_r3c0_1",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c0-r3c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.970697961091174
+          ],
+          [
+            79.1519936048462,
+            12.971035206227493
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c0_r3c0_1->s_r2c0_r3c0_2",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c0-r3c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1519936048462,
+            12.971035206227493
+          ],
+          [
+            79.15198395796135,
+            12.971372451363477
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c0_r3c0_2->s_r2c0_r3c0_3",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c0-r3c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15198395796135,
+            12.971372451363477
+          ],
+          [
+            79.15197710444941,
+            12.971709696499367
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c0->s_r2c0_r3c0_3",
+        "name": "Lane 1",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c0-r3c0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.97204694163676
+          ],
+          [
+            79.15197710444941,
+            12.971709696499367
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c1->s_r2c1_r3c1_1",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c1-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.97069795458999
+          ],
+          [
+            79.15386896202348,
+            12.971035199561587
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c1_r3c1_1->s_r2c1_r3c1_2",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c1-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15386896202348,
+            12.971035199561587
+          ],
+          [
+            79.1538219449672,
+            12.971372445029155
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c1_r3c1_2->s_r2c1_r3c1_3",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c1-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1538219449672,
+            12.971372445029155
+          ],
+          [
+            79.15383639038556,
+            12.971709690064705
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c1->s_r2c1_r3c1_3",
+        "name": "Lane 2",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c1-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.972046935135578
+          ],
+          [
+            79.15383639038556,
+            12.971709690064705
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c2->s_r2c2_r2c3_1",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "signalized",
+        "slope": 5,
+        "coarseId": "r2c2-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.970697935086442
+          ],
+          [
+            79.15606057226572,
+            12.97068619944665
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c2_r2c3_1->s_r2c2_r2c3_2",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "signalized",
+        "slope": 5,
+        "coarseId": "r2c2-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15606057226572,
+            12.97068619944665
+          ],
+          [
+            79.15642971519887,
+            12.970691357261122
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c2_r2c3_2->s_r2c2_r2c3_3",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "signalized",
+        "slope": 5,
+        "coarseId": "r2c2-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15642971519887,
+            12.970691357261122
+          ],
+          [
+            79.15679885813202,
+            12.970715388441242
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c2_r2c3_3->s_r2c2_r2c3_4",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "signalized",
+        "slope": 5,
+        "coarseId": "r2c2-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15679885813202,
+            12.970715388441242
+          ],
+          [
+            79.15716800106517,
+            12.970719020713437
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c3->s_r2c2_r2c3_4",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 4,
+        "crossing": "signalized",
+        "slope": 5,
+        "coarseId": "r2c2-r2c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.970697902580522
+          ],
+          [
+            79.15716800106517,
+            12.970719020713437
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c2->s_r2c2_r3c2_1",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c2-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.970697935086442
+          ],
+          [
+            79.15566121655422,
+            12.971035180646773
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c2_r3c2_1->s_r2c2_r3c2_2",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c2-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15566121655422,
+            12.971035180646773
+          ],
+          [
+            79.15568217392239,
+            12.971372425489472
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c2_r3c2_2->s_r2c2_r3c2_3",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c2-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15568217392239,
+            12.971372425489472
+          ],
+          [
+            79.1556860945026,
+            12.97170967057074
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c2->s_r2c2_r3c2_3",
+        "name": "Lane 3",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c2-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.972046915632028
+          ],
+          [
+            79.1556860945026,
+            12.97170967057074
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c3->s_r2c3_r2c4_1",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.5,
+        "coarseId": "r2c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.970697902580522
+          ],
+          [
+            79.15790628693136,
+            12.970696966463347
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c3_r2c4_1->s_r2c3_r2c4_2",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.5,
+        "coarseId": "r2c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15790628693136,
+            12.970696966463347
+          ],
+          [
+            79.15827542986443,
+            12.97068818594816
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c3_r2c4_2->s_r2c3_r2c4_3",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.5,
+        "coarseId": "r2c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15827542986443,
+            12.97068818594816
+          ],
+          [
+            79.15864457279747,
+            12.970667348682623
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c3_r2c4_3->s_r2c3_r2c4_4",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.5,
+        "coarseId": "r2c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15864457279747,
+            12.970667348682623
+          ],
+          [
+            79.15901371573048,
+            12.970690081729863
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c4->s_r2c3_r2c4_4",
+        "name": "Temple Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 4.5,
+        "coarseId": "r2c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.970697857072238
+          ],
+          [
+            79.15901371573048,
+            12.970690081729863
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c3->s_r2c3_r3c3_1",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 3.7,
+        "coarseId": "r2c3-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.970697902580522
+          ],
+          [
+            79.15752847331386,
+            12.971035147900025
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c3_r3c3_1->s_r2c3_r3c3_2",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 3.5,
+        "coarseId": "r2c3-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15752847331386,
+            12.971035147900025
+          ],
+          [
+            79.15751127699505,
+            12.97137239339871
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c3_r3c3_2->s_r2c3_r3c3_3",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 3.7,
+        "coarseId": "r2c3-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15751127699505,
+            12.97137239339871
+          ],
+          [
+            79.157547575962,
+            12.971709637769036
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c3->s_r2c3_r3c3_3",
+        "name": "Lane 4",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 3.7,
+        "coarseId": "r2c3-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.97204688312611
+          ],
+          [
+            79.157547575962,
+            12.971709637769036
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c4->s_r2c4_r2c5_1",
+        "name": "Temple Rd",
+        "surface": "cobble",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c4-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.970697857072238
+          ],
+          [
+            79.15975200159642,
+            12.970705045559473
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c4_r2c5_1->s_r2c4_r2c5_2",
+        "name": "Temple Rd",
+        "surface": "cobble",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c4-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15975200159642,
+            12.970705045559473
+          ],
+          [
+            79.16012114452934,
+            12.970678046577763
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c4_r2c5_2->s_r2c4_r2c5_3",
+        "name": "Temple Rd",
+        "surface": "cobble",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r2c4-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16012114452934,
+            12.970678046577763
+          ],
+          [
+            79.16049028746222,
+            12.970677824329464
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c4_r2c5_3->s_r2c4_r2c5_4",
+        "name": "Temple Rd",
+        "surface": "cobble",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c4-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16049028746222,
+            12.970677824329464
+          ],
+          [
+            79.16085943039508,
+            12.970697260697499
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c5->s_r2c4_r2c5_4",
+        "name": "Temple Rd",
+        "surface": "cobble",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r2c4-r2c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.970697798561588
+          ],
+          [
+            79.16085943039508,
+            12.970697260697499
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c4->s_r2c4_r3c4_1",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c4-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.970697857072238
+          ],
+          [
+            79.15936220703186,
+            12.971035102789754
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c4_r3c4_1->s_r2c4_r3c4_2",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c4-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15936220703186,
+            12.971035102789754
+          ],
+          [
+            79.1593557823645,
+            12.971372348106602
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c4_r3c4_2->s_r2c4_r3c4_3",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c4-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1593557823645,
+            12.971372348106602
+          ],
+          [
+            79.15941129897618,
+            12.971709591678483
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c4->s_r2c4_r3c4_3",
+        "name": "Lane 5",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c4-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.972046837617826
+          ],
+          [
+            79.15941129897618,
+            12.971709591678483
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c5->s_r2c5_r3c5_1",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c5-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.970697798561588
+          ],
+          [
+            79.1612588693739,
+            12.971035042629113
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c5_r3c5_1->s_r2c5_r3c5_2",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c5-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1612588693739,
+            12.971035042629113
+          ],
+          [
+            79.1612294962008,
+            12.97137228880187
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r2c5_r3c5_2->s_r2c5_r3c5_3",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c5-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1612294962008,
+            12.97137228880187
+          ],
+          [
+            79.1612181424203,
+            12.971709534337979
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c5->s_r2c5_r3c5_3",
+        "name": "Lane 6",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2.7,
+        "coarseId": "r2c5-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.972046779107174
+          ],
+          [
+            79.1612181424203,
+            12.971709534337979
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c0->s_r3c0_r3c1_1",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c0-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.152,
+            12.97204694163676
+          ],
+          [
+            79.15236914293327,
+            12.972049856073857
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c0_r3c1_1->s_r3c0_r3c1_2",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c0-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15236914293327,
+            12.972049856073857
+          ],
+          [
+            79.15273828586655,
+            12.972058597085148
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c0_r3c1_2->s_r3c0_r3c1_3",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r3c0-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15273828586655,
+            12.972058597085148
+          ],
+          [
+            79.15310742879981,
+            12.972038656520311
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c0_r3c1_3->s_r3c0_r3c1_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c0-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15310742879981,
+            12.972038656520311
+          ],
+          [
+            79.15347657173308,
+            12.972059607948747
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c1->s_r3c0_r3c1_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c0-r3c1"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.972046935135578
+          ],
+          [
+            79.15347657173308,
+            12.972059607948747
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c1->s_r3c1_r3c2_1",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c1-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15384571466635,
+            12.972046935135578
+          ],
+          [
+            79.1542148575996,
+            12.972044673549647
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c1_r3c2_1->s_r3c1_r3c2_2",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c1-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.1542148575996,
+            12.972044673549647
+          ],
+          [
+            79.15458400053284,
+            12.972041256275395
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c1_r3c2_2->s_r3c1_r3c2_3",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r3c1-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15458400053284,
+            12.972041256275395
+          ],
+          [
+            79.15495314346607,
+            12.972058014567788
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c1_r3c2_3->s_r3c1_r3c2_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c1-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15495314346607,
+            12.972058014567788
+          ],
+          [
+            79.1553222863993,
+            12.972022119810973
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c2->s_r3c1_r3c2_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c1-r3c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.972046915632028
+          ],
+          [
+            79.1553222863993,
+            12.972022119810973
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c2->s_r3c2_r3c3_1",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c2-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.972046915632028
+          ],
+          [
+            79.15606057226572,
+            12.972061199021311
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c2_r3c3_1->s_r3c2_r3c3_2",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c2-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15606057226572,
+            12.972061199021311
+          ],
+          [
+            79.15642971519887,
+            12.97201899860651
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c2_r3c3_2->s_r3c2_r3c3_3",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r3c2-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15642971519887,
+            12.97201899860651
+          ],
+          [
+            79.15679885813202,
+            12.972023157594167
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c2_r3c3_3->s_r3c2_r3c3_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c2-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15679885813202,
+            12.972023157594167
+          ],
+          [
+            79.15716800106517,
+            12.972041690125877
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c3->s_r3c2_r3c3_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c2-r3c3"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.97204688312611
+          ],
+          [
+            79.15716800106517,
+            12.972041690125877
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c3->s_r3c3_r3c4_1",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c3-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.97204688312611
+          ],
+          [
+            79.15790628693136,
+            12.972058747322315
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c3_r3c4_1->s_r3c3_r3c4_2",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c3-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15790628693136,
+            12.972058747322315
+          ],
+          [
+            79.15827542986443,
+            12.972053309229272
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c3_r3c4_2->s_r3c3_r3c4_3",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r3c3-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15827542986443,
+            12.972053309229272
+          ],
+          [
+            79.15864457279747,
+            12.972052096355094
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c3_r3c4_3->s_r3c3_r3c4_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c3-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15864457279747,
+            12.972052096355094
+          ],
+          [
+            79.15901371573048,
+            12.972025636882629
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c4->s_r3c3_r3c4_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c3-r3c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.972046837617826
+          ],
+          [
+            79.15901371573048,
+            12.972025636882629
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c4->s_r3c4_r3c5_1",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r3c4-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.972046837617826
+          ],
+          [
+            79.15975200159642,
+            12.972058941636192
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c4_r3c5_1->s_r3c4_r3c5_2",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c4-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15975200159642,
+            12.972058941636192
+          ],
+          [
+            79.16012114452934,
+            12.972044712630426
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c4_r3c5_2->s_r3c4_r3c5_3",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r3c4-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16012114452934,
+            12.972044712630426
+          ],
+          [
+            79.16049028746222,
+            12.972063973465037
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r3c4_r3c5_3->s_r3c4_r3c5_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.2,
+        "coarseId": "r3c4-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16049028746222,
+            12.972063973465037
+          ],
+          [
+            79.16085943039508,
+            12.972031358857548
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r3c5->s_r3c4_r3c5_4",
+        "name": "Ridge Rd",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 0.3,
+        "coarseId": "r3c4-r3c5"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.16122857332789,
+            12.972046779107174
+          ],
+          [
+            79.16085943039508,
+            12.972031358857548
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c3->s_r1c3_r0c2_1",
+        "name": "Temple Diagonal Link",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.969348922034936
+          ],
+          [
+            79.15726987347044,
+            12.969160889726643
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r0c2_1->s_r1c3_r0c2_2",
+        "name": "Temple Diagonal Link",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2,
+        "coarseId": "r1c3-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15726987347044,
+            12.969160889726643
+          ],
+          [
+            79.15700688715222,
+            12.968967290472941
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r0c2_2->s_r1c3_r0c2_3",
+        "name": "Temple Diagonal Link",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15700688715222,
+            12.968967290472941
+          ],
+          [
+            79.15676092499135,
+            12.968751570692364
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r0c2_3->s_r1c3_r0c2_4",
+        "name": "Temple Diagonal Link",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2,
+        "coarseId": "r1c3-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15676092499135,
+            12.968751570692364
+          ],
+          [
+            79.15646743042635,
+            12.968597611650686
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r0c2_4->s_r1c3_r0c2_5",
+        "name": "Temple Diagonal Link",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15646743042635,
+            12.968597611650686
+          ],
+          [
+            79.15620776447005,
+            12.968399697300931
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r0c2_5->s_r1c3_r0c2_6",
+        "name": "Temple Diagonal Link",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2,
+        "coarseId": "r1c3-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15620776447005,
+            12.968399697300931
+          ],
+          [
+            79.15595290753004,
+            12.968195534134708
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r0c2->s_r1c3_r0c2_6",
+        "name": "Temple Diagonal Link",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r0c2"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15569142933249,
+            12.967999973995267
+          ],
+          [
+            79.15595290753004,
+            12.968195534134708
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r1c3->s_r1c3_r2c4_1",
+        "name": "Bazaar Diagonal Way",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15753714399827,
+            12.969348922034936
+          ],
+          [
+            79.15779319168998,
+            12.969551536457427
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r2c4_1->s_r1c3_r2c4_2",
+        "name": "Bazaar Diagonal Way",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2,
+        "coarseId": "r1c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15779319168998,
+            12.969551536457427
+          ],
+          [
+            79.15804925093849,
+            12.969754135613325
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r2c4_2->s_r1c3_r2c4_3",
+        "name": "Bazaar Diagonal Way",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15804925093849,
+            12.969754135613325
+          ],
+          [
+            79.15833221977684,
+            12.969921769502625
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r2c4_3->s_r1c3_r2c4_4",
+        "name": "Bazaar Diagonal Way",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2,
+        "coarseId": "r1c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15833221977684,
+            12.969921769502625
+          ],
+          [
+            79.15857829240271,
+            12.97013734427506
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r2c4_4->s_r1c3_r2c4_5",
+        "name": "Bazaar Diagonal Way",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15857829240271,
+            12.97013734427506
+          ],
+          [
+            79.15886081550198,
+            12.970305556765567
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "s_r1c3_r2c4_5->s_r1c3_r2c4_6",
+        "name": "Bazaar Diagonal Way",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 2,
+        "coarseId": "r1c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15886081550198,
+            12.970305556765567
+          ],
+          [
+            79.15912389006796,
+            12.970499039493173
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "r2c4->s_r1c3_r2c4_6",
+        "name": "Bazaar Diagonal Way",
+        "surface": "asphalt",
+        "stairs": false,
+        "kerbCm": 0,
+        "lanes": 2,
+        "crossing": "none",
+        "slope": 1.7,
+        "coarseId": "r1c3-r2c4"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            79.15938285866346,
+            12.970697857072238
+          ],
+          [
+            79.15912389006796,
+            12.970499039493173
+          ]
+        ]
+      }
+    }
+  ]
+}
