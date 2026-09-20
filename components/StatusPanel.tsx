@@ -167,7 +167,7 @@ export function StatusPanel({
           </div>
         )}
 
-        {/* Embedded Ask AEGIS Panel */}
+        {/* Embedded Ask SafePath Panel */}
         {children && <div className="pt-2 border-t border-[#1e293b]">{children}</div>}
       </div>
     </aside>

@@ -131,7 +131,7 @@ export function AskAegis({
           <div className="flex items-center space-x-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
             <h3 className="text-[10px] font-mono font-extrabold tracking-widest uppercase text-cyan-300">
-              ASK AEGIS // INTEL
+              ASK SAFEPATH // INTEL
             </h3>
           </div>
           <p className="text-[9px] text-slate-400 font-mono">

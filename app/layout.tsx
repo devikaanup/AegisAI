@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AEGIS AI — Inclusive Disaster Evacuation Router",
+  title: "SafePath AI — Inclusive Disaster Evacuation Router",
   description:
     "Deterministic life-safety evacuation routing engine paired with a constrained Gemini explanation layer.",
 };

@@ -6,7 +6,7 @@ import { buildExplanationContext } from "../lib/explainContext";
 
 function main() {
   console.log("============================================================");
-  console.log("AEGIS AI — SIMULATION STORY VERIFICATION (npm run story)");
+  console.log("SafePath AI — SIMULATION STORY VERIFICATION (npm run story)");
   console.log("============================================================\n");
 
   const evacuees = getAllEvacuees();
