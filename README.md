@@ -169,7 +169,7 @@ Open [http://localhost:3000](http://localhost:3000) in a desktop/tablet browser 
 ### Step 5: Shelter Saturation & Overflow Rerouting (1:05 - 1:20)
 - **Action**: Slide the **"People evacuating"** slider from 10 to **50**.
 - **Showcase**:
-  - S1 (Govt School) capacity bars rise to **50/50 [FULL]**.
+  - S1 (Govt School) capacity bars rise to **50/50 [FULL]**..
   - Toast: `SHELTER FULL — Govt School reached capacity`.
   - Engine automatically reroutes Marcus to **Community Hall** (`800m · 11.1 min`).
   - Click **"Why did the shelter change?"**: SAFEPATH confirms Govt School reached capacity and redirected traffic to the nearest reachable facility.
